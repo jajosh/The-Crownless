@@ -1,0 +1,16 @@
+[
+  {
+    "GridX": 0,
+    "GridY": 0,
+    "LocalX": 13,
+    "LocalY": 13,
+    "Description": "The Banshee Event Trigger",
+    "TileStates": null,
+    "PossibleNextEvents": {
+      "1": 1
+    },
+    "TriggerActions": [
+      "Combat"
+    ]
+  }
+]

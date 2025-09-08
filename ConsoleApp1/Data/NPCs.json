@@ -1,0 +1,30 @@
+{
+  "ID": 1,
+  "Name": "Bear",
+  "PossibleNames": [
+    "The Bear"
+  ],
+  "Skills": {
+    "Strength": 18,
+    "Dexterity": 10,
+    "Constitution": 16,
+    "Intelligence": 2,
+    "Wisdom": 12,
+    "Charisma": 5
+  },
+  "TriggerActions": {
+    "Attack": "Roars and charges",
+    "Flee": "Retreats into the forest if heavily injured"
+  },
+  "Inventory": [
+    ""
+  ],
+  "Armor": [],
+  "RandomDialogTrees": null,
+  "RandomBattleDialog": [
+    "*The bear growls deeply*",
+    "*It roars and swipes with massive claws*",
+    "*The bear snorts, eyeing you with wild aggression*"
+  ]
+}
+

@@ -1,0 +1,145 @@
+[
+  {
+    "asciiKey": "scimitar",
+    "ID": 1,
+    "Name": "Scimitar",
+    "MaxStack": 1,
+    "Price": 50,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "You're carrying too many weapons."
+    },
+    "Melee": {
+      "Versatile": false
+    },
+    "DamageDie": 6,
+    "DamageBonusSkill": "Dexterity",
+    "DamageType": "Slashing"
+  },
+  {
+    "asciiKey": "shortbow",
+    "ID": 2,
+    "Name": "Shortbow",
+    "MaxStack": 1,
+    "Price": 40,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "The bowstring is getting tangled with your gear."
+    },
+    "Range": {
+      "Range": 60
+    },
+    "DamageDie": 6,
+    "DamageBonusSkill": "Dexterity",
+    "DamageType": "Piercing"
+  },
+  {
+    "asciiKey": "spoon",
+    "ID": 3,
+    "Name": "Spoon",
+    "MaxStack": 5,
+    "Price": 1,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "You really don’t need more spoons."
+    },
+    "DamageDie": 6,
+    "DamageBonusSkill": "Dexterity",
+    "DamageType": "Piercing"
+  },
+  {
+    "asciiKey": "bear_meat",
+    "ID": 4,
+    "Name": "Bear Meat",
+    "MaxStack": 10,
+    "Price": 5,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "You can't carry that much meat."
+    },
+    "Consumable": {
+      "HealthToHeal": 5,
+      "Cookable": true,
+      "CookingDifficulty": 3
+    },
+    "Crafting": {
+      "CraftID": 101
+    }
+  },
+  {
+    "asciiKey": "cooked_bear_meat",
+    "ID": 5,
+    "Name": "Cooked Bear Meat",
+    "MaxStack": 10,
+    "Price": 15,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "Too heavy to carry hot food right now."
+    },
+    "Consumable": {
+      "HealthToHeal": 20,
+      "Cookable": false,
+      "CookingDifficulty": 0
+    }
+  },
+  {
+    "asciiKey": "bear_claws",
+    "ID": 6,
+    "Name": "Bear Claws",
+    "MaxStack": 1,
+    "Price": 30,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "Those claws are too bulky for your pouch."
+    },
+    "Crafting": {
+      "CraftID": 202
+    },
+    "Melee": {
+      "Versatile": true
+    },
+    "DamageDie": 6,
+    "DamageBonusSkill": "Strength",
+    "DamageType": "Slashing"
+  },
+  {
+    "asciiKey": "scrap_of_bear_fur",
+    "ID": 7,
+    "Name": "Scrap of Bear Fur",
+    "MaxStack": 20,
+    "Price": 2,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "The fur keeps slipping out of your hands."
+    },
+    "Crafting": {
+      "CraftID": 303
+    },
+    "Alchemy": {
+      "AlchemyID": 11
+    }
+  },
+  {
+    "asciiKey": "primitive_javelin",
+    "ID": 8,
+    "Name": "Primitive Javelin",
+    "MaxStack": 3,
+    "Price": 10,
+    "CanStore": true,
+    "EncumbranceErrorMessages": {
+      "1": "You can't carry more spears."
+    },
+    "Melee": {
+      "Versatile": false
+    },
+    "Range": {
+      "Range": 15
+    },
+    "DamageDie": 4,
+    "DamageBonusSkill": "Dexterity",
+    "DamageType": "Piercing"
+  }
+]
+
+
+

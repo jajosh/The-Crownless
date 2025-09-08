@@ -1,0 +1,11 @@
+Quest Class Attruibutes 
+    Basic Details
+    Quest Name
+    Giver
+    summary of Quest
+    rewards
+    ID
+    Title
+To Dos
+    QuestDataBase Method //Loads full list of quests from file
+    

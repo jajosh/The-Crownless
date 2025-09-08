@@ -1,0 +1,55 @@
+Player notes and reference information
+    To dos
+        Methods
+            Working on
+                StartNewGame
+                LoadGame
+                SavePlayerData
+            Need to start
+                EquipItem
+                UnequipItem
+                LevelUp
+            Finished
+                modifier    
+        
+    Player Atrributes | Can save: true
+        identity
+            name
+            race
+            Pronouns   
+            background 
+        social 
+            Reputation 
+            Languages
+            KnownNPC
+
+        Core Stats
+            SkillValues
+            Health
+            MaxHealth
+            Money
+        Equipment
+            inventory 
+            Equiped
+        Journal
+            Completed quests
+            Inprogress quests
+        Bools
+            Isdead
+            _IsInitialized
+        Skills | 
+            Strength
+            Constitution
+            Charisma
+            Dexterity
+            Inttelliegence 
+            Wisdom
+        Money
+            Copper
+            Silver
+            Gold
+        Finished
+            Method modifier
+            AssertInitialized
+
+

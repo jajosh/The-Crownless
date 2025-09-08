@@ -1,0 +1,21 @@
+[Goblin]
+ArmorClass: 15
+MaxHealth: 7
+strength: 8
+Dexterity: 14
+Constituation: 10
+Intelligence: 10
+Wisdom: 8
+Charisma: 8
+Inventory: Scimitar|ShortBow
+
+[Banshee]
+ArmorClass: 15
+MaxHealth: 7
+strength: 8
+Dexterity: 14
+Constituation: 10
+Intelligence: 10
+Wisdom: 8
+Charisma: 8
+Inventory: Scimitar|ShortBow

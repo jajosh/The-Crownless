@@ -1,0 +1,11 @@
+Attruibutes
+    int ID
+    string name //Name of the race
+    List<string> PossibleName
+    Dictionary<skill, int> Skills
+    TriggerActions
+    List<Item> Inventory
+    List<Item> Armor
+    List<int> RandomDialogTrees
+    List<string>? RandomBattleDialog
+    NPCType Type

@@ -1,0 +1,56 @@
+
+Name_: Aria Nightshade
+Race_: Elf
+Pronouns_: She/Her
+Health_: 85
+MaxHealth_: 100
+
+Skills_: Swordsmanship: 5
+Skills_: Archery: 3
+Skills_: Stealth: 7
+
+Money_: Gold: 120
+Money_: Silver: 430
+Money_: Copper: 55
+
+Reputation_: ThievesGuild: 75
+Reputation_: MageCouncil: 20
+
+KnownNPC_: Thalor: True
+KnownNPC_: Eldrin: False
+KnownNPC_: Mira: True
+CompletedQuests_: 101|The Lost Relic
+CompletedQuests_: 102|Rescue the Merchant
+
+ActiveQuests_: 103|A Shadow in the Forest
+ActiveQuests_: 104|The Poisoned Well
+
+Languages_: Elvish
+Languages_: Common
+Languages_: Dwarvish
+
+Inventory_: 201|Iron Sword
+Inventory_: 202|Healing Potion
+Inventory_: 203|Lockpick Set
+
+EquipedItem_Weapon: 201
+EquipedItem_Armor: 305
+EquipedItem_Ring: 412
+
+_isInitialized = false; //for error checking
+    flags.IsDead = false;
+    Health = 100;
+    MaxHealth = 100;
+    Name = string.Empty;
+    Race = string.Empty;
+    Sex  = string.Empty;
+Background  = string.Empty;
+    Skills = new Dictionary<Skill, int>();
+    Money = new Dictionary<string, int>();
+    Reputation = new Dictionary<string, int>();
+    Languages = new List<string>();
+    EquippedItems = new Dictionary<EquipmentSlots, Item>();
+    CompletedQuests = new List<int>();
+    ActiveQuests = new Dictionary<Quest, int>();
+    KnownNPC = new Dictionary<NPCNamed, int>();
+Inventory = new Dictionary<int, Item>();

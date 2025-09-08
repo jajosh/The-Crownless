@@ -1,0 +1,30 @@
+
+[Item: ]
+ItemType: 
+ID: 
+Name: 
+MaxStack: 
+CanStore: 
+Description: 
+DamageDie: 
+DamageBonusSkill: 
+Range: 
+
+
+[NPC Name]
+Name_: 
+Age_: 
+Type: 
+Gender_: 
+HairColor_:
+Diaglog_: 
+[QuestGiver[NPC]]
+Quest dialog
+
+
+[Quests]
+ID_: 
+Title_: 
+isComplete_:
+QuestsStatus_:
+Description_:

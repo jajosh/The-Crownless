@@ -1,0 +1,100 @@
+{
+  "id": 1,
+  "title": "Gather Healing Herbs",
+  "isComplete": false,
+  "status": "Active",
+  "description": "Collect herbs from the forest and bring them to the village healer.",
+  "fetchData": {
+    "neededItems": [
+      {
+        "id": 101,
+        "name": "Healing Herb",
+        "quantity": 5
+      }
+    ],
+    "targetNPC": {
+      "id": 1,
+      "name": "Healer Alina"
+    }
+  }
+  {
+    "id": 2,
+    "title": "The Banshee",
+    "isComplete": false,
+    "status": "Inactive",
+    "description": "Bandits have been harassing travelers. Take them out.",
+    "killData": {
+      "neededItems": [
+        {
+          "id": 201,
+          "name": "Bandit Emblem",
+          "quantity": 3
+        }
+      ],
+      "targetNPCs": [
+        {
+          "id": 10,
+          "name": "Bandit Scout"
+        },
+        {
+          "id": 11,
+          "name": "Bandit Captain"
+        }
+      ],
+      "turnInNPC": {
+        "id": 2,
+        "name": "Captain Roland"
+      }
+    }
+  }
+  {
+    "id": 3,
+    "title": "Council Meeting",
+    "isComplete": false,
+    "status": "Active",
+    "description": "Speak with the village council members.",
+    "speakData": {
+      "targetNPCs": [
+        {
+          "id": 3,
+          "name": "Elder Miriam"
+        },
+        {
+          "id": 4,
+          "name": "Merchant Darion"
+        }
+      ]
+    }
+  }
+  {
+    "id": 4,
+    "title": "Defend the Village",
+    "isComplete": false,
+    "status": "Inactive",
+    "description": "Waves of monsters are attacking the village. Hold them off!",
+    "defendData": {
+      "targetNPCs": [
+        {
+          "id": 5,
+          "name": "Villager Tomas"
+        },
+        {
+          "id": 6,
+          "name": "Villager Elara"
+        }
+      ],
+      "monsters": [
+        {
+          "id": 20,
+          "name": "Goblin Raider"
+        },
+        {
+          "id": 21,
+          "name": "Goblin Shaman"
+        }
+      ]
+    }
+  }
+
+
+}

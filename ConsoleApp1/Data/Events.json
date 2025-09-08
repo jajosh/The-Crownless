@@ -1,0 +1,78 @@
+[
+  {
+    "id": 1,
+    "title": "The Banshee",
+    "type": "Quest",
+    "linkedID": 1,
+    "description": {
+      "1": "As you walk the pews you see a white figure appear in the back row",
+      "2": "The air feels heavy as you approach the altar."
+    },
+    "choices": [
+      {
+        "text": "Investigate the figure",
+        "skill": "Perception",
+        "skillDifficulty": 10,
+        "DialogTree": [
+          {
+            "pass": true,
+            "text": "You recogonise the figure as a banshee. Any Closer and it'll attack",
+            "choices" [
+              {
+                "test": "Sneak around",
+                "skillCheck": "sneak"
+              }
+            ]
+          },
+          {
+            "pass": false,
+            "text": "the figure looks like a man, about your age.",
+            "choices": [
+              {
+                "text": "approach the man"
+              },
+              {
+                "text": "Call out to the man"
+              },
+              {
+                "text": "Shoot the man"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave quietly",
+        "weight": 30,
+        "nextEvent": 4,
+        "fallBackEvent": 5
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "Title": "The Banshee",
+    "type": "Combat",
+    "linkedID": 1,
+    "description": null,
+    "choices": [
+      {
+        "text": "Sneak Past"
+        "pass": null,
+        "requiredItem": null,
+        "text": null,
+        "weight": null,
+        "skill": null,
+        "skillDifficulty": null,
+        "nextEvent": null,
+        "fallBackEvent": null,
+        "dialogTree"
+      },
+      {
+        "test", ""
+      }
+    ]
+  }
+]
+
+  

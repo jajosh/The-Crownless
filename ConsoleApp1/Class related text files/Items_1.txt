@@ -1,0 +1,42 @@
+[Item: Scimitar]
+ItemType: Weapon|Melee|Versatile
+ID: 1
+Name: Scimitar 
+MaxStack: 1
+CanStore: true
+Description: A sleek, curved blade favored by the agile.\nLight and deadly, it escels in the hands of those who value speed over brute force\n
+DamageDie: 6
+DamageBonusSkill: Dexterity
+
+[Item: Shortbow]
+ItemType: Weapon|Range
+ID: 2
+Name: ShortBow
+MaxStack: 1
+CanStore: true
+Description: A lightweight, bow designed for speed and mobility.\n
+DamageDie: 6
+DamageBonusSkill: Dexterity
+Range: 80
+
+[Item: Spoon]
+ItemType: Weapon|Melee
+ID: 3
+Name: The Spoon 
+MaxStack: 1
+CanStore: true
+Description: 
+DamageDie: 
+DamageBonusSkill: 
+Range: 
+
+[Item: ]
+ItemType: 
+ID: 
+Name: 
+MaxStack: 
+CanStore: 
+Description: 
+DamageDie: 
+DamageBonusSkill: 
+Range: 
