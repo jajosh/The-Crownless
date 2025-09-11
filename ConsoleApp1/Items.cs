@@ -73,12 +73,10 @@ public class Item
         }
     }
 
-    public Item? FindItemByID(int IDToFind, List<Item> itemList)
+    public static Item? FindItemByID(int IDToFind)
     {
-
-
+        List<Item> itemList = MainClass.items;
         Item? foundItem = itemList.Find(item => item.ID == IDToFind);
-
         if (foundItem != null)
         {
             Console.WriteLine($"Item Found: {foundItem.Name}");
@@ -139,7 +137,7 @@ public class Item
     {
         public int? DamageDie { get; set; }
         public Skill DamageBonusSkill { get; set; }
-        damanageType DamageType { get; set; }
+        public DamageTypes DamageType { get; set; }
 
     }
     public class MeleeWeaponData

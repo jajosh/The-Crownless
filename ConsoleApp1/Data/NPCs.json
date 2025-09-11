@@ -1,30 +1,104 @@
-{
-  "ID": 1,
-  "Name": "Bear",
-  "PossibleNames": [
-    "The Bear"
-  ],
-  "Skills": {
-    "Strength": 18,
-    "Dexterity": 10,
-    "Constitution": 16,
-    "Intelligence": 2,
-    "Wisdom": 12,
-    "Charisma": 5
-  },
-  "TriggerActions": {
-    "Attack": "Roars and charges",
-    "Flee": "Retreats into the forest if heavily injured"
-  },
-  "Inventory": [
-    ""
-  ],
-  "Armor": [],
-  "RandomDialogTrees": null,
-  "RandomBattleDialog": [
-    "*The bear growls deeply*",
-    "*It roars and swipes with massive claws*",
-    "*The bear snorts, eyeing you with wild aggression*"
-  ]
-}
+[
+  {
+    "ID": 0,
+    "Name": "",
+    "Known": null,
+    "NPCType": {
+      "PossibleNames": []
+    },
+    "NPCNamed": {
+      "Pronouns": {}
+    },
+    "PossibleCombatSymbols": [],
+    "isAlive": {},
 
+    "CreatureType": null,
+    "CreatureSubType": null,
+    "Languages": [],
+
+    "XP": 0,
+    "AC": 0,
+    "Skills": {},
+
+    "DamageResistance": [],
+    "DamageImmunities": [],
+    "ConditionImmunities": [],
+
+    "InventoryData": [],
+    "ArmorData": [],
+
+    "RandomBattleDialog": [
+      "My dialog hasn't been set, but I'll kill you anyway"
+    ],
+    "RandomDialog": [],
+    "UseStaticRandomDialog": false,
+
+    "TriggerData": {}
+  },
+  {
+    "ID": 1,
+    "Name": "The Banshee",
+    "Known": false,
+    "NPCNamed": {
+      "Pronouns": {},
+      "isKnown": {}
+    },
+    "PossibleCombatSymbols": [],
+    "isAlive": true,
+
+    "CreatureType": "Undead",
+    "CreatureSubType": "Banshee",
+    "Languages": [],
+
+    "XP": 10,
+    "AC": 10,
+    "Skills": {
+      "Strength": 1,
+      "Dexterity": 12,
+      "Constituation": 10,
+      "Intelligence": 12,
+      "Wisdom": 11,
+      "Charisma": 13
+    },
+
+    "DamageResistance": [
+      "Acid",
+      "Fire",
+      "Lightning",
+      "thunder",
+      "Bludgeoning",
+      "Piercing",
+      "slashing"
+    ],
+    "DamageImmunities": [
+      "Poison",
+      "Cold",
+      "Nerotic"
+    ],
+    "ConditionImmunities": [
+      "Charmed",
+      "Exhaustion",
+      "Frightened",
+      "Grappled",
+      "Paralyzed",
+      "Petrified",
+      "Posioned",
+      "Prone",
+      "Restrained"
+    ],
+
+    "InventoryData": [],
+    "ArmorData": [],
+
+    "RandomBattleDialog": [
+      "Ill Stop You!",
+      "Stop! Stop! STOP!!!",
+      "Stop!!"
+    ],
+    "RandomDialog": [],
+    "UseStaticRandomDialog": false,
+
+    "TriggerData": []
+  }
+  
+]

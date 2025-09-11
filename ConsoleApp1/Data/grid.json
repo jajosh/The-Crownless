@@ -78,7 +78,6 @@
     "xPosition": 1,
     "yPosition": 0,
     "Biome": "BorelForst",
-    "SubBiome": "AbandonedBuilding",
     "RandomEventChance": 0,
     "DescriptionEntries": [
       {
@@ -101,7 +100,6 @@
   },
   {
     "gridMap": [
-      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
       "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
       ".┌--------┐ṠFFFFFFFFFFFFFFFFF...FFFF┌----------┐FFF",
       ".|HACKWOOD|.........FFFFF...........|H'''''''''|FFF",
@@ -154,7 +152,6 @@
   },
   {
     "gridMap": [
-      "",
       "FFFFFFFFFFFFFF……,,FFFFFFFFFFFFFFF.……FFFF,Ṡ,FFFFFFFF",
       "FFF,,,,,,,,,,,……,,,FFF,,,..……………………FFFFFFFFFFFFFFFF",
       "F┌---------┐FF……,♣,,,♣,,.………♣.,,,,┌----┐,┌---┐,FFFF",

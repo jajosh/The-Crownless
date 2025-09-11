@@ -1,77 +1,116 @@
-[
+[ // === GeneralEvent ===
   {
-    "id": 1,
-    "title": "The Banshee",
-    "type": "Quest",
-    "linkedID": 1,
-    "description": {
-      "1": "As you walk the pews you see a white figure appear in the back row",
-      "2": "The air feels heavy as you approach the altar."
+    "ID": 0,
+    "Startinglocation": {
+      "GridX": 0,
+      "GridY": 0,
+      "LocalX": 0,
+      "LocalY": 0
     },
-    "choices": [
-      {
-        "text": "Investigate the figure",
-        "skill": "Perception",
-        "skillDifficulty": 10,
-        "DialogTree": [
+    "Title": "",
+    "LinkedID": null,
+    "Description": [
+      ""
+    ],
+    "EnemyID": [],
+    "AllyID": [],
+    "Branches": {
+      "1": {
+        "ChoiceID": 1,
+        "Text": "",
+        "Dialog": "",
+        "Limbs": {
+          "1": {
+            "NextBranchID": 0,
+            "RequiredFlag": null,
+            "AlreadyGoneDown":  false,
+            "ChoiceText": "",
+            "DC": null,
+            "skill": null,
+            "requiredItem": null,
+            "TimePassed": 0
+          }
+        },
+        "Leaves": []
+      }
+    }
+  },
+  // === Combat Event ===
+  {
+    "ID": 0,
+    "Startinglocation": null,
+    "Title": "",
+    "LinkedID": null,
+    "Description": [
+      ""
+    ],
+    "EnemyID": [ 0 ],
+    "AllyID": [],
+    "Branches": {
+      "1": {
+        "ChoiceID": 1,
+        "Text": "",
+        "Dialog": "",
+        "Limbs": {},
+        "Combat": {
+          "Victory": false,
+          "RewardXP": null,
+          "RewardItemID": []
+        },
+        "Leaves": [
           {
-            "pass": true,
-            "text": "You recogonise the figure as a banshee. Any Closer and it'll attack",
-            "choices" [
-              {
-                "test": "Sneak around",
-                "skillCheck": "sneak"
-              }
-            ]
-          },
-          {
-            "pass": false,
-            "text": "the figure looks like a man, about your age.",
-            "choices": [
-              {
-                "text": "approach the man"
-              },
-              {
-                "text": "Call out to the man"
-              },
-              {
-                "text": "Shoot the man"
-              }
-            ]
+            "RequiredFlag": null,
+            "DC": null,
+            "Skill": null,
+            "RewardXP": 0,
+            "RewardItems": []
           }
         ]
-      },
-      {
-        "text": "Leave quietly",
-        "weight": 30,
-        "nextEvent": 4,
-        "fallBackEvent": 5
       }
-    ]
+    }
   },
+  // === Dialog Event ===
   {
-    "id": 2,
-    "Title": "The Banshee",
-    "type": "Combat",
-    "linkedID": 1,
-    "description": null,
-    "choices": [
-      {
-        "text": "Sneak Past"
-        "pass": null,
-        "requiredItem": null,
-        "text": null,
-        "weight": null,
-        "skill": null,
-        "skillDifficulty": null,
-        "nextEvent": null,
-        "fallBackEvent": null,
-        "dialogTree"
-      },
-      {
-        "test", ""
+    "ID": 0,
+    "Startinglocation": null,
+    "Title": "",
+    "LinkedID": null,
+    "Description": [
+      ""
+    ],
+    "EnemyID": [],
+    "AllyID": [],
+    "Branches": {
+      "1": {
+        "ChoiceID": 1,
+        "Text": "",
+        "Dialog": "",
+        "DialogTree": {
+          "NPCID": 0,
+          "Limb": {
+            "Text": {
+              "1": ""
+            },
+            "Dialog": {
+              "1": ""
+            }
+          },
+          "CheckText": ""
+        },
+        "Limbs": {
+          "1": {
+            "NextBranchID": 0,
+            "RequiredFlag": null,
+            "ChoiceText": "",
+            "DC": null,
+            "skill": null,
+            "requiredItem": null,
+            "TimePassed": 0
+          }
+        },
+        "Leaves": []
       }
-    ]
+    }
   }
 ]
 

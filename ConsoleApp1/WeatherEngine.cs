@@ -151,3 +151,43 @@ public class WeatherEngine
 
     }
 }
+public struct WeatherRef
+{
+    //var desc1 = new BiomeRef(GridBiomeType.Forest);
+    //var desc2 = new BiomeRef(GridBiomeSubType.DarkForest);
+    //var desc3 = BiomeRef.Any;  // matches everything
+    public WeatherData? Main { get; }
+    public SeasonData? Sub { get; }
+    public bool IsAny { get; }   // <--- wildcard flag
+
+    // Constructors
+    public WeatherRef(WeatherData type)
+    {
+        Main = type;
+        Sub = null;
+        IsAny = false;
+    }
+
+    public WeatherRef(SeasonData subtype)
+    {
+        Main = null;
+        Sub = subtype;
+        IsAny = false;
+    }
+
+    private WeatherRef(bool any)   // special ctor for Any
+    {
+        Main = null;
+        Sub = null;
+        IsAny = any;
+    }
+
+    public static WeatherRef Any => new WeatherRef(true);
+
+    public override string ToString()
+    {
+        if (IsAny) return "Any";
+        return Main?.ToString() ?? Sub?.ToString() ?? "Unknown";
+    }
+}
+

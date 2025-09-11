@@ -36,7 +36,8 @@ namespace GameNamespace
         public List<Quest> completedQuests = new List<Quest>();
         public List<Quest> activeQuests = new List<Quest>();
         public List<Quest> quests = new List<Quest>();
-        public List<Item> items = new List<Item>();
+        public static List<Item> items = JsonLoader.LoadFromJson<List<Item>>(FileManager.TheNPCFilePath);
+        public static List<NPC> NPCs = NPC.ProcessNPCData();
 
         /// <summary>
         /// Application entry point. Initializes the game state, 
@@ -47,13 +48,14 @@ namespace GameNamespace
         {
             /// --- Shit that gets saved to the save json
             Player player = new Player();
-            List<TriggerCoordinets> triggers = new List<TriggerCoordinets>();
+            List<TriggerCoordinets> triggerCoordinets = new List<TriggerCoordinets>();
             WeatherEngine weather = new();
             StatusFlags flags = new StatusFlags();
             List<Quest> completedQuests = new List<Quest>();
             List<Quest> activeQuests = new List<Quest>();
             List<Quest> quests = new List<Quest>();
-            List<Item> items = JsonLoader.LoadFromJson<List<Item>>(FileManager.ItemFilePath);
+
+
 
 
             #region === Initialization Data ===
@@ -65,22 +67,13 @@ namespace GameNamespace
             int bottomLine = lastHeight - 4; // bottom line of the UI
             // Allows the console to print unicode
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-
             Map gameMap = Map.LoadMapFromJson();
-            List<TriggerCoordinets> triggerCoordinets = new List<TriggerCoordinets>();
-
-
-            Item item = new Item();
-            FileManager filemanager = new FileManager();
             #endregion
-            Map dataSetMap = new();
-            Player dataSetPlayer = new();
 
 
             //  A check if the game needs a redraw
             bool needRedraw = true;
-
-            
+            bool isRunning = true;
             while (isRunning)
             {
                 var stopwatch = new Stopwatch();

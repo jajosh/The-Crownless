@@ -32,6 +32,8 @@ public class SaveGame
     public List<Quest> completedQuests = new List<Quest>();
     public List<Quest> activeQuests = new List<Quest>();
     public List<Item> items = new List<Item>();
+    public List<NPC> NPCStats = new List<NPC>();
+    public LoreBoard LoreBoard = new LoreBoard();
     public SaveGame()
     {
 

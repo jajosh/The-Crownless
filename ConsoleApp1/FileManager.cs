@@ -11,6 +11,7 @@ public class FileManager
     public static readonly string ConfigFolder = Path.Combine(BaseFolder, "Config");
     public static readonly string SavesFolder = GetSavePath();
     #endregion
+
     // JSON file paths (a.k.a. the spaghetti junction of file references)
     #region --- Sets the paths specific to the json ---
     public static readonly string ItemFilePath = Path.Combine(DataFolder, "items.json");
@@ -20,6 +21,7 @@ public class FileManager
     public static readonly string ConfigFilePath = Path.Combine(ConfigFolder, "config.json");
     public static readonly string EventsFilePath = Path.Combine(DataFolder, "Events.json");
     public static readonly string QuestFilePath = Path.Combine(DataFolder, "Quests.json");
+    public static readonly string RandiomEnvironmentalDialog = Path.Combine(DataFolder, "RandiomEnvironmentalDialog.json");
     #endregion
     public FileManager()
 	{
