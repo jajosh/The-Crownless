@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 /// <summary>
 /// Lorepoints, stores the chosen branch path and possible outcomes. 
@@ -39,40 +40,42 @@ public class LoreBoard
 		}
 		else if    (LorePoints.ContainsKey(eventID)) 
 		{
-			foreach (var BranchPath in LorePoints) 
+			foreach (var BranchPath in LorePoints)
 			{
-				LorePoints[eventID].ChosenBranchPath.AddRange<chosenBranchPath>			};
-			Outcomes = outcomes ?? new Dictionary<string, object>();
+                LorePoints[eventID].ChosenBranchPath.AddRange(chosenBranchPath);
+                LorePoints[eventID].Id = eventID;
+				LorePoints[eventID].ChosenBranchPath = chosenBranchPath;
+				LorePoints[eventID].OutComes = outcomes ?? new Dictionary<string, object>();
+            }
         }
 	}
 	public void CompleteEvent(int eventID, List<int> chosenBranchPath, Dictionary<string, object>? outcomes = null)
 	{
-        if (!LorePoints.ContainsKey(eventID))
-        {
-            LorePoints[eventID] = new LorePoint;
-            {
-                Id = eventId,
-                IsCompleted = true,
-                ChosenBranchID = chosenBranchId,
-                Outcomes = outcomes ?? new Dictionary<string, object>()
-            }
-        }
-        else (LorePoints.ContaintKey(eventID))
-
-
+		if (!LorePoints.ContainsKey(eventID))
 		{
-			foreach (var BranchPath in chosenBranchpath)
-			{ 
-				LorePoints[eventID].ChosenBranchPath.Add(BranchPath) )
-			}
-			IsCompleted = true,
-			Outcomes = outcomes ?? new Dictionary<string, object>();
+			LorePoints[eventID] = new LorePoint
+			{
+				Id = eventID,
+				IsComplete = true,
+				ChosenBranchPath = chosenBranchPath,
+				OutComes = outcomes ?? new Dictionary<string, object>()
+			};
+		}
+		else if(LorePoints.ContainsKey(eventID))
+		{
+
+			LorePoints[eventID].IsComplete = true;
+            LorePoints[eventID].ChosenBranchPath.AddRange(chosenBranchPath);
+            LorePoints[eventID].Id = eventID;
+			LorePoints[eventID].ChosenBranchPath = chosenBranchPath;
+				LorePoints[eventID].OutComes = outcomes ?? new Dictionary<string, object>();
         }
     }
-        public bool IsEventCompleted(int eventId)
-    {
-        return LorePoints.ContainsKey(eventId) && LorePoints[eventId].IsCompleted;
-    }
+    public bool IsEventCompleted(int eventId)
+	{
+    return LorePoints.ContainsKey(eventId) && LorePoints[eventId].IsComplete;
+	}
+	
     /// <summary>
     /// Gets the outcome of an event.
     /// </summary>

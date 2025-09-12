@@ -7,7 +7,7 @@ public class Combat
     GUIEngine UI = new GUIEngine();
     TextHandler text = new TextHandler();
     /// <summary>
-    /// Potentional unicode characters to use
+    /// Protentional unicode characters to use
     /// 
     ///  ⭍ 
     /// </summary>
