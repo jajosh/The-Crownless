@@ -99,7 +99,7 @@ public class DialogLimb
 
 public class ScriptedEvents
 {
-    private static TextHandler Text = new TextHandler();
+    private static EngineText Text = new EngineText();
     /// <summary>
     /// STARTS NEW GAME
     /// 
@@ -113,7 +113,7 @@ public class ScriptedEvents
         SaveGame saveGame = new SaveGame();
         Player player = new Player();
         List<TriggerCoordinets> triggers = JsonLoader.LoadFromJson<List<TriggerCoordinets>>(FileManager.TheTriggerCoordinetsPath);
-        WeatherEngine weather = new WeatherEngine();
+        EngineWeather weather = new EngineWeather();
         StatusFlags flags = new StatusFlags();
         List<Quest> completedQuests = new List<Quest>();
         List<Quest> activeQuests = new List<Quest>();

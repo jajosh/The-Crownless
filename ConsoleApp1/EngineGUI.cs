@@ -4,10 +4,10 @@ using static System.Net.Mime.MediaTypeNames;
 /// <summary>
 ///  This engine handles the creating the GUI. Methods must be changed to fit any changes that are desired in the gui. 
 /// </summary>
-public class GUIEngine
+public class EngineGUI
 {
     StatusFlags flags = new StatusFlags();
-	public GUIEngine()
+	public EngineGUI()
 	{
 
 	}
@@ -93,11 +93,13 @@ public class GUIEngine
         }
     }
     /// <summary>
-    /// Updates the player stats panel with health, money, and skills.
+    /// Updates the player stats panel with health, money, skills, and position coordinets
     /// </summary>
     /// <param name="player">The player whose stats are displayed.</param>
     public static void UpdataStats(Player player)
     {
+        //Writes the players location
+        EngineGUI.WriteInPanel(8, 0, $"{player.Gridx}, {player.GridY}, {player.LocalX}, {player.LocalY}");
         WriteInPanel(56, 1, $"HP: {player.Health}");
         int x = 3;
         foreach (var value in player.Money)
@@ -116,4 +118,9 @@ public class GUIEngine
 
     }
 
+    public int GetConsoleHeight()
+    {
+
+        int consoleHeightChange = Console.WindowHeight - lastHeight;
+    }
 }

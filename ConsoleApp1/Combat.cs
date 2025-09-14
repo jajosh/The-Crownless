@@ -4,9 +4,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class Combat
 {
-    GUIEngine UI = new GUIEngine();
-    TextHandler text = new TextHandler();
+    EngineGUI UI = new EngineGUI();
+    EngineText text = new EngineText();
     /// <summary>
+    /// The combat loop. 
+    /// 
     /// Protentional unicode characters to use
     /// 
     ///  ⭍ 
@@ -14,12 +16,39 @@ public class Combat
     /// <param name="player"></param>
     /// <param name="enemy"></param>
     public Combat(Player player, List<int> enemy, List<int> ally)
-	{
+    {
         text.Write("Starting Combat", 50);
-		while (player.Health  > 0)
-		{
+        bool isRunning = true;
+        while (isRunning)
+        {
 
-		}
-	}
+        }
+    }
+    public void StartCombat(Player player, List<NPC> enemy, List<NPC> ally)
+    {
+        EngineText text = new();
+        Random rng = new Random();
+        int enemyListLength = enemy.Count;
+        
+    }
+    /// <summary>
+    /// Grabs a random chat from a random enemy and one of their chats
+    /// </summary>
+    /// <param name="npcs">List of NPCs involed</param>
+    /// <returns></returns>
+    public (NPC, string) GetRandomBattleDialog(List<NPC> npcs)
+    {
+        string result = string.Empty;
+        Random rng = new Random();
+        int x = rng.Next(npcs.Count);
+        int b = npcs[x].RandomDialog.Count;
+        NPC speaker = npcs[x];
+        EngineRandomDialog chat = speaker.RandomDialog[rng.Next(speaker.RandomDialog.Count)];
+        x = chat.text.Count;
+        result = chat.text[rng.Next(x)];
+        var sendback = (speaker, result);
+        return sendback;
+        
+    }
 }
 

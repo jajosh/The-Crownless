@@ -1,12 +1,12 @@
 ﻿using System;
 
-public class TextHandler
+public class EngineText
 {
     public static StatusFlags flags = new StatusFlags();
     private readonly Menu menu;
     private readonly Dictionary<string, Delegate> triggerActions;
 
-    public TextHandler()
+    public EngineText()
     {
         menu = new Menu();
         triggerActions = new Dictionary<string, Delegate>(StringComparer.OrdinalIgnoreCase)

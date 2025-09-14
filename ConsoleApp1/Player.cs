@@ -21,25 +21,6 @@ using Windows.Networking.NetworkOperators;
 using Windows.Services.Store;
 using Windows.Storage.Provider;
 /// <summary>
-/// Helper Class to handle the save object. 
-/// </summary>
-public class SaveGame
-{
-    public Player player = new Player();
-    public List<TriggerCoordinets> triggers = new List<TriggerCoordinets>();
-    public WeatherEngine weather = new();
-    public StatusFlags flags = new StatusFlags();
-    public List<Quest> completedQuests = new List<Quest>();
-    public List<Quest> activeQuests = new List<Quest>();
-    public List<Item> items = new List<Item>();
-    public List<NPC> NPCStats = new List<NPC>();
-    public LoreBoard LoreBoard = new LoreBoard();
-    public SaveGame()
-    {
-
-    }
-}
-/// <summary>
 /// Handles the player object and related methods. 
 /// </summary>
 public class Player
@@ -50,8 +31,8 @@ public class Player
     //Inventory inventory = new Inventory();
     //PlayerInputHandler inputHandler = new PlayerInputHandler();
     static Random random = new Random();
-    static GUIEngine UI = new GUIEngine();
-    TextHandler text = new TextHandler();
+    static EngineGUI UI = new EngineGUI();
+    EngineText text = new EngineText();
     #endregion
     
     #region Core data
@@ -88,6 +69,7 @@ public class Player
     public int MaxHealth { get; set; }
     public int Mana { get; set; }
     public int MaxMana { get; set; }
+    public int TileSpeed { get; set; }
     #endregion
 
 

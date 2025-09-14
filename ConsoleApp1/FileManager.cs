@@ -21,7 +21,7 @@ public class FileManager
     public static readonly string ConfigFilePath = Path.Combine(ConfigFolder, "config.json");
     public static readonly string EventsFilePath = Path.Combine(DataFolder, "Events.json");
     public static readonly string QuestFilePath = Path.Combine(DataFolder, "Quests.json");
-    public static readonly string RandiomEnvironmentalDialog = Path.Combine(DataFolder, "RandiomEnvironmentalDialog.json");
+    public static readonly string TheRandiomEnvironmentalDialog = Path.Combine(DataFolder, "RandiomEnvironmentalDialog.json");
     #endregion
     public FileManager()
 	{

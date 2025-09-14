@@ -43,7 +43,7 @@ public class Grid
     /// <param name="grid">The current grid.</param>
     /// <param name="player">The player, used for condition matching.</param>
     /// <returns>A description string, or null if none matched.</returns>
-    public static string NewGridDescription(Grid grid, WeatherEngine weather)
+    public static string NewGridDescription(Grid grid, EngineWeather weather)
     {
         var possible = grid.DescriptionEntries
             .Where(d => d.Matches(weather, grid.Biome, grid.SubBiome))
@@ -116,7 +116,7 @@ public class Tile
     /// <param name="CurrentBiome">The biome type of the grid.</param>
     /// <param name="CurrentSubBiome">The biome subtype of the grid.</param>
     /// <returns>A descriptive string, or null if none matched.</returns>
-    public static string PickADescription(Tile tile, WeatherEngine weather, GridBiomeType CurrentBiome, GridBiomeSubType CurrentSubBiome)
+    public static string PickADescription(Tile tile, EngineWeather weather, GridBiomeType CurrentBiome, GridBiomeSubType CurrentSubBiome)
     {
         Random random = new Random();
         var possible = tile.Description
@@ -214,7 +214,7 @@ public class DescriptionEntry
    
 
     // Checks if this entry applies to a given player and biome
-    public bool Matches(WeatherEngine weather, GridBiomeType currentBiome, GridBiomeSubType currentSubBiome)
+    public bool Matches(EngineWeather weather, GridBiomeType currentBiome, GridBiomeSubType currentSubBiome)
     {
         bool biomeMatch = !Biome.HasValue || Biome.Value == currentBiome;
         bool subBiomeMatch = !SubBiome.HasValue || SubBiome.Value == currentSubBiome;
@@ -223,7 +223,7 @@ public class DescriptionEntry
 
         return biomeMatch && subBiomeMatch && seasonMatch && weatherMatch;
     }
-    public bool Matches(WeatherEngine weather, GridBiomeType currentBiome)
+    public bool Matches(EngineWeather weather, GridBiomeType currentBiome)
     {
         bool biomeMatch = !Biome.HasValue || Biome.Value == currentBiome;
         bool seasonMatch = !Season.HasValue || Season.Value == weather.Seasons;
@@ -231,7 +231,7 @@ public class DescriptionEntry
 
         return biomeMatch && seasonMatch && weatherMatch;
     }
-    public bool Matches(WeatherEngine weather, GridBiomeSubType currentSubBiome)
+    public bool Matches(EngineWeather weather, GridBiomeSubType currentSubBiome)
     {
         bool subBiomeMatch = !SubBiome.HasValue || SubBiome.Value == currentSubBiome;
         bool seasonMatch = !Season.HasValue || Season.Value == weather.Seasons;

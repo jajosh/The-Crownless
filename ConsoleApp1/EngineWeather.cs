@@ -22,14 +22,14 @@ public enum SeasonData
     Fall,
     Winter
 }
-public class WeatherEngine
+public class EngineWeather
 {
     public WeatherData Weather { get; set; } 
     public SeasonData Seasons { get; set; }
     public int WeatherCount { get; set; }
     public int SeasonCount { get; set; }
     public int Day {  get; set; }
-    public WeatherEngine()
+    public EngineWeather()
 	{
         Weather = WeatherData.Clear;   // default starting weather
         Seasons = SeasonData.Spring;   // default starting season

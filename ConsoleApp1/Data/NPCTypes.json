@@ -1,0 +1,58 @@
+[
+  {
+    "NPCType": {
+      "ID": 1,
+      "RaceName": "Banshee",
+      "HP": 120,
+      "MP": 200,
+      "Type": "Undead",
+      "SubType": "Spirit",
+      "BaseStats": {
+        "Strength": 8,
+        "Dexterity": 14,
+        "Charisma": 18,
+        "Intelligence": 12,
+        "Wisdom": 15,
+        "Constitution": 10
+      },
+      "Languages": [ "Common", "Abyssal" ],
+      "DamageResistance": [ "Necrotic", "Cold" ],
+      "DamageImmunities": [ "Poison" ],
+      "ConditionImmunities": [ "Charmed", "Poisoned" ],
+      "RandomDialog": [
+        {
+          "weatherMain": null,
+          "seasonMain": null,
+          "biomeMain": null,
+          "biomeSub": null,
+          "creatureType": null,
+          "isBattleDialog": false,
+          "text": [ "Leave this place... the demon must not be freed." ]
+        },
+        {
+          "weatherMain": null,
+          "seasonMain": null,
+          "biomeMain": null,
+          "biomeSub": null,
+          "creatureType": null,
+          "isBattleDialog": false,
+          "text": [ "Your death will add to my sorrows" ]
+        },
+        {
+          "weatherMain": null,
+          "seasonMain": null,
+          "biomeMain": null,
+          "biomeSub": null,
+          "creatureType": null,
+          "isBattleDialog": true,
+          "text": [ "Do not repeat my mistake!" ]
+        }
+      ],
+      "DefaultNames": [ "Eleanor", "The Wailing Shade" ],
+      "TriggerData": {
+        "OnApproach": "Test if player is worthy to bear the relic.",
+        "OnCombatStart": "Unleash Wail of Remembrance."
+      }
+    }
+  }
+]

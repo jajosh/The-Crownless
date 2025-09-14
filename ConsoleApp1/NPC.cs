@@ -1,191 +1,125 @@
-﻿using GameNamespace;
+﻿using Newtonsoft.Json;
 using System;
-using System.Reflection.Metadata;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Networking.Proximity;
-using Windows.Networking.Sockets;
+using Windows.Media.Playback;
 
-
-
-
-
-
-
-public class NPC
+public class NPCData
 {
-    #region Core Info
-    public int ID { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public NPCTypeData? NPCType { get; set; }
-    public NPCNamedData? NPCNamed { get; set; }
-    public List<string> PossibleCombatSymbols { get; set; } = new();
-    public bool isAlive { get; set; }
-    #endregion
-
-    #region Creature Info
-    public CreatureType? CreatureType { get; set; }
-    public CreatureSubType? CreatureSubType { get; set; }
-    public List<string> Languages { get; set; } = new();
-    #endregion
-
-    #region Stats & Combat
-    public int? HP { get; set; }
-    public int MaxHP { get; set; }
-    public int? MP { get; set; }
-    public int MaxMP { get; set; }
-    public int XP { get; set; }
-    public int AC { get; set; }
-    public Dictionary<Skill, int> Skills { get; set; } = new();
-    public List<DamageTypes>? DamageResistance { get; set; } = new();
-    public List<DamageTypes>? DamageImmunities { get; set; }
-    public List<Conditions>? ConditionImmunities { get; set; }
-    #endregion
-
-
-    #region Inventory & Equipment
-    public List<int>? InventoryData { get; set; } = new();
+    public List<NPCType> TypeNPCDehydrated = new();
+    public List<NPC> NamedNPCDehydrated = new();
     [JsonIgnore]
-    public List<Item> Inventory { get; set; } = new();
-
-    public List<int>? ArmorData { get; set; } = new();
+    public List<NPCType> TypeNPCHyraded= new();
     [JsonIgnore]
-    public List<Item>? Armor { get; set; } = new();
-    #endregion
+    public List<NPC> NamedNPCHydrated = new();
 
-    #region Dialog
-    public List<string>? RandomBattleDialog { get; set; } = new() { "My dialog hasn't been set, but I'll kill you anyway" };
-    [JsonIgnore]
-    public List<RandomDialog>? RandomDialog { get; set; } = new();
-    public bool UseStaticRandomDialog { get; set; }
-    public Dictionary<Triggers, string>? TriggerData { get; set; }
-    #endregion
 
-    [JsonIgnore]
-    public Dictionary<Triggers, Action> TriggerActions { get; set; } = new();
-
-    #region Constructor
-    public NPC() { }
-    #endregion
-
-    #region Nested Classes
-    public class NPCNamedData
+    // Hydration method (stub)
+    public List<NPC> Hydrate(List<NPC> npc)
     {
-        public Dictionary<Pronouns, string>? Pronouns { get; set; } = new();
-        public bool? isKnown { get; set; }
-        public bool? isAlive { get; set; }
-    }
-
-    public class NPCTypeData
-    {
-        public List<string>? PossibleNames { get; set; }
-    }
-    #endregion
-
-
-    public static List<NPC> Hydrate()
-    {
-        List<NPC> rawData = JsonLoader.LoadFromJson<List<NPC>>(FileManager.TheNPCFilePath);
-        List<NPC> CleanedData = new();
-        foreach (var npc in rawData)
+        foreach (var NPC in npc)
         {
-            // Build TriggerActions (what you already have)
-            npc.TriggerActions = new Dictionary<Triggers, Action>();
-            if (npc.TriggerData != null)
+            if (NPC.TriggerData != null)
             {
-                foreach (var kvp in npc.TriggerData)
+                foreach (var kvp in NPC.TriggerData)
                 {
-                    if (NPCActions.ActionLookup.TryGetValue(kvp.Value, out var action))
-                        npc.TriggerActions[kvp.Key] = action;
+                    switch (kvp.Value)
+                    {
+                        case ""
+                    }
                 }
             }
-
-            // 🔹 Map Inventory
-            if (npc.InventoryData != null)
-            {
-                var inventoryItems = new List<Item>();
-                foreach (var itemId in npc.InventoryData)
-                {
-                    Item item = Item.FindItemByID(itemId);
-                    if (item != null)
-                        inventoryItems.Add(item);
-                    else
-                        Console.WriteLine($"Warning: Item ID {itemId} not found.");
-                }
-                // You could either add a new property for the "hydrated" version
-                // or replace the raw Inventory list:
-                // npc.InventoryItems = inventoryItems; // if you make such a property
-            }
-
-            // 🔹 Map Armor
-            if (npc.ArmorData != null)
-            {
-                var armorItems = new List<Item>();
-                foreach (var itemId in npc.ArmorData)
-                {
-                    Item item = Item.FindItemByID(itemId);
-                    if (item != null)
-                        armorItems.Add(item);
-                }
-                // npc.ArmorItems = armorItems; // if you make such a property
-            }
-
-            CleanedData.Add(npc);
         }
-
-        return CleanedData;
-
     }
     public static List<NPC> DeHydrate()
     {
         return new List<NPC>();
     }
-    public static void CorruptingTouch()
+    public static NPCData ProcessNPCData()
     {
-
+        NPCData rawData = JsonLoader.LoadFromJson<NPCData>(FileManager.TheNPCFilePath);
+        rawData.Hydrate(rawData.NPCRawData);
+        
     }
-    public static void HorrifiyingVisage()
-    {
-
-    }
-    public static void Wail()
-    {
-
-    }
-
 }
-public class NPCActions
+public class NPCType
 {
-    public static readonly Dictionary<string, Action> ActionLookup = new();
-    public static void CorruptingTouch()
-    {
+    public int ID { get; set; }
+    public string RaceName { get; set; } = string.Empty;
 
-    }
-    public static void HorrifiyingVisage()
-    {
+    public int HP { get; set; }
+    public int MP { get; set; }
+    public int TileSpeed { get; set; }
+    public CreatureType Type { get; set; }
+    public CreatureSubType SubType { get; set; }
 
-    }
-    public static void Wail()
-    {
+    public Dictionary<Skill, int> BaseStats { get; set; } = new();
 
-    }
+    public List<Languages>? Languages { get; set; }
+    public List<DamageTypes>? DamageResistance { get; set; }
+    public List<DamageTypes>? DamageImmunities { get; set; }
+    public List<Conditions>? ConditionImmunities { get; set; }
+
+    public List<EngineRandomDialog>? RandomDialog { get; set; } // Null if using global list
+    public List<string>? DefaultNames { get; set; }
+
+    public Dictionary<Triggers, string>? TriggerData { get; set; }
+    [JsonIgnore]
+    public Dictionary<Triggers, Action>? TriggerActions { get; set; } = new();
+    public List<string> PossibleCombatSymbols { get; set; } = new();
 }
 
-public class RandomDialog
+public class NPC
 {
-    public WeatherData? weatherMain { get; set; }
-    public SeasonData? seasonMain { get; set; }
-    public GridBiomeType? biomeMain { get; set; }
-    public GridBiomeSubType? biomeSub { get; set; }
-    public CreatureType? creatureType { get; set; }
-    public List<string> text = new();
-    public List<RandomDialog> RandomDialogList()
+    //Not included in NPCType or needs to be reference separetlly. Really just stuff that isnt going to be overridden.
+    public int ID { get; set; }
+    public string Name { get; set; }
+
+    public int TypeID { get; set; }
+
+    public string Race { get; set; }
+    public Dictionary<string, string> Aliases { get; set; } = new();
+
+    public int CurrentHP { get; set; }
+    public int CurrentMP { get; set; }
+
+    // Overrides from base type
+    public int TileSpeed { get; set; }
+    public int MaxHP { get; set; }
+    public int MaxMP { get; set; }
+    public List<Languages>? Languages { get; set; }
+    public List<DamageTypes>? DamageResistance { get; set; }
+    public List<DamageTypes>? DamageImmunities { get; set; }
+    public List<Conditions>? ConditionImmunities { get; set; }
+    public List<EngineRandomDialog>? RandomDialog { get; set; }
+    public string ascii { get; set; }
+
+    public bool isAlive { get; set; } = true;
+    public bool UseStaticRandomDialog { get; set; }
+
+    // Inventory & Equipment
+    public List<int> InventoryData { get; set; } = new();
+    [JsonIgnore]
+    public List<Item> Inventory { get; set; } = new();
+
+    public List<int> ArmorData { get; set; } = new();
+    [JsonIgnore]
+    public List<Item> Armor { get; set; } = new();
+
+    public Dictionary<Triggers, string>? TriggerData { get; set; }
+    [JsonIgnore]
+    public Dictionary<Triggers, Action> TriggerActions { get; set; }
+    public NPC()
     {
-        List<RandomDialog> rawData = JsonLoader.LoadFromJson<List<RandomDialog>>(FileManager.RandiomEnvironmentalDialog);
-        return rawData;
+
     }
 }
 
+public class AI
+{
+    public Action NextAction { get; set; }
+    
+    public AI()
+    {
 
+    }
+}
 

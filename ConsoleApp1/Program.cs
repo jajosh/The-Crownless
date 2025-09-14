@@ -23,7 +23,7 @@ namespace GameNamespace
     /// </summary>
     public class MainClass
     {
-        static GUIEngine UI = new GUIEngine();
+        static EngineGUI UI = new EngineGUI();
         // The Game loop
         public static bool isRunning = true;
 
@@ -31,7 +31,7 @@ namespace GameNamespace
 
         public Player player = new Player();
         public List<TriggerCoordinets> triggers = new List<TriggerCoordinets>();
-        public WeatherEngine weather = new();
+        public EngineWeather weather = new();
         public StatusFlags flags = new StatusFlags();
         public List<Quest> completedQuests = new List<Quest>();
         public List<Quest> activeQuests = new List<Quest>();
@@ -49,7 +49,7 @@ namespace GameNamespace
             /// --- Shit that gets saved to the save json
             Player player = new Player();
             List<TriggerCoordinets> triggerCoordinets = new List<TriggerCoordinets>();
-            WeatherEngine weather = new();
+            EngineWeather weather = new();
             StatusFlags flags = new StatusFlags();
             List<Quest> completedQuests = new List<Quest>();
             List<Quest> activeQuests = new List<Quest>();
@@ -84,14 +84,12 @@ namespace GameNamespace
                 {
                     if (needRedraw)
                     {                     
-                        GUIEngine.UpdataStats(player);
+                        EngineGUI.UpdataStats(player);
                         Map.PrintWorld(gameMap, player, 0);
-                        GUIEngine.DrawLayout(player);
+                        EngineGUI.DrawLayout(player);
                         needRedraw = false;
                     }
-                    int consoleHeightChange = Console.WindowHeight - lastHeight;
-                    //Writes the players location
-                    GUIEngine.WriteInPanel(8, 0, $"{player.Gridx}, {player.GridY}, {player.LocalX}, {player.LocalY}");
+                    int consoleHeightChange = Console.WindowHeight - lastHeight;{player.LocalX}, {player.LocalY}");
                     Console.SetCursorPosition(3, bottomRow);
 
                     ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -181,7 +179,7 @@ namespace GameNamespace
                         {
                             Grid currentGrid = Map.FindGrid(gameMap, GridX, GridY);
                             string text = Tile.PickADescription(tileToMoveTo, weather, currentGrid.Biome, currentGrid.SubBiome);
-                            GUIEngine.WriteWithClearAnimation(0, 27, text);
+                            EngineGUI.WriteWithClearAnimation(0, 27, text);
 
                             Console.SetWindowPosition(0, 0);
                         }
@@ -192,7 +190,7 @@ namespace GameNamespace
                     {
                         consoleHeightChange = Console.WindowHeight - lastHeight;
                         Console.SetCursorPosition(3, bottomLine);  // column 0, bottom row
-                        GUIEngine.WriteInPanel(2,26,"Tile not Walkable");
+                        EngineGUI.WriteInPanel(2,26,"Tile not Walkable");
                         System.Threading.Thread.Sleep(750);
                         needRedraw = true;
 

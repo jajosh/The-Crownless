@@ -9,7 +9,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class Menu
 {
-    public TextHandler text = new TextHandler();
+    public EngineText text = new EngineText();
     public Menu()
     {
         
@@ -18,9 +18,9 @@ public class Menu
     public static SaveGame StartMenu()
     {
         SaveGame saveGame = new SaveGame();
-        GUIEngine UI = new GUIEngine();
+        EngineGUI UI = new EngineGUI();
         Menu menu = new Menu();
-        TextHandler text = new TextHandler();
+        EngineText text = new EngineText();
         Dictionary<string, Delegate> triggerActions = new(StringComparer.OrdinalIgnoreCase)
             {
                 { "new game",  new Func<SaveGame>(ScriptedEvents.StartNewGame) },
