@@ -5,6 +5,7 @@
 /// </summary>
 public class EngineLocation
 {
+
 	public EngineLocation()
 	{
 		//

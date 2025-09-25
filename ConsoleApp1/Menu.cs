@@ -1,71 +1,67 @@
 ﻿using GameNamespace;
 using System;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
-using Windows.Security.EnterpriseData;
-using Windows.Storage;
-using static System.Net.Mime.MediaTypeNames;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class Menu
 {
-    public EngineText text = new EngineText();
+    public EngineText text;
+
     public Menu()
     {
-        
+
     }
 
-    public static SaveGame StartMenu()
+    public static SaveGame StartMenu(SaveGame saveGame)
     {
-        SaveGame saveGame = new SaveGame();
         EngineGUI UI = new EngineGUI();
         Menu menu = new Menu();
         EngineText text = new EngineText();
+
         Dictionary<string, Delegate> triggerActions = new(StringComparer.OrdinalIgnoreCase)
-            {
-                { "new game",  new Func<SaveGame>(ScriptedEvents.StartNewGame) },
-                { "load game", new Func<SaveGame>(menu.OnLoadGame) },
-                { "settings",  new Action(menu.OnSettings) },
-                { "quit",      new Action(menu.OnQuit) },
-                { "debug file",     new Func<SaveGame>(Player.debugLoadGame)}
-            };
+        {
+            { "new game",  new Func<SaveGame>(ScriptedEvents.StartNewGame) },
+            { "load game", new Func<SaveGame>(menu.OnLoadGame) },
+            { "settings",  new Action(menu.OnSettings) },
+            { "quit",      new Action(menu.OnQuit) },
+            { "debug file", new Func<SaveGame>(Player.debugLoadGame) }
+        };
+
         bool firstCheck = true;
+
         while (firstCheck)
         {
             Console.WriteLine("Hello! and thank you for playing my game!\n\n\nNew Game\nLoad Game\nSettings\nQuit");
-            string firstResponse = Console.Read().ToString();
+
+            // FIX: Console.Read() only grabs one character. Use ReadLine instead.
+            string firstResponse = Console.ReadLine()?.Trim().ToLower();
+
             if (firstResponse == "new game")
             {
-                // Run "new game" -> returns Player
-                var newGameFunc = (Func<SaveGame>)triggerActions["new game"];
                 saveGame = ScriptedEvents.StartNewGame();
-                saveGame.triggers = JsonLoader.LoadFromJson<List<TriggerCoordinets>>(FileManager.TheTriggerCoordinetsPath);
+                saveGame.Triggers = JsonLoader.LoadFromJson<List<TriggerCoordinets>>(FileManager.TheTriggerCoordinetsPath);
                 firstCheck = false;
             }
             else if (firstResponse == "load game")
             {
-                // Run "load game" -> returns (Player, TriggerCoordinets)
                 saveGame = menu.OnLoadGame();
-
                 firstCheck = false;
             }
             else if (firstResponse == "settings")
             {
-                // Run "settings" -> void
                 var settingsAction = (Action)triggerActions["settings"];
                 settingsAction();
                 firstCheck = true;
             }
             else if (firstResponse == "quit")
             {
-                // Run "quit" -> void
                 ((Action)triggerActions["quit"])();
                 firstCheck = false;
             }
             else if (firstResponse == "debug file")
             {
                 saveGame = Player.debugLoadGame();
-
+                firstCheck = false;
             }
             else
             {
@@ -75,29 +71,29 @@ public class Menu
                     text.Write("This is my wielder?");
                     if (Console.KeyAvailable)
                     {
-                        // Clear the key press so it doesn't interfere with later input
-                        Console.ReadKey(true);
-
-                        // Print the rest of the text immediately
+                        Console.ReadKey(true); // Clear any stray key presses
                     }
-
                     await Task.Delay(1000);
                     Console.Clear();
-                });
+                }).GetAwaiter().GetResult();
             }
         }
-        return saveGame;
 
+        return saveGame;
     }
+
     private SaveGame OnLoadGame()
     {
-
         SaveGame saveGame = new SaveGame();
         bool checker = true;
-        while (checker) {
-            foreach (var folder in FileManager.SavesFolder) {
+
+        while (checker)
+        {
+            foreach (var folder in FileManager.SavesFolder)
+            {
                 Console.WriteLine($"{folder}");
             }
+
             string name = text.Read("Which save would you like to load?");
             try
             {
@@ -106,20 +102,21 @@ public class Menu
             }
             catch
             {
-                throw new Exception("Save file does not exist...\nDid you miss spell the name?");
+                Console.WriteLine("Save file does not exist...\nDid you misspell the name?");
             }
         }
+
         return saveGame;
     }
+
     public void OnSettings()
     {
         text.Write("Settings...\nPress ENTER to continue", 100);
     }
+
     private void OnQuit()
     {
         text.Write("Quitting game...\nPress ENTER to continue", 100);
         MainClass.isRunning = false;
     }
-    
-
 }

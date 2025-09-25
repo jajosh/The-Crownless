@@ -1,145 +1,234 @@
 [
   {
-    "asciiKey": "scimitar",
+    "ID": 0,
+    "Name": "New Item",
+    "AsciiKey": "new_item",
+    "SpawnChance": 0,
+    "MaxStack": 1,
+    "Price": null,
+    "CanStore": true,
+    "EncumbranceErrorMessages": [
+      "Default encumbrance message."
+    ],
+    "WeaponData": {
+      "DamageDie": null,
+      "DamageBonusSkill": "Wisdom",
+      "DamageType": "None"
+    },
+    "MeleeWeaponData": {
+      "Versatile": false
+    },
+    "RangeWeaponData": {
+      "Range": 0
+    },
+    "ConsumableData": {
+      "HealthToHeal": 0,
+      "Cookable": false,
+      "CookingDifficulty": 0
+    },
+    "AlchemyData": {
+      "AlchemyID": 0
+    },
+    "CraftingData": {
+      "CraftID": 0,
+      "IsCookable": false
+    },
+    "TriggerRawData": []
+  }
+,
+  {
     "ID": 1,
     "Name": "Scimitar",
+    "AsciiKey": "",
+    "SpawnChance": 0,
     "MaxStack": 1,
     "Price": 50,
     "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "You're carrying too many weapons."
+    "EncumbranceErrorMessages": [
+      "You're carrying too many weapons."
+    ],
+    "WeaponData": {
+      "DamageDie": 6,
+      "DamageBonusSkill": "Strength",
+      "DamageType": "Slashing"
     },
-    "Melee": {
+    "MeleeWeaponData": {
       "Versatile": false
-    },
-    "DamageDie": 6,
-    "DamageBonusSkill": "Dexterity",
-    "DamageType": "Slashing"
+    }
   },
   {
-    "asciiKey": "shortbow",
     "ID": 2,
     "Name": "Shortbow",
+    "AsciiKey": "",
+    "SpawnChance": 0,
     "MaxStack": 1,
     "Price": 40,
     "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "The bowstring is getting tangled with your gear."
+    "EncumbranceErrorMessages": [
+      "The bowstring is getting tangled with your gear."
+    ],
+    "WeaponData": {
+      "DamageDie": 6,
+      "DamageBonusSkill": "Dexterity",
+      "DamageType": "Piercing"
     },
-    "Range": {
+    "RangeWeaponData": {
       "Range": 60
-    },
-    "DamageDie": 6,
-    "DamageBonusSkill": "Dexterity",
-    "DamageType": "Piercing"
+    }
   },
   {
-    "asciiKey": "spoon",
     "ID": 3,
     "Name": "Spoon",
+    "AsciiKey": "spoon",
+    "SpawnChance": 0,
     "MaxStack": 5,
     "Price": 1,
     "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "You really don’t need more spoons."
-    },
-    "DamageDie": 6,
-    "DamageBonusSkill": "Dexterity",
-    "DamageType": "Piercing"
+    "EncumbranceErrorMessages": [
+      "You really don’t need more spoons."
+    ],
+    "WeaponData": {
+      "DamageDie": 1,
+      "DamageBonusSkill": "Dexterity",
+      "DamageType": "Bludgeoning"
+    }
   },
   {
-    "asciiKey": "bear_meat",
     "ID": 4,
     "Name": "Bear Meat",
+    "AsciiKey": "bear_meat",
+    "SpawnChance": 5,
     "MaxStack": 10,
     "Price": 5,
     "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "You can't carry that much meat."
-    },
-    "Consumable": {
+    "EncumbranceErrorMessages": [
+      "You can't carry that much meat."
+    ],
+    "ConsumableData": {
       "HealthToHeal": 5,
       "Cookable": true,
       "CookingDifficulty": 3
     },
-    "Crafting": {
-      "CraftID": 101
+    "CraftingData": {
+      "CraftID": 101,
+      "IsCookable": true
     }
   },
   {
-    "asciiKey": "cooked_bear_meat",
     "ID": 5,
     "Name": "Cooked Bear Meat",
+    "AsciiKey": "cooked_bear_meat",
+    "SpawnChance": 0,
     "MaxStack": 10,
     "Price": 15,
     "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "Too heavy to carry hot food right now."
-    },
-    "Consumable": {
+    "EncumbranceErrorMessages": [
+      "Too heavy to carry hot food right now."
+    ],
+    "ConsumableData": {
       "HealthToHeal": 20,
       "Cookable": false,
       "CookingDifficulty": 0
     }
   },
   {
-    "asciiKey": "bear_claws",
     "ID": 6,
     "Name": "Bear Claws",
+    "AsciiKey": "bear_claws",
+    "SpawnChance": 2,
     "MaxStack": 1,
     "Price": 30,
     "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "Those claws are too bulky for your pouch."
+    "EncumbranceErrorMessages": [
+      "Those claws are too bulky for your pouch."
+    ],
+    "WeaponData": {
+      "DamageDie": 6,
+      "DamageBonusSkill": "Strength",
+      "DamageType": "Slashing"
     },
-    "Crafting": {
-      "CraftID": 202
-    },
-    "Melee": {
+    "MeleeWeaponData": {
       "Versatile": true
     },
-    "DamageDie": 6,
-    "DamageBonusSkill": "Strength",
-    "DamageType": "Slashing"
-  },
-  {
-    "asciiKey": "scrap_of_bear_fur",
-    "ID": 7,
-    "Name": "Scrap of Bear Fur",
-    "MaxStack": 20,
-    "Price": 2,
-    "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "The fur keeps slipping out of your hands."
-    },
-    "Crafting": {
-      "CraftID": 303
-    },
-    "Alchemy": {
-      "AlchemyID": 11
+    "CraftingData": {
+      "CraftID": 202,
+      "IsCookable": false
     }
   },
   {
-    "asciiKey": "primitive_javelin",
-    "ID": 8,
-    "Name": "Primitive Javelin",
-    "MaxStack": 3,
+    "ID": 7,
+    "Name": "Scrap of Bear Fur",
+    "AsciiKey": "bear_fur",
+    "SpawnChance": 5,
+    "MaxStack": 20,
     "Price": 10,
     "CanStore": true,
-    "EncumbranceErrorMessages": {
-      "1": "You can't carry more spears."
+    "EncumbranceErrorMessages": [
+      "The fur is too bulky to carry more."
+    ],
+    "CraftingData": {
+      "CraftID": 303,
+      "IsCookable": false
+    }
+  },
+  {
+    "ID": 8,
+    "Name": "Primitive Javelin",
+    "AsciiKey": "javelin",
+    "SpawnChance": 3,
+    "MaxStack": 3,
+    "Price": 15,
+    "CanStore": true,
+    "EncumbranceErrorMessages": [
+      "You can’t carry more spears."
+    ],
+    "WeaponData": {
+      "DamageDie": 4,
+      "DamageBonusSkill": "Strength",
+      "DamageType": "Piercing"
     },
-    "Melee": {
-      "Versatile": false
+    "RangeWeaponData": {
+      "Range": 20
     },
-    "Range": {
-      "Range": 15
+    "CraftingData": {
+      "CraftID": 404,
+      "IsCookable": false
+    }
+  },
+  {
+    "ID": 9,
+    "Name": "Healing Potion",
+    "AsciiKey": "healing_potion",
+    "SpawnChance": 1,
+    "MaxStack": 5,
+    "Price": 50,
+    "CanStore": true,
+    "EncumbranceErrorMessages": [
+      "Your satchel is too full for more potions."
+    ],
+    "ConsumableData": {
+      "HealthToHeal": 50,
+      "Cookable": false,
+      "CookingDifficulty": 0
     },
-    "DamageDie": 4,
-    "DamageBonusSkill": "Dexterity",
-    "DamageType": "Piercing"
+    "AlchemyData": {
+      "AlchemyID": 1
+    }
+  },
+  {
+    "ID": 10,
+    "Name": "Iron Ore",
+    "AsciiKey": "iron_ore",
+    "SpawnChance": 10,
+    "MaxStack": 30,
+    "Price": 2,
+    "CanStore": true,
+    "EncumbranceErrorMessages": [
+      "You can’t carry more heavy ore."
+    ],
+    "CraftingData": {
+      "CraftID": 505,
+      "IsCookable": false
+    }
   }
 ]
-
-
-

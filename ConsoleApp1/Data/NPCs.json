@@ -1,104 +1,33 @@
 [
   {
-    "ID": 0,
-    "Name": "",
-    "Known": null,
-    "NPCType": {
-      "PossibleNames": []
-    },
-    "NPCNamed": {
-      "Pronouns": {}
-    },
-    "PossibleCombatSymbols": [],
-    "isAlive": {},
-
-    "CreatureType": null,
-    "CreatureSubType": null,
-    "Languages": [],
-
-    "XP": 0,
-    "AC": 0,
-    "Skills": {},
-
-    "DamageResistance": [],
-    "DamageImmunities": [],
-    "ConditionImmunities": [],
-
-    "InventoryData": [],
-    "ArmorData": [],
-
-    "RandomBattleDialog": [
-      "My dialog hasn't been set, but I'll kill you anyway"
-    ],
-    "RandomDialog": [],
-    "UseStaticRandomDialog": false,
-
-    "TriggerData": {}
-  },
-  {
     "ID": 1,
-    "Name": "The Banshee",
-    "Known": false,
-    "NPCNamed": {
-      "Pronouns": {},
-      "isKnown": {}
+    "Name": "Eleanor",
+    "TypeID": 1,
+    "Race": "Undead",
+    "Aliases": {
+      "Shade": "Eleanor",
+      "Guardian": "Banshee of Umela"
     },
-    "PossibleCombatSymbols": [],
+    "CurrentHP": 120,
+    "CurrentMP": 200,
+    "Languages": [ "Common", "Abyssal" ],
+    "DamageResistance": [ "Necrotic", "Cold" ],
+    "DamageImmunities": [ "Poison" ],
+    "ConditionImmunities": [ "Charmed", "Poisoned" ],
+    "RandomDialog": [
+      {
+        "weatherMain": null,
+        "seasonMain": null,
+        "biomeMain": null,
+        "biomeSub": null,
+        "creatureType": null,
+        "isBattleDialog": false,
+        "text": [ "I guard what cost me my life." ]
+      }
+    ],
     "isAlive": true,
-
-    "CreatureType": "Undead",
-    "CreatureSubType": "Banshee",
-    "Languages": [],
-
-    "XP": 10,
-    "AC": 10,
-    "Skills": {
-      "Strength": 1,
-      "Dexterity": 12,
-      "Constituation": 10,
-      "Intelligence": 12,
-      "Wisdom": 11,
-      "Charisma": 13
-    },
-
-    "DamageResistance": [
-      "Acid",
-      "Fire",
-      "Lightning",
-      "thunder",
-      "Bludgeoning",
-      "Piercing",
-      "slashing"
-    ],
-    "DamageImmunities": [
-      "Poison",
-      "Cold",
-      "Nerotic"
-    ],
-    "ConditionImmunities": [
-      "Charmed",
-      "Exhaustion",
-      "Frightened",
-      "Grappled",
-      "Paralyzed",
-      "Petrified",
-      "Posioned",
-      "Prone",
-      "Restrained"
-    ],
-
-    "InventoryData": [],
-    "ArmorData": [],
-
-    "RandomBattleDialog": [
-      "Ill Stop You!",
-      "Stop! Stop! STOP!!!",
-      "Stop!!"
-    ],
-    "RandomDialog": [],
     "UseStaticRandomDialog": false,
-
-    "TriggerData": []
+    "InventoryData": [],
+    "ArmorData": []
   }
-  
 ]

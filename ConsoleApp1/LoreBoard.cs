@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
 /// <summary>
-/// Lorepoints, stores the chosen branch path and possible outcomes. 
+/// Lorepoints, stores the chosen branch path and possible outcomes. Used to track individual points of story knowledge that may need to be called upon 
 /// </summary>
 public class LorePoint
 {
@@ -27,6 +27,12 @@ public class LoreBoard
 	{
 
 	}
+	/// <summary>
+	///  Adds and updates a lorepoint
+	/// </summary>
+	/// <param name="eventID"> ID to add or find</param>
+	/// <param name="chosenBranchPath"> The dialog tree of paths taken</param>
+	/// <param name="outcomes">  Any outcomes (the leaves)</param>
 	public void RecordEvent(int eventID, List<int> chosenBranchPath, Dictionary<string, object>? outcomes = null)
 	{
 		if (!LorePoints.ContainsKey(eventID))
@@ -49,7 +55,13 @@ public class LoreBoard
             }
         }
 	}
-	public void CompleteEvent(int eventID, List<int> chosenBranchPath, Dictionary<string, object>? outcomes = null)
+    /// <summary>
+    /// add or update an event as completed. Changes IsComplete to true.
+    /// </summary>
+    /// <param name="eventID"> ID to add or find</param>
+    /// <param name="chosenBranchPath"> The dialog tree of paths taken</param>
+    /// <param name="outcomes">  Any outcomes (the leaves)</param>
+    public void CompleteEvent(int eventID, List<int> chosenBranchPath, Dictionary<string, object>? outcomes = null)
 	{
 		if (!LorePoints.ContainsKey(eventID))
 		{
@@ -71,11 +83,15 @@ public class LoreBoard
 				LorePoints[eventID].OutComes = outcomes ?? new Dictionary<string, object>();
         }
     }
+	/// <summary>
+	/// Returns true if the event is completed. What else would it do?
+	/// </summary>
+	/// <param name="eventId"></param>
+	/// <returns></returns>
     public bool IsEventCompleted(int eventId)
 	{
     return LorePoints.ContainsKey(eventId) && LorePoints[eventId].IsComplete;
 	}
-	
     /// <summary>
     /// Gets the outcome of an event.
     /// </summary>

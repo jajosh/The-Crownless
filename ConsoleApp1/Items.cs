@@ -5,8 +5,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 using Windows.ApplicationModel.DataTransfer;
-
-
 public class Item
 {
 
@@ -17,65 +15,50 @@ public class Item
     public int MaxStack { get; set; }
     public int? Price { get; set; }
     public bool CanStore { get; set; } // Determines if the item can be stored in inventory
-    public Dictionary<int, string>? EncumbranceErrorMessages { get; set; } = new Dictionary<int, string>();
+    public List<string> EncumbranceErrorMessages { get; set; } = new();
+    
+    public WeaponDataFrame? WeaponData { get; set; }
+    public MeleeWeaponDataFrame? MeleeWeaponData { get; set; }
+    public RangeWeaponDataFrame? RangeWeaponData { get; set; }
+    public ConsumableDataFrame? ConsumableData { get; set; }
+    public AlchemyDataFrame? AlchemyData { get; set; }
+    public CraftingDataFrame? CraftingData { get; set; }
 
-
-    // Composable Data Blocks
-
-    public WeaponData? Weapon { get; set; }
-    public MeleeWeaponData? Melee { get; set; }
-    public RangeWeaponData? Range { get; set; }
-    public ConsumableData? Consumable { get; set; }
-    public AlchemyData? Alchemy { get; set; }
-    public CraftingData? Crafting { get; set; }
-
-
-    public Dictionary<string, Action<string>> triggerActions { get; set; } = new Dictionary<string, Action<string>>();
-    [JsonInclude]
-    public List<string>? TriggerKeys { get; set; }
+    // Actions that the item can use
+    [JsonIgnore]
+    public Dictionary<TriggerEnum, GameAction> TriggerData = new();
+    // key to hydrate into the triggerActions
+    public List<string>? TriggerRawData { get; set; }
 
     public Item()
     {
-        AsciiKey = string.Empty;
-        Name = string.Empty;
-        ID = 0;
-        SpawnChance = 0;
-        MaxStack = 0;
-        Price = 0;
-        EncumbranceErrorMessages = new Dictionary<int, string>();
-        triggerActions = new();
-        TriggerKeys = new List<string>();
-        CanStore = false;
-        Weapon = null;
-        Melee = null;
-        Range = null;
-        Consumable = null;
-        Alchemy = null;
 
     }
-
-    public void SetProperty(string key, string value)//Checks that each property is set correctly
+    /// <summary>
+    /// Hydrates the TriggerActions dictionary based on TriggerKeys
+    /// </summary>
+    public List<Item> Hydrate()
     {
-        if (triggerActions.TryGetValue(key.Trim().ToLower(), out var action))
+        // Load all raw items from JSON
+        List<Item> RawData = JsonLoader.LoadFromJson<List<Item>>(FileManager.ItemFilePath);
+        foreach (var item in RawData)
         {
-            try
+
+            // Handles loading in the trigger data for the items. IE: Heal, Curropting Touch
+            foreach (var trigger in TriggerRawData)
             {
-                action(value.Trim());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error setting property '{key}': {ex.Message}");
+                if (Enum.TryParse<ActionNames>(trigger, out var actionName))
+                {
+                    if (ActionRegistry.Actions.TryGetValue(actionName, out var factory))
+                        TriggerData.Add((TriggerEnum)Enum.Parse(typeof(TriggerEnum), trigger), factory());
+                }
             }
         }
-        else
-        {
-            Console.WriteLine($"Unknown property: {key}");
-        }
+        return RawData;
     }
-
-    public static Item? FindItemByID(int IDToFind)
+    public Item? FindItemByID(int IDToFind)
     {
-        List<Item> itemList = MainClass.items;
+        List<Item> itemList = FileManager.Items;
         Item? foundItem = itemList.Find(item => item.ID == IDToFind);
         if (foundItem != null)
         {
@@ -88,44 +71,33 @@ public class Item
             return null;
         }
     }
-    public Item? FindItemByName(string NameToFind, List<Item> itemList)
+    public Item? FindItemByName(string NameToFind)
     {
         if (string.IsNullOrWhiteSpace(NameToFind))
         {
             Console.WriteLine("Invalid name.");
             return null;
         }
-        Item? foundItem = itemList.Find(item => item.Name.Equals(NameToFind, StringComparison.OrdinalIgnoreCase));
+
+        if (FileManager.Items == null)
+        {
+            Console.WriteLine("FileManager.Items is NULL! Did you call FileManager.LoadData()?");
+            return null;
+        }
+
+        Item? foundItem = FileManager.Items.Find(item =>
+            !string.IsNullOrEmpty(item.Name) &&
+            item.Name.Equals(NameToFind, StringComparison.OrdinalIgnoreCase));
+
         if (foundItem != null)
         {
-            if (MainClass.saveGame.flags.IsDebug)
+            if (MainClass.saveGame?.Flags?.IsDebug == true)
                 Console.WriteLine($"Item Found: {foundItem.Name}");
             return foundItem;
         }
         else
         {
-            if (MainClass.saveGame.flags.IsDebug)
-                Console.WriteLine($"Item Not Found: {NameToFind}");
-            return null;
-        }
-    }
-    public static Item? FindItemByNameStatic(string NameToFind, List<Item> itemList)
-    {
-        if (string.IsNullOrWhiteSpace(NameToFind))
-        {
-            Console.WriteLine("Invalid name.");
-            return null;
-        }
-        Item? foundItem = itemList.Find(item => item.Name.Equals(NameToFind, StringComparison.OrdinalIgnoreCase));
-        if (foundItem != null)
-        {
-            if (MainClass.saveGame.flags.IsDebug)
-                Console.WriteLine($"Item Found: {foundItem.Name}");
-            return foundItem;
-        }
-        else
-        {
-            if (MainClass.saveGame.flags.IsDebug)
+            if (MainClass.saveGame?.Flags?.IsDebug == true)
                 Console.WriteLine($"Item Not Found: {NameToFind}");
             return null;
         }
@@ -133,33 +105,33 @@ public class Item
 
 
     #region Subclass data
-    public class WeaponData
+    public class WeaponDataFrame
     {
         public int? DamageDie { get; set; }
         public Skill DamageBonusSkill { get; set; }
         public DamageTypes DamageType { get; set; }
 
     }
-    public class MeleeWeaponData
+    public class MeleeWeaponDataFrame
     {
         public bool Versatile { get; set; }
     }
-    public class RangeWeaponData
+    public class RangeWeaponDataFrame
     {
         public int Range { get; set; }
     }
-    public class ConsumableData
+    public class ConsumableDataFrame
     {
         public int HealthToHeal { get; set; }
         public bool Cookable { get; set; }
         public int CookingDifficulty { get; set; }//1 to 10, 0 if not cookable
 
     }
-    public class AlchemyData
+    public class AlchemyDataFrame
     {
         public int AlchemyID { get; set; }
     }
-    public class CraftingData
+    public class CraftingDataFrame
     {
         public int CraftID { get; set; }
         public bool IsCookable { get; set; }
@@ -167,13 +139,9 @@ public class Item
     #endregion
     public static class ItemTriggers
     {
-        public static readonly Dictionary<string, Action<Item, string>> ActionMap = new()
+        public static readonly Dictionary<int, Action<Item, string>> ActionMap = new()
         {
-            ["name"] = (item, val) => item.Name = val,
-            ["price"] = (item, val) => item.Price = int.TryParse(val, out var result) ? result : null,
-            ["maxstack"] = (item, val) => item.MaxStack = int.TryParse(val, out var result) ? result : item.MaxStack,
-            // Add more as needed
+            
         };
-
     }
 }

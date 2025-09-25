@@ -4,7 +4,7 @@
 public enum GridBiomeType // The biome of the grid
 {
     Any,
-    BorelForst,
+    BorelForest,
     TemperateBroadleafForest,
 
 }
@@ -43,7 +43,8 @@ public enum TileTriggeractions
     Trader,
     Quest,
     Event,
-    Door
+    Door,
+    Combat
 }
 public enum TileCheckType
 {
@@ -100,18 +101,25 @@ public enum EquipmentSlots
 }
 public enum Languages
 {
+    None,
     Common,
-    Elvish
+    Elvish,
+    Abyssal
 }
 public enum DamageTypes
 {
+    None,
     Slashing,
     Piercing,
     Bludgeoning,
-    None
+    Necrotic,
+    Cold,
+    Poison,
+    Posioned
 }
 public enum Conditions
 {
+    None,
     Charmed,
     Exhaustion,
     Frightened,
@@ -149,24 +157,30 @@ public enum AlignmentChart
 
 public enum CreatureType
 {
-    Undead,
+    Undead
+}
+public enum CreatureSubType
+{
+    Spirit,
+
+}
+public enum ResponseFeelingType
+{
+    Happy,
     kind,
     Aggressive,
     Inquisitive,
     Neutral
 }
-public enum CreatureSubType
-{
-    Banshee
-}
-public enum ResponseFeelingType
-{
-    Happy
-}
 #endregion
 
 
 #region === Triggers ===
+public enum TriggerKey
+{
+    Combat,
+    Social
+}
 public enum Triggers
 {
     #region --- NPC Triggers
@@ -177,7 +191,7 @@ public enum Triggers
     GiveQuest,
     Steal,
     Bribe,
-    Talk
+    Talk,
     #endregion
 }
 #endregion
@@ -210,13 +224,5 @@ public struct EnvironmentRef
 {
     BiomeRef biomeRef;
     WeatherRef weatherRef;
-}
-public class EnvironmentDialog
-{
-    public WeatherData? weatherMain {  get; set; }
-    public SeasonData? seasonMain { get; set; }
-    public GridBiomeType? biomeMain {  get; set; }
-    public GridBiomeSubType? biomeSub {  get; set; }
-    public List<string> text = new();
 }
 

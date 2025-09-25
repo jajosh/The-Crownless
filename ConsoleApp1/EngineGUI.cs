@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameNamespace;
+using System;
 using static System.Net.Mime.MediaTypeNames;
 
 /// <summary>
@@ -6,6 +7,11 @@ using static System.Net.Mime.MediaTypeNames;
 /// </summary>
 public class EngineGUI
 {
+    public int lastWidth { get; set; }
+    public int lastHeight { get; set; }
+    //Gets the initial screen height
+    public int bottomRow { get; set; }
+    public int bottomLine { get; set; }
     StatusFlags flags = new StatusFlags();
 	public EngineGUI()
 	{
@@ -60,18 +66,22 @@ public class EngineGUI
             Console.Write('\n');
         }
     }
-    /// <summary>
-    /// Writes text to a specific panel position.
-    /// </summary>
-    /// <param name="x">The x-coordinate of the cursor.</param>
-    /// <param name="y">The y-coordinate of the cursor.</param>
-    /// <param name="text">The text to display.</param>
+    // Existing WriteInPanel
     public static void WriteInPanel(int x, int y, string text)
     {
         Console.SetWindowPosition(0, 0);
         Console.SetCursorPosition(x, y);
         Console.Write(text);
         Console.SetCursorPosition(0, 27);
+    }
+
+    // Modular async panel message
+    public static async Task ShowTemporaryMessage(int x, int y, string text, int durationMs = 750)
+    {
+        WriteInPanel(x, y, text);       // Show message
+        await Task.Yield();             // Allow console to render
+        await Task.Delay(durationMs);   // Wait specified duration
+        WriteInPanel(x, y, new string('-', text.Length)); // Clear message
     }
     /// <summary>
     /// Writes text to the console, pauses briefly, then clears it with an animation.
@@ -100,7 +110,7 @@ public class EngineGUI
     {
         //Writes the players location
         EngineGUI.WriteInPanel(8, 0, $"{player.Gridx}, {player.GridY}, {player.LocalX}, {player.LocalY}");
-        WriteInPanel(56, 1, $"HP: {player.Health}");
+        WriteInPanel(56, 1, $"HP: {player.CurrentHP}");
         int x = 3;
         foreach (var value in player.Money)
         {
@@ -118,9 +128,10 @@ public class EngineGUI
 
     }
 
-    public int GetConsoleHeight()
-    {
 
+    public int ConsoleHeightChange()
+    {
         int consoleHeightChange = Console.WindowHeight - lastHeight;
+        return consoleHeightChange;
     }
 }

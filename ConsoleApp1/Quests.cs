@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameNamespace;
+using System;
 using System.Security.Cryptography.X509Certificates;
 using Windows.Foundation.Collections;
 using Windows.Media.Protection;
@@ -61,7 +62,7 @@ public class QuestDatabase()
 
     public static Quest? FindQuestByIQ(int questId)
     {
-        Quest? foundQuest = questList.Find(q => q.ID == questId);
+        Quest? foundQuest = FileManager.Quests.Find(q => q.ID == questId);
 
         if (foundQuest != null)
         {
@@ -81,7 +82,7 @@ public class QuestDatabase()
             Console.WriteLine("Invalid Quest.");
             return null;
         }
-        Quest? foundQuest = questList.Find(item => item.Title.Equals(TitleToFind, StringComparison.OrdinalIgnoreCase));
+        Quest? foundQuest = FileManager.Quests.Find(item => item.Title.Equals(TitleToFind, StringComparison.OrdinalIgnoreCase));
         if (foundQuest != null)
         {
             Console.WriteLine($"Item Found: {foundQuest.Title}");

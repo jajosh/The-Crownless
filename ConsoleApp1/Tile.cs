@@ -8,7 +8,13 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-
+public enum CoverGrade
+{
+    full,
+    half,
+    quarter,
+    none
+}
 
 public class Grid
 {
@@ -19,6 +25,7 @@ public class Grid
     public GridBiomeSubType SubBiome { get; set; }
     public int RandomEventChance { get; set; }
     public List<DescriptionEntry> DescriptionEntries { get; set; } = new();
+    public Dictionary<char, (int weight, string text, GridBiomeType biome, GridBiomeSubType subBiome,SeasonData Season,WeatherData weather)>? TileAdds {get; set;} = new();
 
     public Grid() { }
 
@@ -66,7 +73,7 @@ public class Grid
 }
 public class Tile
 {
-    public string? AsciiToShow { get; set; }
+    public char? AsciiToShow { get; set; }
     public int GridX { get; set; }
     public int GridY { get; set; }
     public int LocalX { get; set; }
@@ -76,6 +83,7 @@ public class Tile
     public bool IsWalkable { get; set; }
     public bool IsRoofed { get; set; }
     public TileTriggeractions Triggeractions { get; set; }
+    public CoverGrade cover { get; set; }
 
     // Checks if the tile needs to be processed after surrounding tiles have been processed
     public TileCheckType DeferredChecks { get; set; } = TileCheckType.None;
@@ -87,7 +95,7 @@ public class Tile
     {
 
     }
-    public Tile(int gridX, int gridY, int localX, int localY, TileTypes tileType, bool isWalkable, bool isRoofed, List<DescriptionEntry> description, string asciiToShow)
+    public Tile(int gridX, int gridY, int localX, int localY, TileTypes tileType, bool isWalkable, bool isRoofed, List<DescriptionEntry> description, char asciiToShow)
     {
         GridX = gridX;
         GridY = gridY;

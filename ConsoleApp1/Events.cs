@@ -126,10 +126,10 @@ public class ScriptedEvents
         player.LocalX = 12;
         player.LocalY = 9;
         // --- Player stats
-        player.Health = 100;
-        player.MaxHealth = 100;
-        player.Mana = 100;
-        player.MaxMana = 100;
+        player.CurrentHP = 100;
+        player.MaxHP = 100;
+        player.CurrentMP = 100;
+        player.MaxMP = 100;
         // --- Adds 0 values so that it prints to the UI
         player.Money.Add("copper", 0);
         player.Money.Add("silver", 0);
@@ -202,21 +202,18 @@ public class ScriptedEvents
                 if (response == "shortbow" || response == "scimitar" || response == "spoon")
                 {
                     Item item = new Item();
-                    item = item.FindItemByName(response, MainClass.saveGame.items);
-                    MainClass.saveGame.player.Inventory.Add(1, item);
+                    item = item.FindItemByName(response);
+                    MainClass.saveGame.PlayerCharacter.Inventory.Add(1, item);
                     checker = false;
                 }
                 else
                 { Console.WriteLine("Please select a valid weapon."); }
             }
         }
-        saveGame.player = player;
-        saveGame.triggers = triggers;
-        saveGame.weather = weather;
-        saveGame.flags = flags;
-        saveGame.completedQuests = completedQuests;
-        saveGame.activeQuests = activeQuests;
-        saveGame.items = items;
+        saveGame.PlayerCharacter = player;
+        saveGame.Triggers = triggers;
+        saveGame.Weather = weather;
+        saveGame.Flags = flags;
         return saveGame;
 
     }

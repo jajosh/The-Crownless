@@ -1,27 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class EngineText
 {
     public static StatusFlags flags = new StatusFlags();
-    private readonly Menu menu;
     private readonly Dictionary<string, Delegate> triggerActions;
 
     public EngineText()
     {
-        menu = new Menu();
         triggerActions = new Dictionary<string, Delegate>(StringComparer.OrdinalIgnoreCase)
         {
-            { "settings", new Action(menu.OnSettings) },
             { "save game", new Action(() => OnSaveToJson(new SaveGame())) }
         };
     }
 
     public void OnSaveToJson(SaveGame saveGame)
     {
-        JsonLoader.SaveToJson<SaveGame>(
-            FileManager.SavesFolder + saveGame.player.Name, saveGame
+        JsonLoader.SaveToJson(
+            FileManager.SavesFolder + saveGame.PlayerCharacter.Name, saveGame
         );
     }
+
     public string HandleInput(string input, int time)
     {
         string response = Read(input, time);
@@ -31,12 +31,14 @@ public class EngineText
         {
             if (cleanedInput.Contains(trigger.Key))
             {
-                trigger.Value.DynamicInvoke(trigger.Key);
-                return HandleInput(input, time);
+                trigger.Value.DynamicInvoke();  // FIX: Don’t pass trigger.Key
+                return cleanedInput;            // FIX: return instead of recursing forever
             }
         }
+
         return response;
     }
+
     public string HandleInput(string input)
     {
         string response = Read(input);
@@ -46,12 +48,14 @@ public class EngineText
         {
             if (cleanedInput.Contains(trigger.Key))
             {
-                trigger.Value.DynamicInvoke(trigger.Key);
-                return HandleInput(input);
+                trigger.Value.DynamicInvoke();
+                return cleanedInput;
             }
         }
+
         return response;
     }
+
     public void Write(string text, int time)
     {
         Task.Run(async () =>
@@ -62,38 +66,37 @@ public class EngineText
 
                 if (Console.KeyAvailable)
                 {
-                    // Clear the key press so it doesn't interfere with later input
-                    Console.ReadKey(true);
-
-                    // Print the rest of the text immediately
+                    Console.ReadKey(true); // clear key press
                     Console.Write(text.Substring(i + 1));
                     break;
                 }
 
                 await Task.Delay(time);
             }
-        }).GetAwaiter().GetResult(); // <-- blocks the caller until the task completes
+        }).GetAwaiter().GetResult();
     }
+
     public void Write(string text)
     {
         Write(text, flags.ConsoleSpeed);
     }
-    
+
     public void Write(int row, string text)
     {
         Console.SetCursorPosition(row, 0);
         Write(text);
     }
+
     public string Read(string text, int time)
     {
         Write(text, time);
-        string response = Console.Read().ToString();
-        return response;
+        // FIX: Console.ReadLine instead of Console.Read
+        string response = Console.ReadLine();
+        return response ?? string.Empty;
     }
+
     public string Read(string text)
     {
-        string response = Read(text, flags.ConsoleSpeed);
-        return response;
-
+        return Read(text, flags.ConsoleSpeed);
     }
 }

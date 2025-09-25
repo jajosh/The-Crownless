@@ -1,100 +1,49 @@
-{
-  "id": 1,
-  "title": "Gather Healing Herbs",
-  "isComplete": false,
-  "status": "Active",
-  "description": "Collect herbs from the forest and bring them to the village healer.",
-  "fetchData": {
-    "neededItems": [
-      {
-        "id": 101,
-        "name": "Healing Herb",
-        "quantity": 5
-      }
-    ],
-    "targetNPC": {
-      "id": 1,
-      "name": "Healer Alina"
-    }
-  }
+[
   {
-    "id": 2,
-    "title": "The Banshee",
-    "isComplete": false,
-    "status": "Inactive",
-    "description": "Bandits have been harassing travelers. Take them out.",
-    "killData": {
-      "neededItems": [
-        {
-          "id": 201,
-          "name": "Bandit Emblem",
-          "quantity": 3
-        }
-      ],
-      "targetNPCs": [
-        {
-          "id": 10,
-          "name": "Bandit Scout"
-        },
-        {
-          "id": 11,
-          "name": "Bandit Captain"
-        }
-      ],
-      "turnInNPC": {
-        "id": 2,
-        "name": "Captain Roland"
+    "ID": 1,
+    "Title": "Gather Bear Claws",
+    "IsComplete": false,
+    "Status": 1,
+    "Description": "Collect 3 bear claws and bring them to the village blacksmith.",
+    "FetchData": {
+      "NeededItems": [ 6, 6, 6 ],
+      "TargetNPC": {
+        "ID": 101,
+        "Name": "Village Blacksmith"
       }
     }
-  }
+  },
   {
-    "id": 3,
-    "title": "Council Meeting",
-    "isComplete": false,
-    "status": "Active",
-    "description": "Speak with the village council members.",
-    "speakData": {
-      "targetNPCs": [
-        {
-          "id": 3,
-          "name": "Elder Miriam"
-        },
-        {
-          "id": 4,
-          "name": "Merchant Darion"
-        }
-      ]
+    "ID": 2,
+    "Title": "Cull the Wolves",
+    "IsComplete": false,
+    "Status": 2,
+    "Description": "The local farmer has asked you to reduce the wolf population in the woods.",
+    "KillData": {
+      "NeededItems": [],
+      "TargetNPCs": [ 201, 202, 203 ],
+      "TurnInNPC": 102
+    }
+  },
+  {
+    "ID": 3,
+    "Title": "Speak with the Elder",
+    "IsComplete": true,
+    "Status": 3,
+    "Description": "Deliver the warning message to the village elder.",
+    "SpeakData": {
+      "TargetNPCsID": [ 301 ]
+    }
+  },
+  {
+    "ID": 4,
+    "Title": "Defend the Village",
+    "IsComplete": false,
+    "Status": 1,
+    "Description": "Protect the village from the incoming bandit raid.",
+    "DefendData": {
+      "TargetNPCs": [ 401, 402 ],
+      "Monsters": [ 501, 502, 503 ]
     }
   }
-  {
-    "id": 4,
-    "title": "Defend the Village",
-    "isComplete": false,
-    "status": "Inactive",
-    "description": "Waves of monsters are attacking the village. Hold them off!",
-    "defendData": {
-      "targetNPCs": [
-        {
-          "id": 5,
-          "name": "Villager Tomas"
-        },
-        {
-          "id": 6,
-          "name": "Villager Elara"
-        }
-      ],
-      "monsters": [
-        {
-          "id": 20,
-          "name": "Goblin Raider"
-        },
-        {
-          "id": 21,
-          "name": "Goblin Shaman"
-        }
-      ]
-    }
-  }
-
-
-}
+]

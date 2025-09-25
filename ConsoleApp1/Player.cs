@@ -23,8 +23,17 @@ using Windows.Storage.Provider;
 /// <summary>
 /// Handles the player object and related methods. 
 /// </summary>
-public class Player
+public class Player : IActionable
 {
+    // Ties object to IActionable for use in interobject targeting in game.
+    public string Name { get; set; }
+    public void ApplyDamage(int amount)
+    {
+        CurrentHP -= amount;
+    }
+
+
+
     #region Initialization data
     public bool _isInitialized = false; //Error Check, to do need erro exception here
     static StatusFlags flags = new StatusFlags();
@@ -36,7 +45,6 @@ public class Player
     #endregion
     
     #region Core data
-    public string Name { get; set; }
     public string Race { get; set; }
     // Key = pronoun set ID, Value = (subjective, possessive, reflexive)
     [JsonIgnore]
@@ -47,6 +55,8 @@ public class Player
             { 3, ("they", "their", "themselves") }
         };
     int pronounKey = 0;
+
+    public int Inititive { get; set; }
     public string Background { get; set; }
     public int Gridx { get; set; }
     public int GridY { get; set; }
@@ -65,10 +75,10 @@ public class Player
     
     #region Core Stats data
     //current Health
-    public int Health { get; set; }//current Health
-    public int MaxHealth { get; set; }
-    public int Mana { get; set; }
-    public int MaxMana { get; set; }
+    public int CurrentHP { get; set; }//current Health
+    public int MaxHP { get; set; }
+    public int CurrentMP { get; set; }
+    public int MaxMP { get; set; }
     public int TileSpeed { get; set; }
     #endregion
 
@@ -111,12 +121,10 @@ public class Player
     {
         _isInitialized = false; //for error checking
         flags.IsDead = false;
-        Health = 100;
-        MaxHealth = 100;
-        Mana = 100;
-        MaxMana = 100;
-        Name = string.Empty;
-        Race = string.Empty;
+        CurrentHP = 100;
+        MaxHP = 100;
+        MaxMP = 100;
+        CurrentMP = 100;
         pronounKey = 0;
         Background  = string.Empty;
         Skills = new Dictionary<Skill, int>();
@@ -143,10 +151,10 @@ public class Player
         player.LocalY = 8;
         player._isInitialized = false; //for error checking
         flags.IsDead = false;
-        player.Health = 100;
-        player.MaxHealth = 100;
-        player.Mana = 100;
-        player.MaxMana = 100;
+        player.CurrentHP = 100;
+        player.MaxHP = 100;
+        player.CurrentMP = 100;
+        player.MaxMP = 100;
         player.Name = "BugFinder";
         player.Race = "Bug";
         player.pronounKey = 1;
@@ -167,12 +175,18 @@ public class Player
          
         Console.Clear();
         Item item = new Item();
-        item = item.FindItemByName("spoon", MainClass.saveGame.items);
-        player.Inventory.Add(1, item);
+        item = item.FindItemByName("spoon");
+        if (item != null)
+            player.Inventory.Add(1, item);
         player.Money.Add("copper", 100);
         player.Money.Add("silver", 100);
         player.Money.Add("gold", 100);
-        saveGame.player = player;
+        saveGame.PlayerCharacter = player;
+        saveGame.Weather = new EngineWeather();
+        saveGame.Flags = new StatusFlags();
+        saveGame.NPCs = NPCData.Hydrate();
+        saveGame.Triggers = JsonLoader.LoadFromJson<List<TriggerCoordinets>>(FileManager.TheTriggerCoordinetsPath);
+        saveGame.GameMap = Map.LoadMapFromJson();
         return saveGame;
     }
     
