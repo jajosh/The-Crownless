@@ -68,7 +68,7 @@ public class Menu
                 Console.WriteLine("Error: Null or invalid response");
                 Task.Run(async () =>
                 {
-                    text.Write("This is my wielder?");
+                    EngineText.Write("This is my wielder?");
                     if (Console.KeyAvailable)
                     {
                         Console.ReadKey(true); // Clear any stray key presses
@@ -94,7 +94,7 @@ public class Menu
                 Console.WriteLine($"{folder}");
             }
 
-            string name = text.Read("Which save would you like to load?");
+            string name = EngineText.Read("Which save would you like to load?");
             try
             {
                 saveGame = JsonLoader.LoadFromJson<SaveGame>(FileManager.SavesFolder + name);
@@ -111,12 +111,12 @@ public class Menu
 
     public void OnSettings()
     {
-        text.Write("Settings...\nPress ENTER to continue", 100);
+        EngineText.Write("Settings...\nPress ENTER to continue", 100);
     }
 
     private void OnQuit()
     {
-        text.Write("Quitting game...\nPress ENTER to continue", 100);
+        EngineText.Write("Quitting game...\nPress ENTER to continue", 100);
         MainClass.isRunning = false;
     }
 }

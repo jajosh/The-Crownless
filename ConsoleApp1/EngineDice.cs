@@ -11,11 +11,11 @@ using Windows.UI.ViewManagement;
 /// <summary>
 /// This class handles all things related to the dice
 /// </summary>
-public class DiceEngine
+public class EngineDice
 {
     Random random = new Random();
     StatusFlags flags = new StatusFlags();
-    public DiceEngine() 
+    public EngineDice() 
     {
         
     }

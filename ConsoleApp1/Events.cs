@@ -121,19 +121,19 @@ public class ScriptedEvents
     Random rng = new Random();
 
         // --- Starting location
-        player.Gridx = 0;
-        player.GridY = 0;
-        player.LocalX = 12;
-        player.LocalY = 9;
+        player.Root.GridX = 0;
+        player.Root.GridY = 0;
+        player.Root.LocalX = 12;
+        player.Root.LocalY = 9;
         // --- Player stats
-        player.CurrentHP = 100;
-        player.MaxHP = 100;
-        player.CurrentMP = 100;
-        player.MaxMP = 100;
+        player.Health.CurrentHP = 100;
+        player.Health.MaxHP = 100;
+        player.Health.CurrentMP = 100;
+        player.Health.MaxMP = 100;
         // --- Adds 0 values so that it prints to the UI
-        player.Money.Add("copper", 0);
-        player.Money.Add("silver", 0);
-        player.Money.Add("gold", 0);
+        player.Money.Add(CoinType.Copper, 0);
+        player.Money.Add(CoinType.Silver, 0);
+        player.Money.Add(CoinType.Gold, 0);
         // --- Fades screen to white then turns text black
         ConsoleColor[] fadeSteps = new ConsoleColor[]
         {
@@ -150,20 +150,20 @@ public class ScriptedEvents
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Black;
         Thread.Sleep(500);
-        Text.Write("Awake\n", 50); System.Threading.Thread.Sleep(500);
-        Text.Write("Awake my wielder. You have been asleep for so long\n", 100);
-        Text.Write("It is time for that sleep to end\n", 100);
+        EngineText.Write("Awake\n", 50); System.Threading.Thread.Sleep(500);
+        EngineText.Write("Awake my wielder. You have been asleep for so long\n", 100);
+        EngineText.Write("It is time for that sleep to end\n", 100);
         bool loopChecker = true;
         while (loopChecker)
         {
-            string name = Text.Read("What is your name?\n");
+            string name = EngineText.Read("What is your name?\n");
             if (name != null)
             {
-                Text.Write("That is not a name...\n");
+                EngineText.Write("That is not a name...\n");
             }
             else
             {
-                Text.Write($"{name}... are you sure?\n");
+                EngineText.Write($"{name}... are you sure?\n");
                 Console.Write("\n\nEnter yes or no: \n\n");
                 string input = Console.ReadLine().Trim().ToLower();
             }
@@ -183,13 +183,13 @@ public class ScriptedEvents
         player.Skills.Add(Skill.Intelligence, rng.Next(8, 18));
         player.Skills.Add(Skill.Wisdom, rng.Next(8, 18));
         player.Skills.Add(Skill.Constitution, rng.Next(8, 18));
-        Text.Write("Hmmm, not as strong as i would've thought");
+        EngineText.Write("Hmmm, not as strong as i would've thought");
 
         //The players first weapon
         bool checker = true;
         while (checker) {
             Console.Clear();
-            Text.Write("What weapon would you like?\nA shortbow\nA scimitar\nA spoon");
+            EngineText.Write("What weapon would you like?\nA shortbow\nA scimitar\nA spoon");
             string response = Console.ReadLine().ToLower();
             if (response.StartsWith("a ", StringComparison.OrdinalIgnoreCase))
             {
@@ -202,8 +202,8 @@ public class ScriptedEvents
                 if (response == "shortbow" || response == "scimitar" || response == "spoon")
                 {
                     Item item = new Item();
-                    item = item.FindItemByName(response);
-                    MainClass.saveGame.PlayerCharacter.Inventory.Add(1, item);
+                    item = Item.FindItemByName(response);
+                    MainClass.saveGame.PlayerCharacter.Inventory.AddItem(item);
                     checker = false;
                 }
                 else

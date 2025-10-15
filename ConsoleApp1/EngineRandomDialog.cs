@@ -15,14 +15,7 @@ public enum DialogSpeaker
     Player,
     Narration
 }
-/// <summary>
-/// Represents a random text entry used for dialog or descriptions, with associated context such as weather, season,
-/// biome, and creature type.
-/// </summary>
-/// <remarks>This class is typically used to store and retrieve context-aware text for in-game events, dialog, or
-/// environmental descriptions. The properties allow filtering or categorizing text based on game state, such as combat
-/// scenarios, relationship status, or environmental conditions.</remarks>
-public class EngineRandomText
+public class ObjectRandomText
 {
     // ID tag for the text
     public int ID { get; set; }
@@ -37,6 +30,10 @@ public class EngineRandomText
     public DialogSpeaker Speaker { get; set; }
     // The actual text line
     public List<String> Text { get; set; }
+}
+public class EngineRandomText
+{
+    
     public EngineRandomText()
     {
 

@@ -1,15 +1,88 @@
 [
   {
+    "ID": 0,
+    "Name": "",
+    "TypeID": 0,
+    "Root": {
+      "GridX": 0,
+      "GridY": 0,
+      "LocalX": 0,
+      "LocalY": 0
+    },
+    "Race": 0,
+    "Aliases": {},
+    "Waypoints": [],
+    "CurrentWaypointIndex": null,
+    "TileSpeed": 6,
+    "ActionCount": 1,
+    "BonusActionCount": 1,
+    "Health": {
+      "CurrentHP": 100,
+      "CurrentMP": 100,
+      "MaxHP": 100,
+      "MaxMP": 100
+    },
+    "Skills": {
+      "Strength": 10,
+      "Dexterity": 10,
+      "Charisma": 10,
+      "Intelligence": 10,
+      "Wisdom": 10,
+      "Constitution": 10
+    },
+    "Languages": [],
+    "DamageResistance": [],
+    "DamageImmunities": [],
+    "ConditionImmunities": [],
+    "RandomDialog": [
+      {
+        "weatherMain": null,
+        "seasonMain": null,
+        "biomeMain": null,
+        "biomeSub": null,
+        "creatureType": null,
+        "isBattleDialog": false,
+        "text": [ "I guard what cost me my life." ]
+      }
+    ],
+    "UseStaticRandomDialog": false,
+    "Ascii": null,
+    "InventoryData": [],
+    "ArmorData": [],
+    "TriggerData": {},
+    "Vender": null
+  },
+  {
     "ID": 1,
     "Name": "Eleanor",
     "TypeID": 1,
-    "Race": "Undead",
-    "Aliases": {
-      "Shade": "Eleanor",
-      "Guardian": "Banshee of Umela"
+    "Root": {
+      "GridX": 0,
+      "GridY": 0,
+      "LocalX": 10,
+      "LocalY": 10
     },
-    "CurrentHP": 120,
-    "CurrentMP": 200,
+    "Race": "Undead",
+    "Aliases": {},
+    "Waypoints": [],
+    "CurrentWaypointIndex": null,
+    "TileSpeed": 6,
+    "ActionCount": 1,
+    "BonusActionCount": 1,
+    "Health": {
+      "CurrentHP": 100,
+      "CurrentMP": 100,
+      "MaxHP": 100,
+      "MaxMP": 100
+    },
+    "Skills": {
+      "Strength": 10,
+      "Dexterity": 10,
+      "Charisma": 10,
+      "Intelligence": 10,
+      "Wisdom": 10,
+      "Constitution": 10
+    },
     "Languages": [ "Common", "Abyssal" ],
     "DamageResistance": [ "Necrotic", "Cold" ],
     "DamageImmunities": [ "Poison" ],
@@ -25,9 +98,11 @@
         "text": [ "I guard what cost me my life." ]
       }
     ],
-    "isAlive": true,
     "UseStaticRandomDialog": false,
+    "Ascii": "@",
     "InventoryData": [],
-    "ArmorData": []
+    "ArmorData": [],
+    "TriggerData": {},
+    "Vender": null
   }
 ]

@@ -13,10 +13,16 @@ public class EngineGUI
     public int bottomRow { get; set; }
     public int bottomLine { get; set; }
     StatusFlags flags = new StatusFlags();
-	public EngineGUI()
-	{
+    public EngineGUI()
+    {
 
-	}
+    }
+    public static void Render(SaveGame saveGame)
+    {
+        EngineGUI.DrawLayout(saveGame.PlayerCharacter);
+        EngineGUI.UpdateStats(saveGame.PlayerCharacter);
+        Map.PrintWorld(saveGame.GameMap, saveGame.PlayerCharacter, 0);
+    }
     /// <summary>
     /// Draws a rectangular ASCII box at the specified location.
     /// </summary>
@@ -52,13 +58,13 @@ public class EngineGUI
     {
 
         // Map (top-left)
-        DrawBox(0, 0, 53, 27, " MAP ");
+        DrawBox(0, 0, 53, 27, $" MAP - Grid {player.Root.GridX}, {player.Root.GridY} - Local {player.Root.LocalX}, {player.Root.LocalY}");
 
         // Player Stats (top-right)
-        DrawBox(54, 0, 31, 27, ($" {player.Name} "));
+        DrawBox(52, 0, 31, 27, ($" {player.Name} "));
 
         // Inventory (bottom-right)
-        DrawBox(81, 0, 31, 27, " INVENTORY ");
+        DrawBox(82, 0, 31, 27, " INVENTORY ");
 
         for (int i = 3; i < Console.WindowHeight; i++)
         {
@@ -75,14 +81,6 @@ public class EngineGUI
         Console.SetCursorPosition(0, 27);
     }
 
-    // Modular async panel message
-    public static async Task ShowTemporaryMessage(int x, int y, string text, int durationMs = 750)
-    {
-        WriteInPanel(x, y, text);       // Show message
-        await Task.Yield();             // Allow console to render
-        await Task.Delay(durationMs);   // Wait specified duration
-        WriteInPanel(x, y, new string('-', text.Length)); // Clear message
-    }
     /// <summary>
     /// Writes text to the console, pauses briefly, then clears it with an animation.
     /// </summary>
@@ -102,28 +100,37 @@ public class EngineGUI
             WriteInPanel(i, y, " ");
         }
     }
+    public static async Task WriteWithClearAnimation(string text)
+    {
+        EngineGUI.WriteWithClearAnimation(0, 27, text);
+    }
     /// <summary>
     /// Updates the player stats panel with health, money, skills, and position coordinets
     /// </summary>
     /// <param name="player">The player whose stats are displayed.</param>
-    public static void UpdataStats(Player player)
+    public static void UpdateStats(Player player)
     {
         //Writes the players location
-        EngineGUI.WriteInPanel(8, 0, $"{player.Gridx}, {player.GridY}, {player.LocalX}, {player.LocalY}");
-        WriteInPanel(56, 1, $"HP: {player.CurrentHP}");
+        EngineGUI.WriteInPanel(8, 0, $" {player.Root.GridX}, {player.Root.GridY} - {player.Root.LocalX}, {player.Root.LocalY} ---");
+        WriteInPanel(55, 1, $"HP: {player.Health.CurrentHP} / {player.Health.MaxHP}");
+        WriteInPanel(55, 2, $"MP: {player.Health.CurrentMP} / {player.Health.MaxMP}");
         int x = 3;
-        foreach (var value in player.Money)
+        if (player.Money != null)
         {
-            string name = player.Money.ToString();
-            WriteInPanel(56, x, $"{value}");
-            x++;
+            foreach (var value in player.Money)
+            {
+                WriteInPanel(55, x, $"{value.Key}: {value.Value}");
+                x++;
+            }
         }
         x = 6;
-        foreach (var value in player.Skills)
+        if (player.Skills != null)
         {
-            string name = player.Skills.ToString();
-            WriteInPanel(56, x, $"{value}");
-            x++;
+            foreach (var value in player.Skills)
+            {
+                WriteInPanel(55, x, $"{value.Key}: {value.Value}");
+                x++;
+            }
         }
 
     }
@@ -133,5 +140,14 @@ public class EngineGUI
     {
         int consoleHeightChange = Console.WindowHeight - lastHeight;
         return consoleHeightChange;
+    }
+
+    public void HighlightEnemy()
+    {
+
+    }
+    public void unhighlight()
+    {
+
     }
 }

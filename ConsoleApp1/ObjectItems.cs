@@ -11,6 +11,7 @@ public class Item
     public string? AsciiKey { get; set; }
     public string Name { get; set; } = string.Empty;
     public int ID { get; set; }
+    public EquipmentSlots SlotType { get; set; }
     public int SpawnChance { get; set; }
     public int MaxStack { get; set; }
     public int? Price { get; set; }
@@ -23,6 +24,7 @@ public class Item
     public ConsumableDataFrame? ConsumableData { get; set; }
     public AlchemyDataFrame? AlchemyData { get; set; }
     public CraftingDataFrame? CraftingData { get; set; }
+    public ArmorDataFrame ArmorData { get; set; }
 
     // Actions that the item can use
     [JsonIgnore]
@@ -41,22 +43,19 @@ public class Item
     {
         // Load all raw items from JSON
         List<Item> RawData = JsonLoader.LoadFromJson<List<Item>>(FileManager.ItemFilePath);
+        List<Item> Hydrated = new List<Item>();
         foreach (var item in RawData)
         {
 
             // Handles loading in the trigger data for the items. IE: Heal, Curropting Touch
             foreach (var trigger in TriggerRawData)
             {
-                if (Enum.TryParse<ActionNames>(trigger, out var actionName))
-                {
-                    if (ActionRegistry.Actions.TryGetValue(actionName, out var factory))
-                        TriggerData.Add((TriggerEnum)Enum.Parse(typeof(TriggerEnum), trigger), factory());
-                }
+                GameActionFactory.Create(trigger);
             }
         }
         return RawData;
     }
-    public Item? FindItemByID(int IDToFind)
+    public static Item? FindItemByID(int IDToFind)
     {
         List<Item> itemList = FileManager.Items;
         Item? foundItem = itemList.Find(item => item.ID == IDToFind);
@@ -71,7 +70,7 @@ public class Item
             return null;
         }
     }
-    public Item? FindItemByName(string NameToFind)
+    public static Item? FindItemByName(string NameToFind)
     {
         if (string.IsNullOrWhiteSpace(NameToFind))
         {
@@ -120,6 +119,11 @@ public class Item
     {
         public int Range { get; set; }
     }
+    public class ArmorDataFrame
+    {
+        public EquipmentSlots SlotType { get; set; }
+        public List<EquipmentSlots>? Invalidated { get; set; }
+    }
     public class ConsumableDataFrame
     {
         public int HealthToHeal { get; set; }
@@ -137,11 +141,5 @@ public class Item
         public bool IsCookable { get; set; }
     }
     #endregion
-    public static class ItemTriggers
-    {
-        public static readonly Dictionary<int, Action<Item, string>> ActionMap = new()
-        {
-            
-        };
-    }
+    
 }

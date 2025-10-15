@@ -23,32 +23,27 @@ namespace GameNamespace
     /// </summary>
     public class MainClass
     {
-        public static FileManager fileManager = new FileManager();
+        
         public static SaveGame saveGame { get; set; }
         // public bools that can be accessed outside of the main class. 
         public static bool needRedraw = true;
         public static bool isRunning = true;
 
-        /// <summary>
-        /// Application entry point. Initializes the game state, 
-        /// displays the main menu, and starts the game loop.
-        /// </summary>
-        /// <param name="args">Command-line arguments (not currently used).</param>
         public static void Main(string[] args)
         {
-            /// <summary>
-            /// The following is the car of the game. All of the engines are initalized here.
-            /// </summary>
-            EngineGUI UIEngine = new EngineGUI();
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                using (StreamWriter writer = new StreamWriter("unhandled_errors.txt", append: true))
+                {
+                    writer.WriteLine($"Unhandled Exception: {e.ExceptionObject}");
+                }
+            };
+
             EngineGame GameEngine = new EngineGame();
             Menu menu = new Menu();
 
 
             saveGame = Menu.StartMenu(saveGame);
-            /// --- Shit that gets saved to the save json
-
-
-
 
             #region === Initialization Data ===
             Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
@@ -61,8 +56,10 @@ namespace GameNamespace
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             #endregion
             Console.Clear();
+            Console.WriteLine("\x1b[3J");
+
             EngineGUI.DrawLayout(saveGame.PlayerCharacter);
-            EngineGUI.UpdataStats(saveGame.PlayerCharacter);
+            EngineGUI.UpdateStats(saveGame.PlayerCharacter);
             Map.PrintWorld(saveGame.GameMap, saveGame.PlayerCharacter, 0);
             while (isRunning)
             {
@@ -74,15 +71,17 @@ namespace GameNamespace
                 {
                     if (needRedraw)
                     {
-                        EngineGUI.DrawLayout(saveGame.PlayerCharacter);
-                        EngineGUI.UpdataStats(saveGame.PlayerCharacter);
-                        Map.PrintWorld(saveGame.GameMap, saveGame.PlayerCharacter, 0);
+                        EngineGUI.Render(saveGame);
                         needRedraw = false;
                     }
+                    else
+                    {
+                        EngineGUI.DrawLayout(saveGame.PlayerCharacter);
+                    }
                     GameEngine.Mover.Move(saveGame);
-                    
-
-
+                    Console.SetCursorPosition(30, 1);
+                    NPC npc = GameEngine.NPC.GetNamedNPCByID(1);
+                    GameEngine.AI.ExecuteTurn(npc, saveGame.PlayerCharacter, saveGame);
                 }
                 
             }
@@ -90,7 +89,7 @@ namespace GameNamespace
             Console.SetCursorPosition(3, bottomRow);  // column 0, bottom row
             Console.WriteLine("\nThanks for playing!");
 
-            TriggerCoordinets.SaveToJson("triggers.json", saveGame.Triggers);
+            JsonLoader.SaveToJson<SaveGame>(FileManager.SavesFolder + saveGame.PlayerCharacter.Name, saveGame);
             #endregion
 
         }

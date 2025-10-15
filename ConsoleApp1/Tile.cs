@@ -16,61 +16,7 @@ public enum CoverGrade
     none
 }
 
-public class Grid
-{
-    public List<string> GridMap { get; set; } = new();
-    public int XPosition { get; set; }
-    public int YPosition { get; set; }
-    public GridBiomeType Biome { get; set; }
-    public GridBiomeSubType SubBiome { get; set; }
-    public int RandomEventChance { get; set; }
-    public List<DescriptionEntry> DescriptionEntries { get; set; } = new();
-    public Dictionary<char, (int weight, string text, GridBiomeType biome, GridBiomeSubType subBiome,SeasonData Season,WeatherData weather)>? TileAdds {get; set;} = new();
 
-    public Grid() { }
-
-    /// <summary>
-    /// Adds a description entry to the grid.
-    /// Null values act as "any".
-    /// </summary>
-    public void AddDescription(
-        int weight,
-        string text,
-        GridBiomeType? biome = null,
-        GridBiomeSubType? subBiome = null,
-        SeasonData? season = null,
-        WeatherData? weather = null)
-    {
-        DescriptionEntries.Add(new DescriptionEntry(
-            weight, text, biome, subBiome, season, weather));
-    }
-    /// <summary>
-    /// Selects a random description for a new grid based on weighted entries.
-    /// </summary>
-    /// <param name="grid">The current grid.</param>
-    /// <param name="player">The player, used for condition matching.</param>
-    /// <returns>A description string, or null if none matched.</returns>
-    public static string NewGridDescription(Grid grid, EngineWeather weather)
-    {
-        var possible = grid.DescriptionEntries
-            .Where(d => d.Matches(weather, grid.Biome, grid.SubBiome))
-            .ToList();
-
-        if (possible.Count == 0) return null;
-
-        int totalWeight = possible.Sum(d => d.Weight);
-        int roll = Random.Shared.Next(totalWeight);
-
-        foreach (var entry in possible)
-        {
-            if (roll < entry.Weight)
-                return entry.ToString();
-            roll -= entry.Weight;
-        }
-        string result = possible.Last().ToString();
-        return result; // fallback
-    }
-}
 public class Tile
 {
     public char? AsciiToShow { get; set; }
@@ -106,6 +52,7 @@ public class Tile
         Description = description;
         AsciiToShow = asciiToShow;
     }
+    // Adds a description
     public void AddDescription(int weight,string text,GridBiomeType? biome = null,GridBiomeSubType? subBiome = null, SeasonData? season = null,WeatherData? weather = null)
     {
         Description.Add(new DescriptionEntry(
@@ -116,14 +63,7 @@ public class Tile
             season: season,
             weather: weather));
     }
-    /// <summary>
-    /// Selects a random description for a tile, weighted by matching conditions.
-    /// </summary>
-    /// <param name="tile">The current tile.</param>
-    /// <param name="player">The player used for condition checks.</param>
-    /// <param name="CurrentBiome">The biome type of the grid.</param>
-    /// <param name="CurrentSubBiome">The biome subtype of the grid.</param>
-    /// <returns>A descriptive string, or null if none matched.</returns>
+    // Picks a random description based on current conditions
     public static string PickADescription(Tile tile, EngineWeather weather, GridBiomeType CurrentBiome, GridBiomeSubType CurrentSubBiome)
     {
         Random random = new Random();
@@ -151,6 +91,11 @@ public class Tile
             return chosen.Text;
         }
         return null;
+    }
+    public Tile GetTileByLocation(int GridX, int GridY, int LocalX, int LocalY)
+    {
+        return new Tile();
+        
     }
 }
 

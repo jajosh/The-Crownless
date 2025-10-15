@@ -17,7 +17,7 @@ public class Combat
     /// <param name="enemy"></param>
     public Combat(Player player, List<int> enemy, List<int> ally)
     {
-        text.Write("Starting Combat", 50);
+        EngineText.Write("Starting Combat", 50);
         bool isRunning = true;
         
         while (isRunning)

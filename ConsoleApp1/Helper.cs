@@ -1,19 +1,7 @@
 ﻿using System;
 
 #region === Grid Biome Enum Data
-public enum GridBiomeType // The biome of the grid
-{
-    Any,
-    BorelForest,
-    TemperateBroadleafForest,
 
-}
-public enum GridBiomeSubType
-{
-    Any,
-    AbandonedBuilding,
-    Town,
-}
 public enum TileTypes
 {
     empty,
@@ -70,35 +58,8 @@ public enum EventType
 
 }
 #region === Player and NPC Enum Data ===
-public enum EquipmentSlots
-{
-    // Armor
-    Head,
-    Chest,
-    Waist,
-    Legs,
-    Feet,
-    Arms,
-    Hands,
-    Wrists,
-    Shoulders,
 
-    // Accessories
-    Neck,
-    RingLeft,
-    RingRight,
-    Trinket,
 
-    // Weapons
-    MainHand,
-    OffHand,
-    Ranged,
-
-    // Miscellaneous / Custom
-    Back,
-    Belt,
-    Tabard
-}
 public enum Languages
 {
     None,
@@ -130,7 +91,7 @@ public enum Conditions
     Prone,
     restrained
 }
-public enum ActionTypes
+public enum ActionKeys
 {
     CorruptingTouch,
     HorrifiyingVisage,
@@ -180,19 +141,6 @@ public enum TriggerKey
 {
     Combat,
     Social
-}
-public enum Triggers
-{
-    #region --- NPC Triggers
-    Trade,
-    Attack,
-    Flee,
-    RequestHelp,
-    GiveQuest,
-    Steal,
-    Bribe,
-    Talk,
-    #endregion
 }
 #endregion
 

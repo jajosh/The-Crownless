@@ -18,27 +18,32 @@ using static System.Net.Mime.MediaTypeNames;
 /// </summary>
 public class EngineGame
 {
+    // References to engine components
     public EngineMovement Mover = new EngineMovement();
+    public EngineGUI UI = new EngineGUI();
+    public EngineText Text = new EngineText();
+    public FileManager FileManager = new FileManager();
+    public EngineAI AI = new EngineAI();
+    public DataNPC NPC = new DataNPC();
+
+    public List<IActionable> ActiveOnScreen { get; set; }
+    public List<IActionable> ActiveOnLocation { get; set; }
     public EngineGame()
     {
 
     }
+    // Initializes everything
     public void Assembly()
     {
         #region === Initialization Data ===
         Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
+        
         // Allows the console to print unicode
         Console.OutputEncoding = System.Text.Encoding.UTF8;
-        Map gameMap = Map.LoadMapFromJson();
         #endregion
     }
     public void update()
     {
-        Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
-        int lastWidth = Console.WindowWidth;
-        int lastHeight = Console.WindowHeight;
-        //Gets the initial screen height
-        int bottomRow = lastHeight - 1; // last valid row index
-        int bottomLine = lastHeight - 4; // bottom line of the UI
+        // Updates the different engines
     }
 }

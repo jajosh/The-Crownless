@@ -9,7 +9,7 @@
     {
         foreach (var (dx, dy) in NeighborOffsets)
         {
-            if (map.MapKey.TryGetValue((tile.GridX, tile.GridY, (tile.LocalX + dx, tile.LocalY + dy)), out var neighbor))
+            if (Map.MapKey.TryGetValue((tile.GridX, tile.GridY, (tile.LocalX + dx, tile.LocalY + dy)), out var neighbor))
             {
                 if (neighbor.IsRoofed)
                     return true;
@@ -22,7 +22,7 @@
     {
         foreach (var (dx, dy) in NeighborOffsets)
         {
-            if (map.MapKey.TryGetValue((tile.GridX, tile.GridY, (tile.LocalX + dx, tile.LocalY + dy)), out var neighbor))
+            if (Map.MapKey.TryGetValue((tile.GridX, tile.GridY, (tile.LocalX + dx, tile.LocalY + dy)), out var neighbor))
             {
                 if (neighbor.IsWalkable)
                     return true;

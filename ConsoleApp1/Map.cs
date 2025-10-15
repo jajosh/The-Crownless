@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Metrics;
+﻿using GameNamespace;
+using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -9,10 +10,10 @@ using System.Text.Json.Serialization;
 /// </summary>
 public class Map
 {
-    public Dictionary<(int, int, (int, int)), Tile> MapKey = new Dictionary<(int, int, (int, int)), Tile>();
-    public Dictionary<(int, int), Grid>GridKey = new Dictionary<(int, int), Grid>();
-    private const int GridWidth = 51;
-    private const int GridHeight = 25;
+    public static Dictionary<(int, int, (int, int)), Tile> MapKey = new Dictionary<(int, int, (int, int)), Tile>();
+    public static Dictionary<(int, int), Grid>GridKey = new Dictionary<(int, int), Grid>();
+    private const int GridY = 25;
+    private const int GridX = 51;
     public static Dictionary<char, Func<int, int, int, int, char, Tile>>? _tileHandlers;
 
 
@@ -22,164 +23,162 @@ public class Map
         _tileHandlers = new Dictionary<char, Func<int, int, int, int, char, Tile>>
         {
             #region === Spawn Points, Characters, and Triggers ===
-            { '@', OnPlayerSpawn },
-            { '&', OnNPCSpawn },
-            { '!', OnQuestMarker },
-            { '?', OnQuestionMark },
-            { '♘', OnKnightSpawn },
-            { '♖', OnGuard },
-            { '€', OnRandomEventSpawn },
-            { 'ɤ', OnPlantSpawn },
-            { '♥', OnHeartSpawn },
-            { '♡', OnHalfHeartSpawn },
-            { '♬', OnSoundIndicator },
-            { '☠', OnPhysicalTrap },
-            { '☢', OnMagicTrap },
-            { '☣', OnLogicTrap },
-            { 'ÿ', OnMarketStand },
+            { '@', TileProcessor.OnPlayerSpawn },
+            { '&', TileProcessor.OnNPCSpawn },
+            { '!', TileProcessor.OnQuestMarker },
+            { '?', TileProcessor.OnQuestionMark },
+            { '♘', TileProcessor.OnKnightSpawn },
+            { '♖', TileProcessor.OnGuard },
+            { '€', TileProcessor.OnRandomEventSpawn },
+            { 'ɤ', TileProcessor.OnPlantSpawn },
+            { '♥', TileProcessor.OnHeartSpawn },
+            { '♡', TileProcessor.OnHalfHeartSpawn },
+            { '♬', TileProcessor.OnSoundIndicator },
+            { '☠', TileProcessor.OnPhysicalTrap },
+            { '☢', TileProcessor.OnMagicTrap },
+            { '☣', TileProcessor.OnLogicTrap },
+            { 'ÿ', TileProcessor.OnMarketStand },
             #endregion
 
             #region === Shops ===
-            { '⚔', OnWeaponsShop },
-            { '⚒', OnCraftingShop },
-            { '⛏', OnRangerShop },
-            { '⛓', OnMatieralShop },
+            { '⚔', TileProcessor.OnWeaponsShop },
+            { '⚒', TileProcessor.OnCraftingShop },
+            { '⛏', TileProcessor.OnRangerShop },
+            { '⛓', TileProcessor.OnMatieralShop },
             #endregion
 
             #region === Faction Related ===
-            { '♦', OnFactionQuest },
+            { '♦', TileProcessor.OnFactionQuest },
             #endregion
 
             #region === Terrain & Walkable Areas ===
-            { '.', OnPath },
-            { ',', OnGrass },
-            { '\'', OnInsideWalkablePath },
-            { '…', OnRoad },
-            { '♣', OnTree },
-            { '♤', OnDeadTree },
+            { '.', TileProcessor.OnPath },
+            { ',', TileProcessor.OnGrass },
+            { '\'', TileProcessor.OnInsideWalkablePath },
+            { '…', TileProcessor.OnRoad },
+            { '♣', TileProcessor.OnTree },
+            { '♤', TileProcessor.OnDeadTree },
             #endregion
             
             #region === Accent Pieces ===
-            { '◎', OnFairyRing },
-            { '◉', OnBullseye },
-            { '●', OnSmallStone1 },
-            { '○', OnSmallStone2 },
-            { '▫', OnGroundDetail },
-            { '▪', OnSmallStone3 },
+            { '◎', TileProcessor.OnFairyRing },
+            { '◉', TileProcessor.OnBullseye },
+            { '●', TileProcessor.OnSmallStone1 },
+            { '○', TileProcessor.OnSmallStone2 },
+            { '▫', TileProcessor.OnGroundDetail },
+            { '▪', TileProcessor.OnSmallStone3 },
             #endregion
 
             #region === Terrain & Non-Walkable Areas ===
-            { '▒', OnImpassableTerrain },
-            { 'f', OnThickForest },
-            { 'F', OnDenseForest },
-            { '■', OnLargeStone },
-            { '□', OnObstaclesgrid },
-            { '%', OnBush },
+            { '▒', TileProcessor.OnImpassableTerrain },
+            { 'f', TileProcessor.OnThickForest },
+            { 'F', TileProcessor.OnDenseForest },
+            { '■', TileProcessor.OnLargeStone },
+            { '□', TileProcessor.OnObstaclesgrid },
+            { '%', TileProcessor.OnBush },
             #endregion
 
             #region === Structures & Furnishings ===
-            { '˄', OnTroughUpper },
-            { '˅', OnTroughLower },
-            { '<', OnFurnaceLeft },
-            { '>', OnFurnaceRight },
-            { '✎', OnWritingDesk },
-            { '✏', OnNote },
-            { 'π', OnCounter },
-            { '▭', OnBed },
-            { '☩', OnCross1 },
-            { '†', OnCross2 },
-            { '‡', OnReligiousSymbol },
-            { 'ɦ', OnPew },
-            { '⛬', OnAlter},
-            { '▣', OnChest },
-            { '⬜', OnBarrel },
-            { 'Ṡ', OnSecretChest },
-            { '█', OnContainer },
-            { 'Ǒ', OnWoodenPillar },
+            { '˄', TileProcessor.OnTroughUpper },
+            { '˅', TileProcessor.OnTroughLower },
+            { '<', TileProcessor.OnFurnaceLeft },
+            { '>', TileProcessor.OnFurnaceRight },
+            { '✎', TileProcessor.OnWritingDesk },
+            { '✏', TileProcessor.OnNote },
+            { 'π', TileProcessor.OnCounter },
+            { '▭', TileProcessor.OnBed },
+            { '☩', TileProcessor.OnCross1 },
+            { '†', TileProcessor.OnCross2 },
+            { '‡', TileProcessor.OnReligiousSymbol },
+            { 'ɦ', TileProcessor.OnPew },
+            { '⛬', TileProcessor.OnAlter},
+            { '▣', TileProcessor.OnChest },
+            { '⬜', TileProcessor.OnBarrel },
+            { 'Ṡ', TileProcessor.OnSecretChest },
+            { '█', TileProcessor.OnContainer },
+            { 'Ǒ', TileProcessor.OnWoodenPillar },
 
             #endregion
             #region === Walls ===
             // ┌, ┐, └, ┘, ─, │, ┼, ┬, ┴, ├, ┤  -> OnWallCharacter
-            { '┌', OnWallCharacter },
-            { '┐', OnWallCharacter },
-            { '└', OnWallCharacter },
-            { '┘', OnWallCharacter },
-            { '─', OnWallCharacter },
-            { '│', OnWallCharacter },
-            { '┼', OnWallCharacter },
-            { '┬', OnWallCharacter },
-            { '┴', OnWallCharacter },
-            { '├', OnWallCharacter },
-            { '┤', OnWallCharacter },
+            { '┌', TileProcessor.OnWallCharacter },
+            { '┐', TileProcessor.OnWallCharacter },
+            { '└', TileProcessor.OnWallCharacter },
+            { '┘', TileProcessor.OnWallCharacter },
+            { '─', TileProcessor.OnWallCharacter },
+            { '│', TileProcessor.OnWallCharacter },
+            { '┼', TileProcessor.OnWallCharacter },
+            { '┬', TileProcessor.OnWallCharacter },
+            { '┴', TileProcessor.OnWallCharacter },
+            { '├', TileProcessor.OnWallCharacter },
+            { '┤', TileProcessor.OnWallCharacter },
 
             // #, +, -, |, /, \, _  -> OnSpecialBuilders
-            { '#', OnSpecialBuilders },
-            { '+', OnSpecialBuilders },
-            { '-', OnSpecialBuilders },
-            { '|', OnSpecialBuilders },
-            { '/', OnSpecialBuilders },
-            { '\\', OnSpecialBuilders }, // escape needed for backslash
-            { '_', OnSpecialBuilders },
+            { '#', TileProcessor.OnSpecialBuilders },
+            { '+', TileProcessor.OnSpecialBuilders },
+            { '-', TileProcessor.OnSpecialBuilders },
+            { '|', TileProcessor.OnSpecialBuilders },
+            { '/', TileProcessor.OnSpecialBuilders },
+            { '\\', TileProcessor.OnSpecialBuilders }, // escape needed for backslash
+            { '_', TileProcessor.OnSpecialBuilders },
             #endregion 
 
             #region === Doors & Entrances ===
-            { '=', OnDoor },
-            { '▶', OnRightEntrance },
-            { '◀', OnLeftEntrance },
+            { '=', TileProcessor.OnDoor },
+            { '▶', TileProcessor.OnRightEntrance },
+            { '◀', TileProcessor.OnLeftEntrance },
             #endregion
 
             #region === UI Decorations & Symbols ===
-            { '★', OnSolidStar },
-            { '☆', OnEmptyStar },
-            { '✓', OnCheckMark1 },
-            { '✗', OnCrossPatch1 },
-            { '✘', OnCrossPatch2 },
-            { '✔', OnCheckMark2 },
-            { '↑', OnUpArrow1 },
-            { '↓', OnDownArrow1 },
-            { '←', OnLeftArrow1 },
-            { '→', OnRightArrow1 },
-            { '↔', OnSideSideArrow },
-            { '↕', OnUpDownArrow },
-            { '⇦', OnLeftArrow2 },
-            { '⇩', OnDownArrow2 },
-            { '⇨', OnRightArrow2 },
-            { '⇧', OnUpArrow2 },
-            { '^', OnUpArrow3 },
-            { '☻', OnCharacter },
-            { '☺', OnSmileFace },
-            { '⚙', OnMachinery },
-            { '‼', OnAlert },
-            { '♫', OnMusicalInstruments }
+            { '★', TileProcessor.OnSolidStar },
+            { '☆', TileProcessor.OnEmptyStar },
+            { '✓', TileProcessor.OnCheckMark1 },
+            { '✗', TileProcessor.OnCrossPatch1 },
+            { '✘', TileProcessor.OnCrossPatch2 },
+            { '✔', TileProcessor.OnCheckMark2 },
+            { '↑', TileProcessor.OnUpArrow1 },
+            { '↓', TileProcessor.OnDownArrow1 },
+            { '←', TileProcessor.OnLeftArrow1 },
+            { '→', TileProcessor.OnRightArrow1 },
+            { '↔', TileProcessor.OnSideSideArrow },
+            { '↕', TileProcessor.OnUpDownArrow },
+            { '⇦', TileProcessor.OnLeftArrow2 },
+            { '⇩', TileProcessor.OnDownArrow2 },
+            { '⇨', TileProcessor.OnRightArrow2 },
+            { '⇧', TileProcessor.OnUpArrow2 },
+            { '^', TileProcessor.OnUpArrow3 },
+            { '☻', TileProcessor.OnCharacter },
+            { '☺', TileProcessor.OnSmileFace },
+            { '⚙', TileProcessor.OnMachinery },
+            { '‼', TileProcessor.OnAlert },
+            { '♫', TileProcessor.OnMusicalInstruments }
             #endregion
         };
     }
+    // Updated LoadMapFromJson (always add tile)
     public static Map LoadMapFromJson()
     {
         Map map = new Map();
 
         // Use the generic loader
-        List<Grid> grids = JsonLoader.LoadFromJson<List<Grid>>(FileManager.TheGridFilePath)
-                          ?? new List<Grid>();
+        List<Locations> Locations = JsonLoader.LoadFromJson<List<Locations>>(FileManager.TheGridFilePath)
+                          ?? new List<Locations>();
 
-        foreach (var grid in grids)
+        foreach (var Location in Locations)
         {
-            map.GridKey[(grid.XPosition, grid.YPosition)] = grid;
-            if (grid.GridMap == null) continue;
-
-            for (int LocalX = 0; LocalX < grid.GridMap.Count; LocalX++)
+            foreach (var grid in Location.Map)
             {
-                string line = grid.GridMap[LocalX];
-                int flippedX = (grid.GridMap.Count - 1) - LocalX;
+                GridKey[(grid.GridX, grid.GridY)] = grid;
+                if (grid.GridMap == null) continue;
 
-                for (int LocalY = 0; LocalY < line.Length; LocalY++)
+                for (int LocalY = 0; LocalY < grid.GridMap.Count; LocalY++)  // Vertical (Y/rows, 0=top)
                 {
-                    char c = line[LocalY];
-                    Tile? tile = map.ProcessTile(c, grid.XPosition, grid.YPosition, flippedX, LocalY);
-
-                    if (tile != null)
+                    string line = grid.GridMap[LocalY];
+                    for (int LocalX = 0; LocalX < line.Length; LocalX++)  // Horizontal (X/columns)
                     {
-                        map.MapKey[(grid.XPosition, grid.YPosition, (flippedX, LocalY))] = tile;
+                        char c = line[LocalX];
+                        Tile tile = map.ProcessTile(c, grid.GridX, grid.GridY, LocalX, LocalY);  // Non-null
+                        MapKey[(grid.GridX, grid.GridY, (LocalX, LocalY))] = tile;
                     }
                 }
             }
@@ -188,83 +187,117 @@ public class Map
         map.FinalizeTiles();
         return map;
     }
-    public static Grid? FindGrid(Map map, int x, int y)
+    public static Grid? FindGrid(Map map, int x, int y)// Does the map really need to be tied into this??
     {
-        if (map.GridKey.TryGetValue((x, y), out Grid grid))
+
+        if (GridKey.TryGetValue((x, y), out Grid grid))
         {
             return grid;
         }
         return null; // or throw an exception if you prefer
     }
-    public static Tile FindTile(Map mapKey, int GridX, int GridY, int LocalX, int LocalY)
+    public static Dictionary<(int, int), Tile> LocalTiles(Grid currentGrid)
     {
-        if (mapKey.MapKey.TryGetValue((GridX, GridY, (LocalX, LocalY)), out Tile tile))
+        Dictionary<(int, int), Tile> result = new();
+        for (int x = 0; x < GridX; x++)
         {
-            return tile;
-        }
-
-        return null;
-    }
-    public static void PrintGrid(int gridX, int gridY)
-    {
-        Map map = new Map();
-        const int gridSize = 50;
-
-        for (int row = 0; row < gridSize; row++)
-        {
-            StringBuilder line = new StringBuilder();
-
-            for (int col = 0; col < gridSize; col++)
+            for (int y = 0; y < GridY; y++)
             {
-                if (map.MapKey.TryGetValue((gridX, gridY, (row, col)), out Tile tile))
+                if (MapKey.TryGetValue((currentGrid.GridX, currentGrid.GridY, (x, y)), out Tile tile))
                 {
-                    line.Append(tile.AsciiToShow);
-                }
-                else
-                {
-                    line.Append('F'); // empty space if no tile exists
+                    result.Add((x, y), tile);
                 }
             }
-
-            Console.WriteLine(line.ToString());
         }
+        return result;
     }
+    
+    // Updated PrintWorld (minor: use max width, clear with border offset)
     public static void PrintWorld(Map map, Player player, int reservedLines)
     {
-        if (map.MapKey == null || map.MapKey.Count == 0)
+        if (MapKey == null || MapKey.Count == 0)
         {
             Console.WriteLine("Map is empty! Nothing to print.");
             return;
         }
 
-        // Calculate how many rows we can actually print
-        int totalMapRows = GridHeight; // assuming one grid vertically, adjust if multiple
-        int printableRows = Math.Max(0, totalMapRows - reservedLines);
+        if (player?.Root == null)
+        {
+            Console.WriteLine("Player or root position not initialized.");
+            return;
+        }
+
+        // Fetch current grid dynamically
+        if (!GridKey.TryGetValue((player.Root.GridX, player.Root.GridY), out var currentGrid) || currentGrid.GridMap == null)
+        {
+            Console.WriteLine("Current grid not found or empty.");
+            return;
+        }
+
+        int height = currentGrid.GridMap.Count;  // Vertical rows (Y) = 25
+        int width = 0;
+        foreach (var rowStr in currentGrid.GridMap)
+        {
+            width = Math.Max(width, rowStr?.Length ?? 0);  // Horizontal columns (X) = 51
+        }
+        if (width == 0)
+        {
+            Console.WriteLine("Grid has no columns.");
+            return;
+        }
+
+        // Calculate safe printable rows (assume fits 25)
+        int availableVisibleRows = Console.WindowHeight - reservedLines - 1;
+        int availableBufferRows = Console.BufferHeight - 1;
+        int printableRows = Math.Min(height, Math.Min(availableVisibleRows, availableBufferRows));
+
+        if (printableRows <= 0) return;
+
+        // Optional: Extend buffer
+        if (printableRows + 1 > Console.BufferHeight)
+        {
+            Console.BufferHeight = printableRows + reservedLines + 10;
+        }
+
+        // Clear the map area (start at col=1 for border)
+        for (int r = 1; r <= availableVisibleRows; r++)
+        {
+            Console.SetCursorPosition(1, r);
+            Console.Write(new string(' ', width));
+        }
+
         int row = 0;
-        for (int LocalX = GridHeight  - 1; LocalX >= 0; LocalX--)
+        for (int localY = 0; localY < printableRows; localY++)  // Top-down (Y=0 top)
         {
             StringBuilder line = new StringBuilder();
 
-            for (int LocalY = 0; LocalY < GridWidth; LocalY++)
+            for (int localX = 0; localX < width; localX++)
             {
-                // Compute absolute coordinates in the map
-                var key = (player.Gridx, player.GridY, (LocalX, LocalY));
-                if (key == (player.Gridx, player.GridY, (player.LocalX, player.LocalY)))
+                var key = (player.Root.GridX, player.Root.GridY, (localX, localY));
+                if (localX == player.Root.LocalX && localY == player.Root.LocalY)
                 {
                     line.Append('@');
                 }
-                else if (map.MapKey.TryGetValue(key, out Tile tile))
+                else if (MapKey.TryGetValue(key, out Tile tile))
                 {
                     line.Append(tile.AsciiToShow);
                 }
                 else
                 {
-                    line.Append(' '); // empty space for missing tiles
+                    line.Append(' ');  // Fallback
                 }
             }
-            Console.SetCursorPosition(1, row+1);
-            row++;
+
+            Console.SetCursorPosition(1, row + 1);
             Console.Write(line.ToString());
+            row++;
+        }
+
+        // Blank out unused rows
+        for (int extraRow = printableRows; extraRow < availableVisibleRows; extraRow++)
+        {
+            Console.SetCursorPosition(1, extraRow + 1);
+            Console.Write(new string(' ', width));
         }
     }
     public void FinalizeTiles()
@@ -292,501 +325,51 @@ public class Map
     /// Checks if any neighboring tile around the given coordinates is roofed.
     /// </summary>
 
-    #region method for each char
-    #region === SPAWNS ===
-    // @
-    private Tile OnPlayerSpawn(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // &
-    private Tile OnNPCSpawn(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // !
-    private Tile OnQuestMarker(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ♘
-    private Tile OnKnightSpawn(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ♖
-    private Tile OnGuard(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // €
-    private Tile OnRandomEventSpawn(int gridX, int gridY, int localX, int localY, char ascii)
+
+    // A method that returns a tile. Easy access to the MapKey
+    public static Tile FindTile(Map mapKey, int GridX, int GridY, int LocalX, int LocalY)
     {
-        return new Tile(gridX, gridY, localX, localY, TileTypes.empty, true, false, new(), ascii)
+        if (MapKey.TryGetValue((GridX, GridY, (LocalX, LocalY)), out Tile tile))
         {
-            DeferredChecks = TileCheckType.NeighborRoofed
-        };
+            return tile;
+        }
+        return new Tile { AsciiToShow = ' ', IsWalkable = false };  // Default non-walkable for missing (or make walkable if open world)
     }
 
-    // ɤ
-    private Tile OnPlantSpawn(int GridX, int GridY, int LocalX, int LocalY, char ascii)
+    public Tile ProcessTile(char ascii, int gridX, int gridY, int LocalX, int LocalY)  // Removed ? (always return Tile)
     {
-        Tile tile = new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), '.');
-        return tile;
-    }
-    // ♥
-    private Tile OnHeartSpawn(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ♡
-    private Tile OnHalfHeartSpawn(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-
-    #region === Shops ===
-    // ⚔
-    private Tile OnWeaponsShop(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⚒
-    private Tile OnCraftingShop(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⛏
-    private Tile OnRangerShop(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⛓
-    private Tile OnMatieralShop(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ÿ
-    private Tile OnMarketStand(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-
-    #region === Faction ===
-    // ♦
-    private Tile OnFactionQuest(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ♣
-    private Tile OnFactionLeader(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ♠
-    private Tile OnFactionLegiet(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-
-    #region === Indicators ===
-    // ♬
-    private Tile OnSoundIndicator(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // !
-    private Tile OnQuestMaker(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ?
-    private Tile OnQuestionMark(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ☠
-    private Tile OnPhysicalTrap(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ☢
-    private Tile OnMagicTrap(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ☣
-    private Tile OnLogicTrap(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-
-    #region === Walkable Terrain and Areas ===
-
-    #region = Path =
-    // .
-    private Tile OnPath(int GridX, int GridY, int LocalX, int LocalY, char ascii)
-    {
-        Tile tile = new Tile(GridX, GridY, LocalX, LocalY, TileTypes.DirtPath, true, false, new(), ascii);
-        tile.AddDescription(3, "Packed Earth");
-        tile.AddDescription(3, "Patches of green grass litter the packed ground", GridBiomeType.BorelForst);
-        tile.AddDescription(3, "You step over puddles of water",null, null, null, WeatherData.Rainy);
-        return tile;
-    }
-    // '
-    private Tile OnInsideWalkablePath(int GridX, int GridY, int LocalX, int LocalY, char ascii)
-    {
-        Tile tile = new Tile(GridX, GridY, LocalX, LocalY, TileTypes.DirtPath, true, false, new(), ascii);
-        tile.AddDescription(3, "Your footsteps echo across the room");
-        return tile;
-    }
-    // …
-    private Tile OnRoad(int GridX, int GridY, int LocalX, int LocalY, char ascii)
-    {
-        Tile tile = new Tile(GridX, GridY, LocalX, LocalY, TileTypes.DirtPath, true, false, new(), ascii);
-        tile.AddDescription(3, "Packed Earth");
-        return tile;
-    }
-    // ,
-    private Tile OnGrass(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, true, false, new(), ascii);
-    #endregion
-
-    #region = PlantLife =
-    // ♣
-    private Tile OnTree(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ,
-    private Tile OnDeadTree(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-    #region Accent Pieces
-    // ◎
-    private Tile OnFairyRing(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ◉
-    private Tile OnBullseye(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ●
-    private Tile OnSmallStone1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ○
-    private Tile OnSmallStone2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ▪
-    private Tile OnSmallStone3(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ▫
-    private Tile OnGroundDetail(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // □
-    private Tile OnObstaclesgrid(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-    #endregion
-
-
-    #region === Non-Walkable Terrain and areas ===
-    // 🌲
-    private Tile OnForest(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ▒
-    private Tile OnImpassableTerrain(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // f
-    private Tile OnThickForest(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // F
-    private Tile OnDenseForest(int GridX, int GridY, int LocalX, int LocalY, char ascii)
-    {
-        Tile tile = new Tile(GridX, GridY, LocalX, LocalY, TileTypes.DirtPath, false, false, new(), ascii);
-        tile.AddDescription(15, "Theres a rustling in the underbrush, a rabbit jumps out and scampers away", GridBiomeType.BorelForest);
-        return tile;
-    }
-    // ■
-    private Tile OnLargeStone(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // %
-    private Tile OnBush(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-
-    #region === Design and Decorations ===
-
-    #region = Outdoor Furnishings =
-    // ˄
-    private Tile OnTroughUpper(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ˅
-    private Tile OnTroughLower(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-    #region = Infoor furnishings =
-    // <
-    private Tile OnFurnaceLeft(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // >
-    private Tile OnFurnaceRight(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ✎
-    private Tile OnWritingDesk(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ✏
-    private Tile OnNote(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // π
-    private Tile OnCounter(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ▭
-    private Tile OnBed(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ☩
-    private Tile OnCross1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // †
-    private Tile OnCross2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ‡
-    private Tile OnReligiousSymbol(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ɦ
-    private Tile OnPew(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), 'ɦ');
-    // ⛬
-    private Tile OnAlter(int GridX, int GridY, int LocalX, int LocalY, char ascii)
-    {
-        Tile tile = new Tile(GridX, GridY, LocalX, LocalY, TileTypes.DirtPath, true, false, new(), ascii);
-        tile.AddDescription(3, "Packed Earth");
-        return tile;
-    }
-    #endregion
-
-    #region = Containers =
-    // █
-    private Tile OnContainer(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ▣
-    private Tile OnChest(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⬜
-    private Tile OnBarrel(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // Ṡ
-    private Tile OnSecretChest(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-    #region = Box Drawing (UI or Structure Outlines) =
-    // ┌, ┐, └, ┘, ─, │, ┼, ┬, ┴, ├, ┤
-    private Tile OnWallCharacter(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // #, +, -, |, /, \, _
-    private Tile OnSpecialBuilders(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // Ǒ
-    private Tile OnWoodenPillar(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-
-    // = Doors and Entrances =
-    // =
-    private Tile OnDoor(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, true, true, new(), ascii);
-    // ▶
-    private Tile OnRightEntrance(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ◀
-    private Tile OnLeftEntrance(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-    #endregion
-
-
-    #region === UI Decorations & Symbols ===
-    // ★
-    private Tile OnSolidStar(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ☆
-    private Tile OnEmptyStar(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ✓
-    private Tile OnCheckMark1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ✗
-    private Tile OnCrossPatch1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ✘
-    private Tile OnCrossPatch2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ✔
-    private Tile OnCheckMark2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ↑
-    private Tile OnUpArrow1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ↓
-    private Tile OnDownArrow1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ←
-    private Tile OnLeftArrow1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // →
-    private Tile OnRightArrow1(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ↔
-    private Tile OnSideSideArrow(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ↕
-    private Tile OnUpDownArrow(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⇦
-    private Tile OnLeftArrow2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⇩
-    private Tile OnDownArrow2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⇨
-    private Tile OnRightArrow2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⇧
-    private Tile OnUpArrow2(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ^
-    private Tile OnUpArrow3(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ☻
-    private Tile OnCharacter(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ☺
-    private Tile OnSmileFace(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ⚙
-    private Tile OnMachinery(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    // ‼
-    private Tile OnAlert(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-
-    #region === Items ===
-    // ♫
-    private Tile OnMusicalInstruments(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-
-    #region === Alphabet ===
-    // Uppercase A-Z
-    private Tile OnA(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-    new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnB(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnC(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnD(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnE(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnF(int GridX, int GridY, int LocalX, int LocalY, char ascii)
-    {
-        Tile tile = new Tile(GridX, GridY, LocalX, LocalY, TileTypes.Forest, false, false, new(), ascii);
-        return tile;
-    }
-    private Tile OnG(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnH(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnI(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnJ(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnK(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnL(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnM(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnN(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnO(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnP(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnQ(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnR(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnS(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnT(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnU(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnV(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnW(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnX(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnY(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile OnZ(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-
-    // Lowercase a-z
-    private Tile Ona(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onb(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onc(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Ond(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile One(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onf(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Ong(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onh(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Oni(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onj(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onk(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onl(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onm(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onn(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Ono(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onp(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onq(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onr(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Ons(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Ont(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onu(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onv(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onw(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onx(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Ony(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    private Tile Onz(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
-        new Tile(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    #endregion
-
-    #endregion
-
-    private Tile? ProcessTile(char ascii, int gridX, int gridY, int LocalX, int LocalY)
-    {
-        
         // 1. Check dictionary first
         if (_tileHandlers.TryGetValue(ascii, out var handler))
             return handler(gridX, gridY, LocalX, LocalY, ascii);
+
         // Letters handled dynamically
         if (char.IsLetter(ascii))
         {
             // 2. Fall back to reflection method
-            string methodName = "On" + ascii;
-            var method = this.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            string methodName = "On" + ascii.ToString();
+            Type type = typeof(TileProcessor);
+            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
             if (method != null)
                 return (Tile)method.Invoke(this, new object[] { gridX, gridY, LocalX, LocalY, ascii });
 
-            // 3. If neither exist, warn
+            // 3. If neither exist, warn and fall through to default
             Console.WriteLine($"Warning: No handler found for letter '{ascii}' (expected {methodName})");
-            return null;
         }
 
         // Non-letter characters always go to dictionary
         if (_tileHandlers.TryGetValue(ascii, out var fallbackHandler))
             return fallbackHandler(gridX, gridY, LocalX, LocalY, ascii);
 
-        // Nothing found
-        return null;
+        // Default for nothing found: e.g., empty space or unknown
+        return new Tile
+        {
+            GridX = gridX,
+            GridY = gridY,
+            LocalX = LocalX,
+            LocalY = LocalY,
+            AsciiToShow = ascii,  // Or ' ' for unknowns
+            IsWalkable = true  // Assume walkable unless border/wall; adjust per char (e.g., if (ascii == ' ') IsWalkable=true;)
+        };
     }
 
 }

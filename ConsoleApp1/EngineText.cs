@@ -56,7 +56,7 @@ public class EngineText
         return response;
     }
 
-    public void Write(string text, int time)
+    public static void Write(string text, int time)
     {
         Task.Run(async () =>
         {
@@ -76,18 +76,18 @@ public class EngineText
         }).GetAwaiter().GetResult();
     }
 
-    public void Write(string text)
+    public static void Write(string text)
     {
         Write(text, flags.ConsoleSpeed);
     }
 
-    public void Write(int row, string text)
+    public static void Write(int row, string text)
     {
         Console.SetCursorPosition(row, 0);
         Write(text);
     }
 
-    public string Read(string text, int time)
+    public static string Read(string text, int time)
     {
         Write(text, time);
         // FIX: Console.ReadLine instead of Console.Read
@@ -95,7 +95,7 @@ public class EngineText
         return response ?? string.Empty;
     }
 
-    public string Read(string text)
+    public static string Read(string text)
     {
         return Read(text, flags.ConsoleSpeed);
     }

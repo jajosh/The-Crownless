@@ -25,11 +25,13 @@ public class FileManager
     public static readonly string TheRandomTextPath = Path.Combine(DataFolder, "RandomText.json");
     public static readonly string TheRandiomEnvironmentalDialog = Path.Combine(DataFolder, "RandiomEnvironmentalDialog.json");
     #endregion
+
+    // The non changable data
     public static List<Item> Items { get; set; }
-    public static List<NPCType> NPCTypes { get;  set; } = new();
-    public static List<Quest> Quests { get;  set; } = new();
-    public static List<NPC> NPCs { get;  set; } = new();
-    public static List<Grid> Grids { get; set; } = new();
+    public static List<NPCType> NPCTypes { get; set; } = new();
+    public static List<Quest> Quests { get; set; } = new();
+    public static List<NPC> NPCs { get; set; } = new();
+    public static List<Locations> Grids { get; set; } = new();
     public static List<EngineRandomText> RandomTexts { get; private set; } = new();
     public FileManager()
     {
@@ -38,7 +40,7 @@ public class FileManager
         VerifyPaths();
         LoadData();
         Console.WriteLine($"Loaded {FileManager.Items?.Count ?? 0} items.");
-        Console.WriteLine($"Loaded {FileManager.Grids?.Count ?? 0} Grids.");
+        Console.WriteLine($"Loaded {FileManager.Grids?.Count ?? 0} Locations.");
         Console.WriteLine($"Loaded {FileManager.NPCs?.Count ?? 0} NPCs.");
         Console.WriteLine($"Loaded {FileManager.NPCTypes?.Count ?? 0} NPCTypes.");
     }
@@ -96,7 +98,7 @@ public class FileManager
         Console.WriteLine("Quests");
         NPCs = JsonLoader.LoadFromJson<List<NPC>>(FileManager.TheNPCFilePath);
         Console.WriteLine("NPCs");
-        Grids = JsonLoader.LoadFromJson<List<Grid>>(FileManager.TheGridFilePath);
+        Grids = JsonLoader.LoadFromJson<List<Locations>>(FileManager.TheGridFilePath);
         Console.WriteLine("Grids");
         RandomTexts = JsonLoader.LoadFromJson<List<EngineRandomText>>(FileManager.TheRandomTextPath);
         Console.WriteLine("RandomTexts");
