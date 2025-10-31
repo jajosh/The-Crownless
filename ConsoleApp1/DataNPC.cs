@@ -1,20 +1,56 @@
 ﻿using GameNamespace;
 using System;
 
+public interface IDataNPC
+{
+    List<IActionable> ActiveOnScreen { get; }     // Current grid NPCs
+    List<IActionable> ActiveOnLocation { get; }   // Location-specific NPCs
+    void LoadGridNPCs(int gridId);
+    void LoadLocationNPCs(int locationId);
+    void UnloadGrid(int gridId);
+}
+
+public class DataNPC : IDataNPC
+{
+    private readonly Dictionary<int, List<IActionable>> _gridNPCs = new();
+    private readonly Dictionary<int, List<IActionable>> _locationNPCs = new();
+
+    public List<IActionable> ActiveOnScreen { get; private set; } = new();
+    public List<IActionable> ActiveOnLocation { get; private set; } = new();
+
+    public void LoadGridNPCs(int gridId)
+    {
+        ActiveOnScreen = _gridNPCs.GetValueOrDefault(gridId, new());
+        // Start AI processing for these NPCs
+    }
+
+    public void LoadLocationNPCs(int locationId)
+    {
+        ActiveOnLocation = _locationNPCs.GetValueOrDefault(locationId, new());
+    }
+
+    public void UnloadGrid(int gridId)
+    {
+        ActiveOnScreen.Clear();
+        // Stop AI processing
+    }
+}
 public class DataNPC
 {
     public List<NPCType> NPCType { get; set; }
     public List<NPC> NPCs { get; set; }
 
     // --- Safe lookups (return null if not found) ---
-    public NPCType? GetTypeNPCByID(int id)
+    public static NPCType? GetTypeNPCByID(int id)
     {
-        var npcType = NPCType.FirstOrDefault(n => n.ID == id);
+        if (MainClass.saveGame.NPCs.NPCs == null)
+            throw new InvalidOperationException("NPC list has not been loaded or initialized.");
+        var npcType = MainClass.saveGame.NPCs.NPCType.FirstOrDefault(n => n.ID == id);
         if (npcType == null)
             throw new KeyNotFoundException($"NPCType with ID {id} not found in hydrated list.");
         return npcType;
     }
-    public NPC? GetNamedNPCByID(int id)
+    public static NPC? GetNamedNPCByID(int id)
     {
         if (MainClass.saveGame.NPCs.NPCs == null)
             throw new InvalidOperationException("NPC list has not been loaded or initialized.");
@@ -57,11 +93,11 @@ public static class NPCHydrator
                 continue;
 
             var triggerRawData = triggerRawDataProp.GetValue(npc) as List<TriggerConfig>;
-            var triggerData = triggerDataProp.GetValue(npc) as IDictionary<CombatActionType, GameAction>;
+            var triggerData = triggerDataProp.GetValue(npc) as IDictionary<ActionType, GameAction>;
 
             if (triggerData == null)
             {
-                triggerData = new Dictionary<CombatActionType, GameAction>();
+                triggerData = new Dictionary<ActionType, GameAction>();
                 triggerDataProp.SetValue(npc, triggerData);
             }
 
@@ -76,7 +112,7 @@ public static class NPCHydrator
                 var gameAction = GameActionFactory.Create(triggerConfig.Action, parameters);
 
                 if (gameAction != null)
-                    triggerData[gameAction.ActionType] = gameAction; // replace or add
+                    triggerData[gameAction.Type] = gameAction; // replace or add
             }
         }
     }

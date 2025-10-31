@@ -1,5 +1,7 @@
 ﻿using GameNamespace;
+using Spectre.Console;
 using System;
+using System.Threading.Tasks;
 
 public class EngineMovement
 {
@@ -56,10 +58,6 @@ public class EngineMovement
         if (newLocalX > 50) { newLocalX = 0; newGridX++; }
         if (newLocalY < 0) { newLocalY = 24; newGridY++; }
         if (newLocalY > 24) { newLocalY = 0; newGridY--; }
-        //if (newLocalX >= gridWidth) { newLocalX -= gridWidth; newGridX++; MainClass.needRedraw = true; }  // Better than =0 for non-unit deltas (though delta=1)
-        //if (newLocalX < 0) { newLocalX += gridWidth; newGridX--; MainClass.needRedraw = true; }
-        //if (newLocalY >= gridHeight) { newLocalY -= gridHeight; newGridY++; MainClass.needRedraw = true; }
-        //if (newLocalY < 0) { newLocalY += gridHeight; newGridY--; MainClass.needRedraw = true; }
 
         // If grid changed, fetch new grid
         Grid newGrid = Map.FindGrid(saveGame.GameMap, newGridX, newGridY);
@@ -70,7 +68,7 @@ public class EngineMovement
 
         if (tileToMoveTo == null || !tileToMoveTo.IsWalkable)
         {
-            _ = EngineGUI.WriteWithClearAnimation("Tile not Walkable");
+            _ = EngineGUI.WriteMessageToPlayer("Tile not Walkable");
             //ssreturn;
         }
 
@@ -92,7 +90,10 @@ public class EngineMovement
             // Redraw old tile (same grid)
             Tile currentTile = Map.FindTile(saveGame.GameMap, oldGridX, oldGridY, oldLocalX, oldLocalY);
             Console.SetCursorPosition(GetConsoleCol(oldLocalX), GetConsoleRow(oldLocalY));
-            Console.Write(currentTile.AsciiToShow);
+            if (currentTile.Color == default)
+                currentTile.Color = Color.White;
+            string line = $"[{currentTile.Color.ToMarkup()}]{currentTile.AsciiToShow}[/]";
+            AnsiConsole.Markup(line);
 
             // Draw player at new location
             Console.SetCursorPosition(GetConsoleCol(newLocalX), GetConsoleRow(newLocalY));
@@ -108,11 +109,11 @@ public class EngineMovement
         if (random.Next(10) < 2)
         {
             string text = Tile.PickADescription(tileToMoveTo, saveGame.Weather, newGrid.Biome, newGrid.SubBiome);
-            _ = EngineGUI.WriteWithClearAnimation(text);
+            _ = EngineGUI.WriteMessageToPlayer(text);
         }
         Console.SetCursorPosition(30, 0);
     }
-    public static bool Move(SaveGame saveGame, NPC npc, int direction) // 1, 2, 3, 4, North, South, East, West
+    public static async Task<bool> Move(SaveGame saveGame, NPC npc, int direction) // 1, 2, 3, 4, North, South, East, West
     {
         // Tags position, logic affects these before saving to the NPC
         int gridX = npc.Root.GridX;
@@ -124,47 +125,58 @@ public class EngineMovement
         int oldGridY = gridY;
         int oldLocalX = localX;
         int oldLocalY = localY;
-        // The logic of the move
-        switch (direction)
+
+       switch(direction)
         {
-            case 1: // North
-                if (localX == 25) { localX = 0; gridX++; }
-                else localX++;
+            case 1:
+                {
+                    if (localY == 50) { localY = 0; gridY++; } else localY++;
+                }
                 break;
-            case 2: // South
-                if (localX == 0) { localX = 25; gridX--; }
-                else localX--;
+            case 2:
+                {
+                    if (localY == 0) { localY = 50; gridY--; } else localY--;
+                }
                 break;
-            case 3: // East
-                if (localY == 51) { localY = 0; gridY++; }
-                else localY++;
+            case 3:
+                {
+                    if (localX == 25) { localX = 0; gridX++; } else localX++;
+                }
                 break;
-            case 4: // West
-                if (localY == 0) { localY = 51; gridY--; }
-                else localY--;
+            case 4:
+                {
+                    if (localX == 0) { localX = 25; gridX--; } else localX--;
+                }
                 break;
         }
-
-        // Checking if the tile is walk able
-        Tile tileToMoveTo = Map.FindTile(saveGame.GameMap, gridX, gridY, localX, localY);
-        if (tileToMoveTo.IsWalkable)
+        Tile newTile = Map.FindTile(saveGame.GameMap, gridX, gridY, localX, localY);
+        Tile oldtile = Map.FindTile(saveGame.GameMap, oldGridX, oldGridY, oldLocalX, oldLocalY);
+        if (newTile.IsWalkable)
         {
-            // Redraw old tile
+            // Redraw old tile (same grid)
             Tile currentTile = Map.FindTile(saveGame.GameMap, oldGridX, oldGridY, oldLocalX, oldLocalY);
-            Console.SetCursorPosition(GetConsoleCol(oldLocalY), GetConsoleRow(oldLocalX));
-            Console.Write(currentTile.AsciiToShow);
+            Console.SetCursorPosition(GetConsoleCol(oldLocalX), GetConsoleRow(oldLocalY));
+            if (currentTile.Color == null)
+                currentTile.Color = Color.White;
+            string line = $"[{currentTile.Color.ToMarkup()}]{currentTile.AsciiToShow}[/]";
+            AnsiConsole.Markup(line);
 
             // Draw NPC at new location
-            Console.SetCursorPosition(GetConsoleCol(localY), GetConsoleRow(localX));
-            Console.Write(npc.Ascii);
-            // Saves the position to the NPC
+            Console.SetCursorPosition(GetConsoleCol(localX), GetConsoleRow(localY));
+            AnsiConsole.Markup(npc.Ascii);
+
+            // Saves the location
             npc.Root.GridX = gridX;
             npc.Root.GridY = gridY;
             npc.Root.LocalX = localX;
             npc.Root.LocalY = localY;
-            return true; // Signals movement was a success
+            return true;
         }
-        else return false; // Signals movement failed
+        else
+        {
+            await EngineGUI.WriteMessageToPlayer("Error: NPC trying to move to a non-walkable tile");
+            return false; // Changes are not saved, NPC does not move.
+        }
     }
 
     // --- Helper methods for console positioning ---

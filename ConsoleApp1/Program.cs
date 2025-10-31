@@ -13,6 +13,7 @@ using Windows.Media.Capture;
 using Windows.Media.Devices;
 using Windows.Perception.Spatial;
 using static System.Net.Mime.MediaTypeNames;
+using Spectre.Console;
 
 namespace GameNamespace
 {
@@ -80,10 +81,11 @@ namespace GameNamespace
                     }
                     GameEngine.Mover.Move(saveGame);
                     Console.SetCursorPosition(30, 1);
-                    NPC npc = GameEngine.NPC.GetNamedNPCByID(1);
-                    GameEngine.AI.ExecuteTurn(npc, saveGame.PlayerCharacter, saveGame);
+                    NPC npc = DataNPC.GetNamedNPCByID(1);
+                    //GameEngine.AI.ExecuteTurn(npc, saveGame.PlayerCharacter, saveGame);
+                    EngineGUI.WriteMessageToPlayer($"{npc.Root.LocalX}, {npc.Root.LocalY}");
                 }
-                
+
             }
             #region === Exit code === 
             Console.SetCursorPosition(3, bottomRow);  // column 0, bottom row

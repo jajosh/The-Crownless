@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Spectre.Console;
+using Windows.Media.Capture;
 
 /// <summary>
 /// Summary description for Class1
@@ -23,7 +25,6 @@ public class Map
         _tileHandlers = new Dictionary<char, Func<int, int, int, int, char, Tile>>
         {
             #region === Spawn Points, Characters, and Triggers ===
-            { '@', TileProcessor.OnPlayerSpawn },
             { '&', TileProcessor.OnNPCSpawn },
             { '!', TileProcessor.OnQuestMarker },
             { '?', TileProcessor.OnQuestionMark },
@@ -280,7 +281,7 @@ public class Map
                 }
                 else if (MapKey.TryGetValue(key, out Tile tile))
                 {
-                    line.Append(tile.AsciiToShow);
+                    line.Append($"[{tile.Color.ToMarkup()}]{tile.AsciiToShow}[/]");
                 }
                 else
                 {
@@ -289,7 +290,7 @@ public class Map
             }
 
             Console.SetCursorPosition(1, row + 1);
-            Console.Write(line.ToString());
+            AnsiConsole.Markup(line.ToString());
             row++;
         }
 

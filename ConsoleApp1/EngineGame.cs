@@ -23,7 +23,8 @@ public class EngineGame
     public EngineGUI UI = new EngineGUI();
     public EngineText Text = new EngineText();
     public FileManager FileManager = new FileManager();
-    public EngineAI AI = new EngineAI();
+    public ObjectAudio Audio = new ObjectAudio();
+    //public EngineAI AI = new EngineAI();
     public DataNPC NPC = new DataNPC();
 
     public List<IActionable> ActiveOnScreen { get; set; }
@@ -36,14 +37,10 @@ public class EngineGame
     public void Assembly()
     {
         #region === Initialization Data ===
-        Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
+        
         
         // Allows the console to print unicode
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         #endregion
-    }
-    public void update()
-    {
-        // Updates the different engines
     }
 }

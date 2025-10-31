@@ -59,8 +59,8 @@
     "Root": {
       "GridX": 0,
       "GridY": 0,
-      "LocalX": 10,
-      "LocalY": 10
+      "LocalX": 19,
+      "LocalY": 11
     },
     "Race": "Undead",
     "Aliases": {},

@@ -24,15 +24,13 @@ public class EngineGUI
         Map.PrintWorld(saveGame.GameMap, saveGame.PlayerCharacter, 0);
     }
     /// <summary>
-    /// Draws a rectangular ASCII box at the specified location.
+    /// Draws out the boxes of the UI
     /// </summary>
-    /// <param name="x">The starting x-coordinate.</param>
-    /// <param name="y">The starting y-coordinate.</param>
-    /// <param name="width">The width of the box.</param>
-    /// <param name="height">The height of the box.</param>
-    /// <param name="title">Optional title text displayed at the top.</param>
+    /// <param name="x"> starting x position of the box </param>
+    /// <param name="y"> starting y position of the box </param>
     private static void DrawBox(int x, int y, int width, int height, string title = "")
     {
+        // Set cursor position to the starting point
         Console.SetCursorPosition(x, y);
         Console.Write("+" + new string('-', width - 2) + "+");
         for (int i = 1; i < height - 1; i++)
@@ -96,11 +94,11 @@ public class EngineGUI
 
         for (int i = 0; i <= text.Length; i++)
         {
-            Console.SetWindowPosition(0, 0);
+            Console.SetWindowPosition(x, y);
             WriteInPanel(i, y, " ");
         }
     }
-    public static async Task WriteWithClearAnimation(string text)
+    public static async Task WriteMessageToPlayer(string text)
     {
         EngineGUI.WriteWithClearAnimation(0, 27, text);
     }

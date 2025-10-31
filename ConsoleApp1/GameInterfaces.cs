@@ -43,10 +43,6 @@ public interface IActionable
     CombatRelation GetCombatRelation(SaveGame saveGame);
     List<GameAction> PossibleAttacks(ICharacter Target, List<ICharacter> allies);
 }
-public interface ICombat
-{
-    
-}
 public interface IHealth
 {
     HealthComponent Health { get; }
@@ -94,6 +90,17 @@ public class HealthComponent
     {
         CurrentMP = CurrentMP - amount;
     }
+    public HealthComponent Clone()
+    {
+        var HealthComponent = new HealthComponent
+        {
+            CurrentHP = this.CurrentHP,
+            MaxHP = this.MaxHP,
+            CurrentMP = this.CurrentMP,
+            MaxMP = this.MaxMP
+        };
+        return HealthComponent;
+    }
 }
 public class SkillsCompanent : ISkills
 {
@@ -137,6 +144,14 @@ public class ItemStack
         if (amount > stackSize) return false;
         stackSize -= amount;
         return true;
+    }
+    public ItemStack Clone()
+    {
+        return new ItemStack
+        {
+            Item = this.Item,
+            stackSize = this.stackSize
+        };
     }
 }
 public class TriggerConfig

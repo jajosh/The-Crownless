@@ -1,7 +1,9 @@
 ﻿using System;
+using Spectre.Console;
 
 public class TileProcessor
 {
+    public static Random random = new Random();
 	public TileProcessor()
 	{
 	}
@@ -109,6 +111,7 @@ public class TileProcessor
         tile.AddDescription(3, "Packed Earth");
         tile.AddDescription(3, "Patches of green grass litter the packed ground", GridBiomeType.BorelForest);
         tile.AddDescription(3, "You step over puddles of water", null, null, null, WeatherData.Rainy);
+        tile.Color = Color.Blue;
         return tile;
     }
     // '

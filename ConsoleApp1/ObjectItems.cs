@@ -5,11 +5,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 using Windows.ApplicationModel.DataTransfer;
+public enum ItemMatieralType { Wood, Leather, Iron, Steel, Adamantian}
+public enum ItemType { ShortSword,  } //  For Craftable items
 public class Item
 {
 
     public string? AsciiKey { get; set; }
     public string Name { get; set; } = string.Empty;
+    
     public int ID { get; set; }
     public EquipmentSlots SlotType { get; set; }
     public int SpawnChance { get; set; }
@@ -31,6 +34,28 @@ public class Item
     public Dictionary<TriggerEnum, GameAction> TriggerData = new();
     // key to hydrate into the triggerActions
     public List<string>? TriggerRawData { get; set; }
+    public Item Clone()
+    {
+        var Item = new Item
+        {
+            AsciiKey = this.AsciiKey,
+            Name = this.Name,
+            ID = this.ID,
+            SlotType = this.SlotType,
+            SpawnChance = this.SpawnChance,
+            MaxStack = this.MaxStack,
+            Price = this.Price,
+            CanStore = this.CanStore,
+            EncumbranceErrorMessages = this.EncumbranceErrorMessages,
+            WeaponData = this.WeaponData.Clone(),
+            MeleeWeaponData = this.MeleeWeaponData,
+            RangeWeaponData = this.RangeWeaponData,
+            ConsumableData = this.ConsumableData,
+            AlchemyData = this.AlchemyData,
+            CraftingData = this.CraftingData
+        };
+        return Item;
+    }
 
     public Item()
     {
@@ -109,11 +134,21 @@ public class Item
         public int? DamageDie { get; set; }
         public Skill DamageBonusSkill { get; set; }
         public DamageTypes DamageType { get; set; }
+        public WeaponDataFrame Clone()
+        {
+            var WeaponDataFrame = new WeaponDataFrame {
+                DamageDie = this.DamageDie,
+                DamageBonusSkill = this.DamageBonusSkill,
+                DamageType = this.DamageType
+            };
+            return WeaponDataFrame;
+        }
 
     }
     public class MeleeWeaponDataFrame
     {
         public bool Versatile { get; set; }
+        
     }
     public class RangeWeaponDataFrame
     {
@@ -127,8 +162,6 @@ public class Item
     public class ConsumableDataFrame
     {
         public int HealthToHeal { get; set; }
-        public bool Cookable { get; set; }
-        public int CookingDifficulty { get; set; }//1 to 10, 0 if not cookable
 
     }
     public class AlchemyDataFrame
@@ -137,8 +170,8 @@ public class Item
     }
     public class CraftingDataFrame
     {
-        public int CraftID { get; set; }
         public bool IsCookable { get; set; }
+        public int CookingDifficulty { get; set; }//1 to 10, 0 if not cookable
     }
     #endregion
     

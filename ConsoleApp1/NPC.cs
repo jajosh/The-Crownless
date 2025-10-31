@@ -45,7 +45,7 @@ public class NPCType
     #region Triggers
     public List<TriggerConfig>? TriggerRawData { get; set; } = new();
     [JsonIgnore]
-    public Dictionary<CombatActionType, GameAction> TriggerData { get; set; } = new();
+    public Dictionary<ActionType, GameAction> TriggerData { get; set; } = new();
 
     [JsonIgnore]
     public InventoryComponent? Inventory { get; set; }
@@ -94,7 +94,7 @@ public class NPCType
         DefaultNames = new List<string>();
 
         // Triggers
-        TriggerData = new Dictionary<CombatActionType, GameAction>();
+        TriggerData = new Dictionary<ActionType, GameAction>();
 
         // Combat
         PossibleCombatSymbols = new List<string>();
@@ -109,7 +109,6 @@ public class NPC : ICharacter
     public int ID { get; set; }
     public string Name { get; set; }
     public int TypeID { get; set; }
-    public Root Root { get; set; }
     public CreatureType Race { get; set; }
     public Dictionary<string, string> Aliases { get; set; } = new();
     #endregion
@@ -136,10 +135,12 @@ public class NPC : ICharacter
     #region Components
     public HealthComponent Health { get; set; }
     public SkillsCompanent Skills { get; set; }
+    public Root Root { get; set; }
+    public VenderComponent? Vender { get; set; }
     #endregion
 
     #region Stats & Abilities
-    
+
     public List<Languages>? Languages { get; set; }
     public List<DamageTypes>? DamageResistance { get; set; }
     public List<DamageTypes>? DamageImmunities { get; set; }
@@ -163,14 +164,11 @@ public class NPC : ICharacter
     #region Triggers & Actions
     public List<TriggerConfig>? TriggerRawData { get; set; } = new();
     [JsonIgnore]
-    public Dictionary<CombatActionType, GameAction> TriggerData { get; set; } = new();
+    public Dictionary<ActionType, GameAction> TriggerData { get; set; } = new();
 
     [JsonIgnore] public int? Initiative { get; set; }
     #endregion
 
-    #region
-    public VenderComponent? Vender { get; set; }
-    #endregion
 
     public NPC()
     {
@@ -205,8 +203,46 @@ public class NPC : ICharacter
 
         Initiative = null;
     }
+    // --- Deep Clone ---
+    public NPC Clone()
+    {
+        return new NPC
+        {
+            ID = this.ID,
+            Name = string.Copy(this.Name),
+            TypeID = this.TypeID,
+            Root = this.Root?.Clone(),                // assumes Root has Clone()
+            Race = this.Race,
+            Aliases = new Dictionary<string, string>(this.Aliases),
+
+            Waypoints = this.Waypoints != null ? new List<(int, int, int, int)>(this.Waypoints) : null,
+            CurrentWaypointIndex = this.CurrentWaypointIndex,
+            TileSpeed = this.TileSpeed,
+            ActionCount = this.ActionCount,
+            BonusActionCount = this.BonusActionCount,
+            Skills = this.Skills,
+
+            Health = this.Health?.Clone(),            // assumes HealthComponent has Clone()
+
+
+            Languages = new List<Languages>(this.Languages),
+            DamageResistance = new List<DamageTypes>(this.DamageResistance),
+            DamageImmunities = new List<DamageTypes>(this.DamageImmunities),
+            ConditionImmunities = new List<Conditions>(this.ConditionImmunities),
+            RandomDialog = new List<ObjectRandomText>(this.RandomDialog),
+
+            UseStaticRandomDialog = this.UseStaticRandomDialog,
+            Ascii = string.Copy(this.Ascii),
+
+            InventoryData = new List<int>(this.InventoryData),
+            ArmorData = new List<int>(this.ArmorData),
+            Armor = this.Armor?.Select(a => a.Clone()).ToList(), // assumes Item has Clone()
+
+            Initiative = this.Initiative
+        };
+    }
     #region === ICharacter Methods ===
-    
+
     public List<GameAction> PossibleAttacks(ICharacter Target, List<ICharacter> allies)
     {
         List<GameAction> actions = new();
@@ -216,7 +252,7 @@ public class NPC : ICharacter
         y = Math.Abs(y);
         foreach (var action in TriggerData)
         {
-            int range = action.Value.range;
+            int range = action.Value.Range;
             if (range <= x || range <= y)
                 actions.Add(action.Value);
         }
@@ -235,7 +271,7 @@ public class NPC : ICharacter
         y = Math.Abs(y);
         foreach (var trigger in TriggerData)
         {
-            if (trigger.Value.range <= x || trigger.Value.range <= y)
+            if (trigger.Value.Range <= x || trigger.Value.Range <= y)
             {
                 return true;
             }

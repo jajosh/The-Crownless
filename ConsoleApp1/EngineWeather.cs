@@ -190,4 +190,45 @@ public struct WeatherRef
         return Main?.ToString() ?? Sub?.ToString() ?? "Unknown";
     }
 }
+/// <summary>
+/// Allows the Grid Tile Description to hold either BridBiomeType or GridBiomeSubType
+/// </summary>
+public struct BiomeRef
+{
+    //var desc1 = new BiomeRef(GridBiomeType.Forest);
+    //var desc2 = new BiomeRef(GridBiomeSubType.DarkForest);
+    //var desc3 = BiomeRef.Any;  // matches everything
+    public GridBiomeType? Main { get; }
+    public GridBiomeSubType? Sub { get; }
+    public bool IsAny { get; }   // <--- wildcard flag
 
+    // Constructors
+    public BiomeRef(GridBiomeType type)
+    {
+        Main = type;
+        Sub = null;
+        IsAny = false;
+    }
+
+    public BiomeRef(GridBiomeSubType subtype)
+    {
+        Main = null;
+        Sub = subtype;
+        IsAny = false;
+    }
+
+    private BiomeRef(bool any)   // special ctor for Any
+    {
+        Main = null;
+        Sub = null;
+        IsAny = any;
+    }
+
+    public static BiomeRef Any => new BiomeRef(true);
+
+    public override string ToString()
+    {
+        if (IsAny) return "Any";
+        return Main?.ToString() ?? Sub?.ToString() ?? "Unknown";
+    }
+}

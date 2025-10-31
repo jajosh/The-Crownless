@@ -1,4 +1,5 @@
 ﻿using GameNamespace;
+using Spectre.Console;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,20 +20,30 @@ public enum CoverGrade
 
 public class Tile
 {
+    // Visual Look
     public char? AsciiToShow { get; set; }
+    public Spectre.Console.Color Color { get; set; } = Spectre.Console.Color.White;
+
+    // Locational Data
     public int GridX { get; set; }
     public int GridY { get; set; }
     public int LocalX { get; set; }
     public int LocalY { get; set; }
 
+    // Meta Data
     public TileTypes TileType { get; set; }
     public bool IsWalkable { get; set; }
     public bool IsRoofed { get; set; }
+    public bool IsFlamable { get; set; }
+    public int? BurnAmount { get; set; } // As a percentage
+
+
     public TileTriggeractions Triggeractions { get; set; }
     public CoverGrade cover { get; set; }
 
     // Checks if the tile needs to be processed after surrounding tiles have been processed
     public TileCheckType DeferredChecks { get; set; } = TileCheckType.None;
+
     // A list of descriptions for each tile type based on the local grid's biome and sub biome
     public List<DescriptionEntry> Description { get; set; }
 
@@ -51,6 +62,8 @@ public class Tile
         IsWalkable = isWalkable;
         Description = description;
         AsciiToShow = asciiToShow;
+        IsFlamable = false;
+        Color = Color.White;
     }
     // Adds a description
     public void AddDescription(int weight,string text,GridBiomeType? biome = null,GridBiomeSubType? subBiome = null, SeasonData? season = null,WeatherData? weather = null)
@@ -99,48 +112,7 @@ public class Tile
     }
 }
 
-/// <summary>
-/// Allows the Grid Tile Description to hold either BridBiomeType or GridBiomeSubType
-/// </summary>
-public struct BiomeRef
-{
-    //var desc1 = new BiomeRef(GridBiomeType.Forest);
-    //var desc2 = new BiomeRef(GridBiomeSubType.DarkForest);
-    //var desc3 = BiomeRef.Any;  // matches everything
-    public GridBiomeType? Main { get; }
-    public GridBiomeSubType? Sub { get; }
-    public bool IsAny { get; }   // <--- wildcard flag
 
-    // Constructors
-    public BiomeRef(GridBiomeType type)
-    {
-        Main = type;
-        Sub = null;
-        IsAny = false;
-    }
-
-    public BiomeRef(GridBiomeSubType subtype)
-    {
-        Main = null;
-        Sub = subtype;
-        IsAny = false;
-    }
-
-    private BiomeRef(bool any)   // special ctor for Any
-    {
-        Main = null;
-        Sub = null;
-        IsAny = any;
-    }
-
-    public static BiomeRef Any => new BiomeRef(true);
-
-    public override string ToString()
-    {
-        if (IsAny) return "Any";
-        return Main?.ToString() ?? Sub?.ToString() ?? "Unknown";
-    }
-}
 public class DescriptionEntry
 {
     public int Weight { get; set; }
@@ -193,5 +165,74 @@ public class DescriptionEntry
         return subBiomeMatch && seasonMatch && weatherMatch;
     }
     
+}
+public class TileEffectState
+{
+    public int ID { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public List<string> Description { get; set; } = new();
+
+
+    // 🎨 Visuals
+    public ConsoleColor? ForegroundColor { get; set; }
+    public ConsoleColor? BackgroundColor { get; set; }
+
+
+    // ⚔️ Effect Mechanics
+    public int? DamageOverTime { get; set; }
+    public DamageTypes? DamageType { get; set; }
+    public int? MovementPenalty { get; set; }
+    public int? Duration { get; set; }
+    public int Radius { get; set; }
+    public Root Root { get; set; }
+
+
+    // 👁️ Environmental Interaction
+    public bool? BlockVision { get; set; }
+
+
+    // 💫 Conditions
+    public int? ChanceToApplyCondition { get; set; }
+    public Conditions? ConditionToApply { get; set; }
+
+
+    // ⚙️ Behavior Flags
+    public bool IsStackable { get; set; } = false;
+    public bool IsSpreadable { get; set; } = false;
+    public bool IsCleansable { get; set; } = true;
+
+
+    // 🧠 Runtime State
+    public bool IsActive { get; set; } = false;
+    public TileEffectState Clone()
+    {
+        return new TileEffectState
+        {
+            ID = this.ID,
+            Name = this.Name,
+            Description = new List<string>(this.Description),
+
+            ForegroundColor = this.ForegroundColor,
+            BackgroundColor = this.BackgroundColor,
+
+            DamageOverTime = this.DamageOverTime,
+            DamageType = this.DamageType,
+            MovementPenalty = this.MovementPenalty,
+            Duration = this.Duration,
+            Radius = this.Radius,
+            Root = this.Root != null ? this.Root.Clone() : null, // assumes Root has Clone()
+
+            BlockVision = this.BlockVision,
+
+            ChanceToApplyCondition = this.ChanceToApplyCondition,
+            ConditionToApply = this.ConditionToApply,
+
+            IsStackable = this.IsStackable,
+            IsSpreadable = this.IsSpreadable,
+            IsCleansable = this.IsCleansable,
+
+            IsActive = this.IsActive
+        };
+    }
 }
 

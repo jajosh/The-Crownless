@@ -3,9 +3,7 @@ using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-/// <summary>
-/// Summary description for Class1
-/// </summary>
+
 //public class TriggerCoordinets
 //{
 //    public int GridX { get; set; }
@@ -15,7 +13,7 @@ using System.Text.Json.Serialization;
 //    public string Description { get; set; }
 //    public TileStates TileState { get; set; }
 //    public Dictionary<int, int> PossibleNextEvents { get; set; }
-//    public List<TileTriggeractions> TriggerActions{ get; set; } = new();
+//    public List<TileTriggeractions> TriggerActions { get; set; } = new();
 
 //    public TriggerCoordinets()
 //    {
@@ -39,7 +37,7 @@ using System.Text.Json.Serialization;
 //        TriggerActions = triggerActions;
 
 //    }
-    
+
 
 //    public static void SaveToJson(string filePath, List<TriggerCoordinets> triggers)
 //    {

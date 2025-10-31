@@ -148,7 +148,7 @@ public class Player : ICharacter
         y = Math.Abs(y);
         foreach (var trigger in Triggers)
         {
-            if (trigger.Value.range <= x || trigger.Value.range <= y)
+            if (trigger.Value.Range <= x || trigger.Value.Range <= y)
             {
                 return true;
             }

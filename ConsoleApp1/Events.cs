@@ -22,8 +22,7 @@ public class EventTree
 
     public Dictionary<int, EventBranchPoint> Branches { get; set; } // The meat and potateos of the event
 }
-/// <summary>
-/// Represents a choice within an event, including its properties, conditions, and potential outcomes. This is what makes up the branches of the event tree
+// Represents a choice within an event, including its properties, conditions, and potential outcomes. This is what makes up the branches of the event tree
 public class EventBranchPoint
 {
     public int ChoiceID { get; set; } // ID used to navigate the event tree
@@ -66,7 +65,7 @@ public class Limbs
     public int? TimePassed { get; set; } // The time passed in days for this choice. Leave at null for no time passed
 }
 /// <summary>
-/// The trigger point for the event. Stored here so that it doesnt need to be held with the other triggercoordinets. 
+/// Positional data for Actionables
 /// </summary>
 public class Root
 {
@@ -74,6 +73,16 @@ public class Root
     public int GridY { get; set; }
     public int LocalX { get; set; }
     public int LocalY { get; set; }
+    public Root Clone()
+    {
+        return new Root
+        {
+            GridX = this.GridX,
+            GridY = this.GridY,
+            LocalX = this.LocalX,
+            LocalY = this.LocalY
+        };
+    }
 }
 /// <summary>
 /// Represents the end of the event, the end of the canister
