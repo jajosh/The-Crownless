@@ -1,0 +1,57 @@
+[
+  {
+    "ID": 1,
+    "RaceName": "Banshee",
+    "Type": "Undead",
+    "SubType": "Spirit",
+    "Alignments": null,
+    "MaxHP": 120,
+    "MaxMP": 200,
+    "TileSpeed": 3,
+    "Skills": {
+      "Strength": 8,
+      "Dexterity": 14,
+      "Charisma": 18,
+      "Intelligence": 12,
+      "Wisdom": 15,
+      "Constitution": 10
+    },
+    "Languages": [
+      "Common",
+      "Abyssal"
+    ],
+    "DamageResistance": [
+      "Necrotic",
+      "Cold"
+    ],
+    "DamageImmunities": [
+      "Poison"
+    ],
+    "ConditionImmunities": [
+      "Charmed",
+      "Poisoned"
+    ],
+    "RandomDialog": [
+      {
+        "weatherMain": null,
+        "seasonMain": null,
+        "biomeMain": null,
+        "biomeSub": null,
+        "creatureType": null,
+        "isBattleDialog": false,
+        "text": [
+          "Leave this place... the demon must not be freed."
+        ]
+      }
+    ],
+    "DefaultNames": [
+      "Eleanor",
+      "The Wailing Shade"
+    ],
+    "TriggerKey": null,
+    "InventoryKey": null,
+    "PossibleCombatSymbols": [
+      "!"
+    ]
+  }
+]

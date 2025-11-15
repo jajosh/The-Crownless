@@ -1,0 +1,114 @@
+┌─────────────────────────────────────────────────────────────┐
+│                    LAYER 0: COORDINATION                    │
+├─────────────────────┬───────────────────────────────────────┤
+│ EngineGame          │ Single entry point, delegates only    │
+│ GameFactory         │ Wiring + Dependency Injection         │
+└─────────────────────┴───────────────────────────────────────┘
+         │
+┌─────────────────────────────────────────────────────────────┐
+│                    LAYER 1: MANAGERS                        │ *(BUSINESS LOGIC)*
+├─────────────────────┬───────────────────────────────────────┤  // This layer coordinates data retrieval and engine logic
+│ XXXManager          │ Rules + Interconnections              │  // Does not calculate. Manage delegates that to the engine. 
+│                     │ Ex: ItemManager, CombatManager        │  
+└─────────────────────┴───────────────────────────────────────┘
+         │
+┌─────────────────────────────────────────────────────────────┐
+│                    LAYER 2: ENGINES                         │ *(Logic behind things)*
+├─────────────────────┬───────────────────────────────────────┤
+│ IEngineXXX          │ Interface contract                    │
+│ EngineXXX           │ Implementation                        │  // Engines for things. the logic of things
+│                     │ Ex: IEngineMovement, EngineMovement   │  // These do not care about databases. Takes input and gives output. 
+└─────────────────────┴───────────────────────────────────────┘
+         │
+┌─────────────────────────────────────────────────────────────┐
+│                    LAYER 3: DATA                            │ *(Storage)*
+├─────────────────────┬───────────────────────────────────────┤
+│ XXXData             │ Load/Save/Cache                       │  // Loads in and saves object data. Does not have logic beyond that. 
+│                     │ Ex: ItemData, NPCData                 │  // Also holds the database of these objects. 
+└─────────────────────┴───────────────────────────────────────┘
+         │
+┌─────────────────────────────────────────────────────────────┐
+│                    LAYER 4: OBJECTS                         │ *(Entities +   Components)*
+├─────────────────────┬───────────────────────────────────────┤
+│ XXXObject           │ Core entity (e.g., NPCObject)         │
+│                     │ "Has-A" relationship to components    │   // No logic, only data. Pure data meaning  
+│ ComponentXXX        │ Pure data (e.g., HealthComponent)     │
+│                     │ Attached via properties/references    │
+└─────────────────────┴───────────────────────────────────────┘
+
+
+Engine/
+├── EngineGame.cs          # Layer 0: Main entry
+├── GameFactory.cs
+├── Common/                # Shared primitives
+        ├── DirectionEnum.cs
+        └── GameConstants.cs
+├── Engines/               # Layer 1: Behavior logic
+        ├── FileEngine.cs
+        ├── InventoryEngine.cs
+        ├── BeepEngine.cs      # Audio-specific
+        ├── ICharacterEngine.cs
+        ├── WeatherEngine.cs
+├── Interfaces/        # Refactored from UnsortedThings
+        ├── IActionable.cs
+        ├── IHealth.cs
+        ├── IHasMoney.cs
+        ├── IInventory.cs
+        ├── ISkills.cs
+        ├── ICharacterEngine.cs  # etc.
+   └── Components/        # Basic components
+        ├── HealthComponent.cs
+        ├── SkillsComponent.cs
+        └── TriggerConfig.cs
+├── Managers/              # Layer 2: Orchestration
+        ├── BeeperManager.cs
+        ├── NPCManager.cs
+        ├── PlayerManager.cs
+        ├── ItemManager.cs
+        ├── FileManager.cs
+        ├── TileManager.cs
+        ├── WeatherManager.cs
+        └── InventoryManager.cs
+├── Data/                  # Layer 3: Persistence
+        ├── InventoryData.cs
+        ├── IDataNPC.cs
+        ├── DataSaveGame.cs
+        └── ItemData.cs
+├── Objects/               # Layer 4: Domain
+        ├── Entities/
+            ├── PlayerObject.cs
+            ├── NPCObject.cs
+            ├── TileObject.cs
+            ├── GridObject.cs
+            ├── LocationObject.cs
+            ├── TileObject.cs
+            └── ItemObject.cs
+        ├── Components/        # Composable data bags
+            ├── InventoryComponent.cs
+            ├── ItemStackComponent.cs
+            ├── MoneyComponent.cs
+            └── Root.cs
+        ├── Primitives/        # Value types/helpers
+            ├── WaveFormProvider.cs
+            ├── PersistentBeeper.cs
+            └── DescriptionEntry.cs
+        ├── Records/           # DTOs (Data Transfer Object)
+            ├── ItemRecord.cs
+            ├── NPCTypeRecord.cs
+            └── CombatResultDto.cs
+        ├── StaticHelpers/     # Builders
+            ├──	RGBColor.cs
+            ├── TileEffectState.cs
+            ├── WeightedRandom.cs
+            └── GameActionFactory.cs
+        ├── TileProcessor
+            ├── TileProcessor_Alphabet.cs
+        ├── Refs/             # DTOs (Data Transfer Object)
+        ├── RefWeather.cs
+        ├── RefBiome.cs
+├── FrameworksDrivers/
+        └── Infrastructure/
+            └── Utils/StaticHelpers/
+                └── JsonLoader.cs          // Basic LoadBasic<T>, SaveBasic<T>
+└── Adapters/
+        └── ItemRepository.cs

@@ -1,7 +1,0 @@
-Methods
-    Dice
-        bool advantage
-        Int numberofdice, int size
-        Int numberofdice, int size, bool advantage
-        Int numberofdice, int size, modifier
-        Int numberofdice, int size, modifier, bool advantage

@@ -1,0 +1,4 @@
+To Do
+├── ICharacter needs to be inheirited by playerObject and NPC object and each of those needs an engine.   
+        ├──
+        └── 
