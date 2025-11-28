@@ -1,0 +1,159 @@
+11/10/2025 1:02:49 AM: BeeperManager created successfully.
+11/10/2025 1:02:49 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Items.json - skipped copy.
+11/10/2025 1:02:49 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\grid.json - skipped copy.
+11/10/2025 1:02:49 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCs.json - skipped copy.
+11/10/2025 1:02:49 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Data/TriggerCoordinates.json
+11/10/2025 1:02:49 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Events.json - skipped copy.
+11/10/2025 1:02:49 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Config/config.json
+11/10/2025 1:02:49 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCTypes.json - skipped copy.
+11/10/2025 1:02:49 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Quests.json - skipped copy.
+11/10/2025 1:02:49 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomText.json - skipped copy.
+11/10/2025 1:02:49 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Data/RandomEnvironmentalDialog.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Config
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\OneDrive\Documents\The Crownless
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Items.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Config\config.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Events.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\grid.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\TriggerCoordinates.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCs.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCTypes.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Quests.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomText.json
+11/10/2025 1:02:49 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomEnvironmentalDialog.json
+11/10/2025 1:02:49 AM: FileManager created successfully.
+11/10/2025 1:02:49 AM: NPCManager created successfully.
+11/10/2025 1:02:49 AM: PlayerManager created successfully.
+11/10/2025 1:02:49 AM: TileProcessorManager created successfully.
+11/10/2025 1:02:49 AM: [[Info]] Check point: Tile Processing process has started.
+11/10/2025 1:02:50 AM: [[Info]] 1
+11/10/2025 1:02:50 AM: [[Info]]  
+11/10/2025 1:02:50 AM: [[Info]]  
+11/10/2025 1:02:50 AM: [[Info]] H
+11/10/2025 1:02:50 AM: [[Info]] A
+11/10/2025 1:02:50 AM: [[Info]] C
+11/10/2025 1:02:50 AM: [[Info]] K
+11/10/2025 1:02:50 AM: [[Info]] W
+11/10/2025 1:02:50 AM: [[Info]] Warning: No handler found for letter 'W' (expected OnW)
+11/10/2025 1:02:50 AM: [[Info]] O
+11/10/2025 1:02:50 AM: [[Info]] O
+11/10/2025 1:02:50 AM: [[Info]] D
+11/10/2025 1:02:50 AM: [[Info]] H
+11/10/2025 1:02:50 AM: [[Info]] H
+11/10/2025 1:02:50 AM: [[Info]] G
+11/10/2025 1:02:50 AM: [[Info]] ¬
+11/10/2025 1:02:50 AM: [[Info]] H
+11/10/2025 1:02:50 AM: [[Info]] G
+11/10/2025 1:02:50 AM: [[Info]] G
+11/10/2025 1:02:50 AM: [[Info]] G
+11/10/2025 1:02:50 AM: [[Info]] Tiles have been Finalized
+11/10/2025 1:02:50 AM: MapManager created successfully.
+11/10/2025 1:02:50 AM: NPCTypeManager created successfully.
+11/10/2025 1:02:50 AM: GameEngine created successfully.
+11/10/2025 1:04:31 AM: BeeperManager created successfully.
+11/10/2025 1:04:31 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Items.json - skipped copy.
+11/10/2025 1:04:31 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\grid.json - skipped copy.
+11/10/2025 1:04:31 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCs.json - skipped copy.
+11/10/2025 1:04:31 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Data/TriggerCoordinates.json
+11/10/2025 1:04:31 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Events.json - skipped copy.
+11/10/2025 1:04:31 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Config/config.json
+11/10/2025 1:04:31 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCTypes.json - skipped copy.
+11/10/2025 1:04:31 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Quests.json - skipped copy.
+11/10/2025 1:04:31 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomText.json - skipped copy.
+11/10/2025 1:04:31 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Data/RandomEnvironmentalDialog.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Config
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\OneDrive\Documents\The Crownless
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Items.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Config\config.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Events.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\grid.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\TriggerCoordinates.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCs.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCTypes.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Quests.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomText.json
+11/10/2025 1:04:31 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomEnvironmentalDialog.json
+11/10/2025 1:04:31 AM: FileManager created successfully.
+11/10/2025 1:04:31 AM: NPCManager created successfully.
+11/10/2025 1:04:31 AM: PlayerManager created successfully.
+11/10/2025 1:04:31 AM: TileProcessorManager created successfully.
+11/10/2025 1:04:31 AM: [[Info]] Check point: Tile Processing process has started.
+11/10/2025 1:04:31 AM: [[Info]] 1
+11/10/2025 1:04:31 AM: [[Info]]  
+11/10/2025 1:04:31 AM: [[Info]]  
+11/10/2025 1:04:31 AM: [[Info]] H
+11/10/2025 1:04:31 AM: [[Info]] A
+11/10/2025 1:04:31 AM: [[Info]] C
+11/10/2025 1:04:31 AM: [[Info]] K
+11/10/2025 1:04:31 AM: [[Info]] W
+11/10/2025 1:04:31 AM: [[Info]] Warning: No handler found for letter 'W' (expected OnW)
+11/10/2025 1:04:31 AM: [[Info]] O
+11/10/2025 1:04:31 AM: [[Info]] O
+11/10/2025 1:04:31 AM: [[Info]] D
+11/10/2025 1:04:31 AM: [[Info]] H
+11/10/2025 1:04:31 AM: [[Info]] H
+11/10/2025 1:04:31 AM: [[Info]] G
+11/10/2025 1:04:31 AM: [[Info]] ¬
+11/10/2025 1:04:31 AM: [[Info]] H
+11/10/2025 1:04:31 AM: [[Info]] G
+11/10/2025 1:04:31 AM: [[Info]] G
+11/10/2025 1:04:31 AM: [[Info]] G
+11/10/2025 1:04:31 AM: [[Info]] Tiles have been Finalized
+11/10/2025 1:04:31 AM: MapManager created successfully.
+11/10/2025 1:04:32 AM: NPCTypeManager created successfully.
+11/10/2025 1:04:32 AM: GameEngine created successfully.
+11/10/2025 1:38:20 AM: BeeperManager created successfully.
+11/10/2025 1:38:20 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Items.json - skipped copy.
+11/10/2025 1:38:20 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\grid.json - skipped copy.
+11/10/2025 1:38:20 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCs.json - skipped copy.
+11/10/2025 1:38:20 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Data/TriggerCoordinates.json
+11/10/2025 1:38:20 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Events.json - skipped copy.
+11/10/2025 1:38:20 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Config/config.json
+11/10/2025 1:38:20 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCTypes.json - skipped copy.
+11/10/2025 1:38:20 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Quests.json - skipped copy.
+11/10/2025 1:38:20 AM: [[Info]] [EXISTS] C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomText.json - skipped copy.
+11/10/2025 1:38:20 AM: [[Info]] [WARNING] Source missing: C:\Users\jajos\source\repos\The Game\The Game\Data/RandomEnvironmentalDialog.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Config
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\OneDrive\Documents\The Crownless
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Items.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Config\config.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Events.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\grid.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\TriggerCoordinates.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCs.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\NPCTypes.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\Quests.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder exists: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomText.json
+11/10/2025 1:38:20 AM: [[Info]] [SUCCESS] Folder missing: C:\Users\jajos\source\repos\The Game\The Game\bin\Debug\net10.0-windows\Data\RandomEnvironmentalDialog.json
+11/10/2025 1:38:20 AM: FileManager created successfully.
+11/10/2025 1:38:20 AM: NPCManager created successfully.
+11/10/2025 1:38:20 AM: PlayerManager created successfully.
+11/10/2025 1:38:20 AM: TileProcessorManager created successfully.
+11/10/2025 1:38:20 AM: [[Info]] Check point: Tile Processing process has started.
+11/10/2025 1:38:21 AM: [[Info]] 1
+11/10/2025 1:38:21 AM: [[Info]]  
+11/10/2025 1:38:21 AM: [[Info]]  
+11/10/2025 1:38:21 AM: [[Info]] H
+11/10/2025 1:38:21 AM: [[Info]] A
+11/10/2025 1:38:21 AM: [[Info]] C
+11/10/2025 1:38:21 AM: [[Info]] K
+11/10/2025 1:38:21 AM: [[Info]] W
+11/10/2025 1:38:21 AM: [[Info]] Warning: No handler found for letter 'W' (expected OnW)
+11/10/2025 1:38:21 AM: [[Info]] O
+11/10/2025 1:38:21 AM: [[Info]] O
+11/10/2025 1:38:21 AM: [[Info]] D
+11/10/2025 1:38:21 AM: [[Info]] H
+11/10/2025 1:38:21 AM: [[Info]] H
+11/10/2025 1:38:21 AM: [[Info]] G
+11/10/2025 1:38:21 AM: [[Info]] ¬
+11/10/2025 1:38:21 AM: [[Info]] H
+11/10/2025 1:38:21 AM: [[Info]] G
+11/10/2025 1:38:21 AM: [[Info]] G
+11/10/2025 1:38:21 AM: [[Info]] G
+11/10/2025 1:38:21 AM: [[Info]] Tiles have been Finalized
+11/10/2025 1:38:21 AM: MapManager created successfully.
+11/10/2025 1:38:21 AM: NPCTypeManager created successfully.
+11/10/2025 1:38:21 AM: GameEngine created successfully.

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class ItemManager
 {
-    Item item = new Item();
+    ItemObject item = new ItemObject();
     ItemStackComponent ItemStack = new ItemStackComponent();
-    public static List<Item> Items { get; set; }
+    public static List<ItemObject> Items { get; set; }
     public ItemManager()
     {
     }
 
-    public static Item FindItemByName(string NameToFind)
+    public static ItemObject FindItemByName(string NameToFind)
     {
         if (string.IsNullOrWhiteSpace(NameToFind))
         {
@@ -24,7 +24,7 @@ public class ItemManager
             return null;
         }
 
-        Item? foundItem = Items.Find(item =>
+        ItemObject? foundItem = Items.Find(item =>
             !string.IsNullOrEmpty(item.Name) &&
             item.Name.Equals(NameToFind, StringComparison.OrdinalIgnoreCase));
 
@@ -41,10 +41,10 @@ public class ItemManager
             return null;
         }
     }
-    public static Item FindItemByID(int IDToFind)
+    public static ItemObject FindItemByID(int IDToFind)
     {
-        List<Item> itemList = Items;
-        Item? foundItem = itemList.Find(item => item.ID == IDToFind);
+        List<ItemObject> itemList = Items;
+        ItemObject? foundItem = itemList.Find(item => item.ID == IDToFind);
         if (foundItem != null)
         {
             Console.WriteLine($"Item Found: {foundItem.Name}");

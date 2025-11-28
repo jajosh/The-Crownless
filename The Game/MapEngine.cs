@@ -13,10 +13,13 @@ public interface MapEngine
 
     void PrintWorld(PlayerObject player, ColorTextBox ctb);
     #region === Map searching === // Tile, grid, and location
-    static abstract IQueryable<LocationObject> Query(Expression<Func<LocationObject, bool>> predicate);
-    static abstract IQueryable<GridObject> Query(Expression<Func<GridObject, bool>> predicate);
-    static abstract IQueryable<TileObject> Query(Expression<Func<TileObject, bool>> predicate);
+    static abstract IQueryable<LocationObject> QueryLocation(Expression<Func<LocationObject, bool>> predicate);
+    static abstract IQueryable<GridObject> QueryGrid(Expression<Func<GridObject, bool>> predicate);
+    static abstract IQueryable<TileObject> QueryTile(Expression<Func<TileObject, bool>> predicate);
+    GridBiomeType CurrentBiome();
+    GridBiomeSubType CurrentSubBiome();
+    SeasonData CurrentSeason();
     #endregion
-    
+
 
 }

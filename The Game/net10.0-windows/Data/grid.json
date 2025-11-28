@@ -1,0 +1,222 @@
+[
+  {
+    "Type": "Settlement",
+    "ID": 0,
+    "Name": "Unknown Location",
+    "TransitionPoints": [],
+    "locationMap": [
+      {
+        "GridMapKey": [
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..……………FFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..…………..FFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..……....FFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.……….…FFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF .……..FFFFFFFFFFFFFF",
+          "FFFFFFFFFFF....FFFFFFFF.FFFFFFF..…….FFFFFFFFFFFFFFF",
+          "FFFFF...................FFFFFF..……….FFFFFFFFFFFFFFF",
+          "FFFFF.┌---------------┐.FFFFFF..……….FFFFFFFFFFFFFFF",
+          "FFFFF.|'''ɦ'ɦ'ɦ'ɦ'ɦ'''|.FFFFFF.………..FFFFFFFFFFFFFFF",
+          "FFFFF.|'''ɦ'ɦ'ɦ'ɦ'ɦ'''|.FFF....………..FFFFFFFFFFFFFFF",
+          "FFFFF.|'''ɦ'ɦ'ɦ'ɦ'ɦ'''|........……..FFFFFFFFFFFFFFFF",
+          "FFFFFṠ|⛬''''''''''''''=...FF..………..FFFFFFFFFFFFFFFF",
+          "FFFFF.|'''ɦ'ɦ'ɦ'ɦ'ɦ'''|...FF..……..FFFFFFFFFFFFFFFFF",
+          "FFFFF.|'''ɦ'ɦ'ɦ'ɦ'ɦ'''|....F..…….FFFFFFFFFFFFFFFFFF",
+          "FFFFF.|'''ɦ'ɦ'ɦ'ɦ'ɦ'''|.FF....…….FFFFFFFFFFFFFFFFFF",
+          "FFFFF.└---------------┘.FFF.….…….FFFFFFFFFFFFFFFFFF",
+          "FFFFF...................FFF..……….FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFF...FFFFFFFFFFFFFFF..…….FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFF.…….FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFF..…….FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFF..…….FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFF..…….FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFF..……..FFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFF.……….FFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFF.……….FFFFFFFFFFFFFFFFF"
+        ],
+        "GridX": 0,
+        "GridY": 0,
+        "Biome": "BorelForest",
+        "SubBiome": "AbandonedBuilding",
+        "RandomEventChance": 0,
+        "DescriptionEntries": [
+          {
+            "Weight": 3,
+            "Text": "Thick forests surrounds the path ahead",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": null,
+            "Weather": null
+          },
+          {
+            "Weight": 12,
+            "Text": "Snow covers the ",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": "Winter",
+            "Weather": null
+          }
+        ],
+        "TileAdds": {}
+      },
+      {
+        "GridMapKey": [
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+          "FFFFFFF,,,,FFFFFFFFFFFFf..………..FFFFFF,,,,,,,.......",
+          "FFFFFFF,,,,,,FF,,,,,♣,fff.………..FF.....……….,,.......",
+          "FFFFFFF,,,♣,,,,,,,♣,ffff..………♣……………………………….........",
+          "FFFFF,,,,♣,,,,♣,,,,,,ff...………………………,,,♣♣……………………………",
+          "FFFFFFFFFFFF,,,,,,,,fFf...……...FFFFF,,,♣♣…………………………",
+          "FFFFFFFFFFFFFF,,FFFFFFFF…………FFFFFFF,,,,,,,,........",
+          "FFFFFFFFFFFFFFFFFFFF....……….....FFFF,,,,,FFFFF.....",
+          "FFFFFFFFFFFFFFFFFFF..€..……..ɤ.€.FFFFFFFFFFFFFFFFF..",
+          "FFFFFFFFFFFFFFFFFF..... ……..€....FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFF...ɤ...…….......FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFF..€....……...€.€.FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFF.ɤ..€.…….€.ɤ...FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFF......……...€..€.FFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFF..€...……......ɤ.FFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFF.ɤ....………..€...FFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFF...ɤ..………….ɤ..FFFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFF........………..FFFFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFF......F…….FFFFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFF…….F..FFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFF.……….....FFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFF...…………....FFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFF..ɤ...………….ɤ.FFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..ɤ..…………..FFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..……………FFFFFFFFFFF"
+        ],
+        "GridX": 0,
+        "GridY": 1,
+        "Biome": "BorelForest",
+        "SubBiome": "Forest",
+        "RandomEventChance": 0,
+        "DescriptionEntries": [
+          {
+            "Weight": 3,
+            "Text": "A religious alter",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": null,
+            "Weather": null
+          },
+          {
+            "Weight": 12,
+            "Text": "This alter is covered in a light frost",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": "Winter",
+            "Weather": null
+          }
+        ],
+        "TileAdds": {}
+      },
+      {
+        "GridMapKey": [
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+          ".┌--------┐ṠFFFFFFFFFFFFFFFFF...FFFF┌----------┐FFF",
+          ".|HACKWOOD|.........FFFFF...........|H'''''''''|FFF",
+          ".├────────┤...┌-=-┐..FFFF..Ǒ<>.┌--┐.├--------=-┤FFF",
+          "………………………………….|H''|˄..FFFF..'''|''|.|''''◉◉''''|.FF",
+          "………………………………….|'''|˅...FF..Ǒ.''|''|.|'ɦɦɦ''ɦɦɦ'|.FF",
+          "...........…….|'''|▣▣.......┌--┘''|.|'ɦɦɦ''ɦɦɦ'|.FF",
+          ".....,,,,,.…….|'''|▣..………………='&'''|.|'ɦɦɦ''ɦɦɦ'|.FF",
+          ".....,,,,,.………└-=-┘#'..……….#└-----┘.|'ɦɦɦ''ɦɦɦ'|.FF",
+          "F▣▣▣▣,,,,,..……##…&#……………',,,,,,,&,.,|''''''''''|.FF",
+          "F┌--┐,,,,,..……………ÿ………'……........ÿ...└-----=----┘.FF",
+          "F|,G|####...………………………………………………………………….………………………………F",
+          "F|,,=..........……….…………..,,,..…….....┌----------┐FF",
+          "F└--┘##..,,,..……….ÿ..ÿ.¬###,,,……,,,ÿ&|''''''''''|FF",
+          "FFF,,,,,,,,,..……..&,F&F,FFF,,,……………….|''''''''''|FF",
+          "FFF,┌-------┐.…….,FFFFFFFFFFFFF,,.…….|''''''''''|FF",
+          "FFF,|H''='''|.…….┌------┐F┌-----┐.…….|''''''''''|FF",
+          "FFF,|'''|█''|.…….|''''''|F|'''''|.…….|''''''''''|FF",
+          "FFF,├---┘█''|.…….|'&''''|F|''&''|.…….|'''&''''''|FF",
+          "FFF,|█''''''|.………=''''''|F|'''''=……….|''''''''''|FF",
+          "FFF,|█''▣'''=……….|''''''|F|'''''=……….└----=-----┘FF",
+          "FFF,|█''▣'ππ|.…….└------┘F|'''''|.……......….....FFF",
+          "FFF,|█'''''&|.……,,,,,,,,,F|'''''|.………………………F,,,FFFF",
+          "FFF,└-------┘.……FFFFFFFFFF└-----┘.……FFFFF,,,,,FFFFF",
+          "FFFFFFFFFFFFFF……FFFFFFFFFFFFFFFFF.……FFṠ,,,,,FFFFFFF"
+        ],
+        "GridX": 1,
+        "GridY": 1,
+        "Biome": "BorelForest",
+        "SubBiome": "Town",
+        "RandomEventChance": 0,
+        "DescriptionEntries": [
+          {
+            "Weight": 3,
+            "Text": "A religious alter",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": null,
+            "Weather": null
+          },
+          {
+            "Weight": 12,
+            "Text": "This alter is covered in a light frost",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": "Winter",
+            "Weather": null
+          }
+        ],
+        "TileAdds": {}
+      },
+      {
+        "GridMapKey": [
+          "FFFFFFFFFFFFFF……,,FFFFFFFFFFFFFFF.……FFFF,Ṡ,FFFFFFFF",
+          "FFF,,,,,,,,,,,……,,,FFF,,,..……………………FFFFFFFFFFFFFFFF",
+          "F┌---------┐FF……,♣,,,♣,,.………♣.,,,,┌----┐,┌---┐,FFFF",
+          "F|'''''''''|##……##,,##,♣………..,,♣,,|''''|,|'''|,FFFF",
+          "F|'''''G'''=……………………………………..,,,,,,|'G''|,|'G'|,FFFF",
+          "F└---┐'''''|##……##♣,##,……….,,♣,,,,|''''|,|'''|,FFFF",
+          "FFFFF|'''''|F,,,,FFFFF,…………...,,,,└-=--┘,└-=-┘,FFFF",
+          "FFFFF└-----┘FF,,,,,,,F,……………………....#…#....#…#,FFFFF",
+          "FFFFFFFFFFFFFFFFF,♣,,F,……...…………………………………………FFFFFFF",
+          "F...............F,,♣ṠF,…,,,,,,FFFFFFFFFFFFFFFFFFFFF",
+          "F-------------F.FFFFFF,…,,,,,,,,,,FFFFFFFFFFFFFFFFF",
+          "F|''''''''''''|.,,####…………FFFFFFFFFFFFFFFFFFFFFFFFF",
+          "F|''''''''''''|.,,##………#……FFF............FFFFFFFFFF",
+          "F|''''''''''''|.,##………##……FFF.F--------F.FFFFFFFFFF",
+          "F|''''''''''''|###……##,#………,##|........|.FFFFFFFFFF",
+          "F|'''''''''&''=.………##,,,,#……….=........|.FFFFFFFFFF",
+          "F|''''''''''''|#####,,FFFFFFF.|.&......|.FFFFFFFFFF",
+          "F|''''''''''',|.,,,,,FFFFFFFF.|........|.FFFFFFFFFF",
+          "FF------------F.,,,,,,,FFFFFF.F--------F.FFFFFFFFFF",
+          "F,,,,,,,,,,,,,,,,,,,,,,,,FFFF............FFFFFFFFFF",
+          "FFFF,,,,,,,,,,,,,,,,,,,,,,FFFFFFFF,FFFFFFFFFFFFFFFF",
+          "FFFFFF,,,,,,FFFF,,FF,FFFF,,FFFFFFFFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFF,F,FFFFFF,FF,,FFFFFFFFFFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFṠFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+          "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+        ],
+        "GridX": 1,
+        "GridY": 0,
+        "Biome": "BorelForest",
+        "SubBiome": "Town",
+        "RandomEventChance": 0,
+        "DescriptionEntries": [
+          {
+            "Weight": 3,
+            "Text": "A religious alter",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": null,
+            "Weather": null
+          },
+          {
+            "Weight": 12,
+            "Text": "This alter is covered in a light frost",
+            "Biome": null,
+            "SubBiome": null,
+            "Season": "Winter",
+            "Weather": null
+          }
+        ],
+        "TileAdds": {}
+      }
+    ]
+  }
+]

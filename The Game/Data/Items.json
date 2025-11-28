@@ -34,8 +34,7 @@
       "IsCookable": false
     },
     "TriggerRawData": []
-  }
-,
+  },
   {
     "ID": 1,
     "Name": "Scimitar",
@@ -230,5 +229,42 @@
       "CraftID": 505,
       "IsCookable": false
     }
+  },
+  {
+    "ID": 0,
+    "Name": "New Item",
+    "AsciiKey": "new_item",
+    "SpawnChance": 0,
+    "MaxStack": 1,
+    "Price": null,
+    "CanStore": true,
+    "EncumbranceErrorMessages": [
+      "Default encumbrance message."
+    ],
+    "WeaponData": {
+      "DamageDie": null,
+      "DamageBonusSkill": "Wisdom",
+      "DamageType": "None"
+    },
+    "MeleeWeaponData": {
+      "Versatile": false
+    },
+    "RangeWeaponData": {
+      "Range": 0
+    },
+    "ConsumableData": {
+      "HealthToHeal": 0,
+      "Cookable": false,
+      "CookingDifficulty": 0
+    },
+    "AlchemyData": {
+      "AlchemyID": 0
+    },
+    "CraftingData": {
+      "CraftID": 0,
+      "IsCookable": false
+    },
+    "TriggerRawData": []
   }
+
 ]

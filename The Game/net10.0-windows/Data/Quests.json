@@ -1,0 +1,49 @@
+[
+  {
+    "ID": 1,
+    "Title": "Gather Bear Claws",
+    "IsComplete": false,
+    "Status": 1,
+    "Description": "Collect 3 bear claws and bring them to the village blacksmith.",
+    "FetchData": {
+      "NeededItems": [ 6, 6, 6 ],
+      "TargetNPC": {
+        "ID": 101,
+        "Name": "Village Blacksmith"
+      }
+    }
+  },
+  {
+    "ID": 2,
+    "Title": "Cull the Wolves",
+    "IsComplete": false,
+    "Status": 2,
+    "Description": "The local farmer has asked you to reduce the wolf population in the woods.",
+    "KillData": {
+      "NeededItems": [],
+      "TargetNPCs": [ 201, 202, 203 ],
+      "TurnInNPC": 102
+    }
+  },
+  {
+    "ID": 3,
+    "Title": "Speak with the Elder",
+    "IsComplete": true,
+    "Status": 3,
+    "Description": "Deliver the warning message to the village elder.",
+    "SpeakData": {
+      "TargetNPCsID": [ 301 ]
+    }
+  },
+  {
+    "ID": 4,
+    "Title": "Defend the Village",
+    "IsComplete": false,
+    "Status": 1,
+    "Description": "Protect the village from the incoming bandit raid.",
+    "DefendData": {
+      "TargetNPCs": [ 401, 402 ],
+      "Monsters": [ 501, 502, 503 ]
+    }
+  }
+]

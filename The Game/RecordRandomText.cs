@@ -29,5 +29,5 @@ public record RecordRandomText
     public List<DialogCategory> Categories { get; set; } = new List<DialogCategory>();
     public DialogSpeaker Speaker { get; set; }
     // The actual text line
-    public List<String> Text { get; set; }
+    public String Text { get; set; }
 }

@@ -13,7 +13,7 @@ public class SaveGame
     public List<QuestObject> CompletedQuests { get; set; }
     public List<QuestObject> ActiveQuests { get; set; }
     public NPCData NPCs { get; set; }
-    public List<Item> Items { get; set; }
+    public List<ItemObject> Items { get; set; }
     public List<TriggerCoordinets> Triggers { get; set; }
     //public LoreBoard LoreBoard { get; set; }
     public MapObject GameMap { get; set; }

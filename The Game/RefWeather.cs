@@ -2,26 +2,26 @@
 public enum WeatherData
 {
 
-    Any,
-    Clear,
-    Overcast,
-    Cloudy,
-    Snowy,
-    Blizzard,
-    RainLight,
-    RainMedium,
-    RainHeavy,
-    Thunderstorm,
-    Foggy,
+    Any = 1,
+    Clear = 2,
+    Overcast =3,
+    Cloudy=4,
+    Snowy=5,
+    Blizzard=6,
+    RainLight=7,
+    RainMedium=8,
+    RainHeavy=9,
+    Thunderstorm=10,
+    Foggy=11,
 
 }
 public enum SeasonData
 {
-    Any,
-    Spring,
-    Summer,
-    Fall,
-    Winter
+    Any = 1,
+    Spring = 2,
+    Summer = 3,
+    Fall= 4,
+    Winter = 5
 }
 public struct RefWeather
 {

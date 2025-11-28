@@ -8,33 +8,74 @@ public class TileManager : ITileEngine
 	{
 	}
     // Picks a random description based on current conditions
-    public string PickADescription(TileObject tile, SeasonData Season, WeatherData Weather, GridBiomeType CurrentBiome, GridBiomeSubType CurrentSubBiome)
+    /// <summary>
+    /// Finds a random DescriptionEntry that matches current game conditions, weighted by Weight
+    /// </summary>
+    public static DescriptionEntry? GetRandomMatchingDescription(GameEngine engine, List<DescriptionEntry> descriptions)
     {
-        if (tile?.Description == null) return "A wonderful time to walk"; BugHunter.Log($"[Missing Data] - {tile.Root} - Mo Description"); // null guard
-        var possible = tile.Description
-                .Where(d => d.Matches(Season, Weather, CurrentBiome, CurrentSubBiome) || d.Matches(Season, Weather, CurrentBiome) || d.Matches(Season, Weather, CurrentSubBiome) || d.Matches(Season, Weather) || d.Matches(Season) || d.Matches(Weather))
-                .ToList();
-
-        if (possible.Count == 0)
-        {
-            BugHunter.Log($"[Missing Data] - [{tile.Root}|{Season}|{Weather}|{CurrentBiome}|{CurrentSubBiome}] - No Description");
+        if (engine == null || descriptions == null || !descriptions.Any())
             return null;
-        }
-            
-        // Weighted random pick
-        int totalWeight = possible.Sum(d => d.Weight);
-        int roll = random.Next(totalWeight);
 
-        int cumulative = 0;
-        foreach (var entry in possible)
+        // Step 1: Filter matching entries
+        var matching = descriptions
+            .Where(entry => entry.Matches(engine, f))
+            .ToList();
+
+        if (!matching.Any())
+            return null;
+
+        // Step 2: Weighted random selection
+        int totalWeight = matching.Sum(entry => entry.Weight);
+        if (totalWeight == 0)
+            return matching[Random.Shared.Next(matching.Count)]; // fallback uniform
+
+        int randomWeight = Random.Shared.Next(totalWeight);
+        int currentWeight = 0;
+
+        foreach (var entry in matching)
         {
-            cumulative += entry.Weight;
-            if (roll < cumulative)
-                return entry.Text;
+            currentWeight += entry.Weight;
+            if (randomWeight < currentWeight)
+                return entry;
         }
 
-        return possible.Last().Text; // Fallback if math error
+        return matching.Last(); // fallback
+    }
 
+    /// <summary>
+    /// Async version (if you're doing DB calls or anything)
+    /// </summary>
+    public static async Task<DescriptionEntry?> GetRandomMatchingDescriptionAsync(
+        GameEngine engine,
+        List<DescriptionEntry> descriptions,
+        CancellationToken ct = default)
+    {
+        if (engine == null || descriptions == null || !descriptions.Any())
+            return null;
+
+        // Filter matching (async if needed)
+        var matching = descriptions
+            .Where(entry => entry.Matches(engine, f))
+            .ToList();
+
+        if (!matching.Any())
+            return null;
+
+        int totalWeight = matching.Sum(entry => entry.Weight);
+        if (totalWeight == 0)
+            return matching[Random.Shared.Next(matching.Count)];
+
+        int randomWeight = Random.Shared.Next(totalWeight);
+        int currentWeight = 0;
+
+        foreach (var entry in matching)
+        {
+            currentWeight += entry.Weight;
+            if (randomWeight < currentWeight)
+                return entry;
+        }
+
+        return matching.Last();
     }
     public void FinalizeTiles(MapManager map)
     {

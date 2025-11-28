@@ -1,12 +1,13 @@
 ﻿using System;
 
 // Used to track entity position
-public class RootComponent
+public class RootComponent : IEquatable<RootComponent>
 {
     public int GridX { get; set; }
     public int GridY { get; set; }
     public int LocalX { get; set; }
     public int LocalY { get; set; }
+    //Private constructor for EF core
     public RootComponent()
     { }
     public RootComponent Clone()
@@ -26,4 +27,14 @@ public class RootComponent
         LocalX = localX;
         LocalY = localY;
     }
+    public bool Equals(RootComponent? other)
+            => other is not null &&
+               GridX == other.GridX &&
+               GridY == other.GridY &&
+               LocalX == other.LocalX &&
+               LocalY == other.LocalY;
+
+    public override bool Equals(object? obj) => Equals(obj as RootComponent);
+
+    public override int GetHashCode() => HashCode.Combine(GridX, GridY, LocalX, LocalY);
 }

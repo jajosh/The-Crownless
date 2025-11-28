@@ -117,6 +117,11 @@ namespace MyGame.Controls
             public float OverlayFontSizeMultiplier { get; set; } = 1f;
 
             public ColorComponent? ColorShiftOverride { get; set; }
+            // Parameterless constructor (required for JSON deserialization, etc.)
+            public CharData()
+            {
+                Color = new ColorComponent(255, 255, 255); // Default white
+            }
         }
 
         public class OverlayStep
@@ -125,6 +130,11 @@ namespace MyGame.Controls
             public string FontFamily { get; set; }
             public FontStyle? FontStyle { get; set; }
             public float SizeMultiplier { get; set; } = 1f;
+            // Parameterless constructor
+            public OverlayStep()
+            {
+                Color = new ColorComponent(0, 0, 0, 0); // Fully transparent
+            }
         }
 
         // --------------------------------------------------------------------

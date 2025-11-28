@@ -1,14 +1,14 @@
 ﻿using System;
 using The_Game;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 // The Player Object
 public class PlayerObject : ICharacter
 {
     // === Components ===
     #region Components
-    [JsonIgnore] public InventoryComponent? Inventory { get; set; }
-    public List<int> InventoryData { get; set; } // Used for hydration
+    public InventoryComponent? Inventory { get; set; }
     public HealthComponent Health { get; set; }
     public SkillComponent Skills { get; set; }
     #endregion
@@ -19,7 +19,7 @@ public class PlayerObject : ICharacter
     public RaceComponent Race { get; set; } // May take out
 
     // Key = pronoun set ID, Value = (subjective, possessive, reflexive)
-    private Dictionary<int, (string Subjective, string Possessive, string Reflexive)> pronouns =
+    public Dictionary<int, (string Subjective, string Possessive, string Reflexive)> pronouns =
         new()
         {
             { 1, ("he", "his", "himself") },
@@ -27,7 +27,7 @@ public class PlayerObject : ICharacter
             { 3, ("they", "their", "themselves") }
         };
 
-    private int pronounKey = 3; // Default
+    public int pronounKey = 3; // Default
     #endregion
 
     // === Actions (IActionable) ===
@@ -128,6 +128,41 @@ public class PlayerObject : ICharacter
                 actions.Add(action);
         }
         return actions;
+    }
+    public bool IsWearingMetal()
+    {
+        foreach (var item in Inventory.EquipedItems)
+        {
+            foreach (var stack in item.Value)
+                {
+                if (stack.Item.material == PrimaryMaterial.Metal)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public bool IsWieldingSword()
+    {
+        foreach (var slotPair in Inventory.EquipedItems)
+        {
+            EquipmentSlots slot = slotPair.Key;                   // e.g. Head, Chest, Weapon, etc.
+            List<ItemStackComponent> itemsInSlot = slotPair.Value;
+
+            foreach (ItemStackComponent itemStack in itemsInSlot)
+            {
+                if (itemStack == null)
+                    continue;
+
+                if (itemStack.Item.PrimaryType == PrimaryType.Sword)
+                {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
 }

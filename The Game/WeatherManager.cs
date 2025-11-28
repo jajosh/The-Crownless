@@ -2,6 +2,8 @@
 
 public class WeatherManager : WeatherEngine
 {
+    public SeasonData CurrentSeason { get; set; }
+    public WeatherData CurrentWeather { get; set; }
     public WeatherManager()
     {
         
@@ -25,7 +27,13 @@ public class WeatherManager : WeatherEngine
 
         return (countDown, newWeather);
     }
-
+    /// <summary>
+    /// The weather for the game and the weight for each option
+    /// </summary>
+    /// <param name="seasons"></param>
+    /// <param name="biomeType"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     private static Dictionary<WeatherData, int> GetWeatherWeights(SeasonData seasons, GridBiomeType biomeType)
     {
         return (seasons, biomeType) switch

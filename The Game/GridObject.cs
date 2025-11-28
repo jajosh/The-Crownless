@@ -1,34 +1,32 @@
-﻿using System;
-using Newtonsoft.Json;
-public enum GridBiomeType // The biome of the grid
-{
-    Any,
-    BorelForest,
-    TemperateBroadleafForest,
+﻿using System.Text.Json;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-}
-public enum GridBiomeSubType // What features the grid has
-{
-    Any, // Used for random description
-    AbandonedBuilding,
-    Town,
-    HighTown,
-    LowTown,
-    RoyalTown,
-    Farm,
-    Forest
 
-}
 // Used the dehydrated tiles. 
 public class GridObject
 {
-    public List<string> GridMapKey { get; set; } = new();
+    // This is stored as JSON text in one column
+    public string GridMapKeyJson { get; set; } = "[]"; // default empty list
+
+    // Runtime property — NOT mapped to DB
+    [NotMapped]
+    public List<string> GridMapKey
+    {
+        get => string.IsNullOrEmpty(GridMapKeyJson)
+            ? new List<string>()
+            : JsonSerializer.Deserialize<List<string>>(GridMapKeyJson)!;
+        set => GridMapKeyJson = JsonSerializer.Serialize(value);
+    }
+
     public int GridX { get; set; }
     public int GridY { get; set; }
     public GridBiomeType Biome { get; set; }
     public GridBiomeSubType SubBiome { get; set; }
     public int RandomEventChance { get; set; }
+    [NotMapped]
     public List<DescriptionEntry> DescriptionEntries { get; set; } = new();
+    [NotMapped]
     public Dictionary<char, TileAddData>? TileAdds { get; set; } = new();
 
     public GridObject() { }
@@ -39,8 +37,9 @@ public class GridObject
     /// </summary>
     public void AddDescription(int weight, string text, GridBiomeType? biome = null, GridBiomeSubType? subBiome = null, SeasonData? season = null, WeatherData? weather = null)
     {
-        DescriptionEntries.Add(new DescriptionEntry(
-            weight, text, biome, subBiome, season, weather));
+        DescriptionEntries.Add(new DescriptionEntry
+    (
+            text, weight, biome, subBiome, season, weather));
     }
 }
 public class TileAddData

@@ -64,38 +64,5 @@ using System.Threading.Tasks;
         Wisdom,
         Constitution
     }
-    public enum EquipmentSlots
-    {
-        // Armor
-        Head,
-        Chest,
-        Waist,
-        Legs,
-        Feet,
-        Arms,
-        Hands,
-        Wrists,
-        Shoulders,
-
-        // Accessories
-        Neck,
-        Ring,
-        Bracelet,
-        Trinket,
-
-        // Weapons
-        MainHand,
-        OffHand,
-        Back,
-        LowerBack,
-        Side,
-
-
-        // Miscellaneous / Custom
-        Cap,
-        Belt,
-        Tabard
-    }
-    public enum ItemMatieralType { Wood, Leather, Iron, Steel, Adamantian }
-    public enum ItemType { ShortSword, } //  For Craftable items
+    
 

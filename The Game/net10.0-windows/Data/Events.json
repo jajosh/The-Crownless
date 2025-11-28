@@ -1,0 +1,117 @@
+[ // === GeneralEvent ===
+  {
+    "ID": 0,
+    "Startinglocation": {
+      "GridX": 0,
+      "GridY": 0,
+      "LocalX": 0,
+      "LocalY": 0
+    },
+    "Title": "",
+    "LinkedID": null,
+    "Description": [
+      ""
+    ],
+    "EnemyID": [],
+    "AllyID": [],
+    "Branches": {
+      "1": {
+        "ChoiceID": 1,
+        "Text": "",
+        "Dialog": "",
+        "Limbs": {
+          "1": {
+            "NextBranchID": 0,
+            "RequiredFlag": null,
+            "AlreadyGoneDown":  false,
+            "ChoiceText": "",
+            "DC": null,
+            "skill": null,
+            "requiredItem": null,
+            "TimePassed": 0
+          }
+        },
+        "Leaves": []
+      }
+    }
+  },
+  // === Combat Event ===
+  {
+    "ID": 0,
+    "Startinglocation": null,
+    "Title": "",
+    "LinkedID": null,
+    "Description": [
+      ""
+    ],
+    "EnemyID": [ 0 ],
+    "AllyID": [],
+    "Branches": {
+      "1": {
+        "ChoiceID": 1,
+        "Text": "",
+        "Dialog": "",
+        "Limbs": {},
+        "Combat": {
+          "Victory": false,
+          "RewardXP": null,
+          "RewardItemID": []
+        },
+        "Leaves": [
+          {
+            "RequiredFlag": null,
+            "DC": null,
+            "Skill": null,
+            "RewardXP": 0,
+            "RewardItems": []
+          }
+        ]
+      }
+    }
+  },
+  // === Dialog Event ===
+  {
+    "ID": 0,
+    "Startinglocation": null,
+    "Title": "",
+    "LinkedID": null,
+    "Description": [
+      ""
+    ],
+    "EnemyID": [],
+    "AllyID": [],
+    "Branches": {
+      "1": {
+        "ChoiceID": 1,
+        "Text": "",
+        "Dialog": "",
+        "DialogTree": {
+          "NPCID": 0,
+          "Limb": {
+            "Text": {
+              "1": ""
+            },
+            "Dialog": {
+              "1": ""
+            }
+          },
+          "CheckText": ""
+        },
+        "Limbs": {
+          "1": {
+            "NextBranchID": 0,
+            "RequiredFlag": null,
+            "ChoiceText": "",
+            "DC": null,
+            "skill": null,
+            "requiredItem": null,
+            "TimePassed": 0
+          }
+        },
+        "Leaves": []
+      }
+    }
+  }
+]
+
+  

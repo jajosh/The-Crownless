@@ -1,5 +1,23 @@
 ﻿using System;
+public enum GridBiomeType // The biome of the grid
+{
+    Any = 1,
+    BorelForest =2,
+    TemperateBroadleafForest= 3,
 
+}
+public enum GridBiomeSubType // What features the grid has
+{
+    Any = 1, // Used for random description
+    AbandonedBuilding = 2,
+    Town = 3,
+    HighTown = 4,
+    LowTown = 5,
+    RoyalTown = 6,
+    Farm = 7,
+    Forest = 8
+
+}
 /// <summary>
 /// Allows the Grid Tile Description to hold either BridBiomeType or GridBiomeSubType
 /// </summary>

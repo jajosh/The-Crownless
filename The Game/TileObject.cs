@@ -5,59 +5,37 @@ using System.Drawing;
 using System.Windows.Forms;
 using MyGame.Controls;
 using System.Xml;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public enum TileTypes
-{
-    empty,
-    Grass,
-    Tree,
-    Forest,
-    DirtPath,
-    StoneBricks,
-    Wall,
-    Window,
-    Pew,
-    Alter,
-    Town
-}
 
-public enum TileTriggerActions
-{
-    SecretChest,
-    PlantSpawn,
-    Trader,
-    Quest,
-    Event,
-    Door,
-    Combat
-}
-
-public enum CoverGrade
-{
-    full,
-    half,
-    quarter,
-    none
-}
-public class TileState
-{
-
-    // Visual Look
-    public MyGame.Controls.ColorTextBox.CharData CharData { get; set; }
-    public MyGame.Controls.ColorTextBox.OverlayStep Overlay { get; set; }
-}
 // The Tile object
 public class TileObject
 {
-    // Visual Look
-    public MyGame.Controls.ColorTextBox.CharData CharData { get; set; }
-    public MyGame.Controls.ColorTextBox.OverlayStep Overlay { get; set; }
+    public int TileId;
+    // Saves as json
+    [NotMapped]
+    public TileRenderProfile TileRenderProfile { get; set; }
 
     // Locational Data
-    public RootComponent Root { get; set; } = new RootComponent(0, 0, 0, 0);
+    public int RootGridX { get; set; }
+    public int RootGridY { get; set; }
+    public int RootLocalX { get; set; }
+    public int RootLocalY { get; set; }
 
-    // Meta Data
-    public List<ItemStackComponent> Items { get; set; } // For item drops and random spawned items. Like a bow sitting on a table
+    [NotMapped]
+    public RootComponent Root
+    {
+        get => new RootComponent(RootGridX, RootGridY, RootLocalX, RootLocalY);
+        set
+        {
+            RootGridX = value.GridX;
+            RootGridY = value.GridY;
+            RootLocalX = value.LocalX;
+            RootLocalY = value.LocalY;
+        }
+    }
+
+    // Meta Datarandom spawned items. Like a bow sitting on a table
     public TileTypes TileType { get; set; }
     public bool IsWalkable { get; set; } = true;
     public bool IsRoofed { get; set; } = false;
@@ -65,37 +43,29 @@ public class TileObject
 
     public bool IsFlammable { get; set; } = true;
     public int BurnAmount { get; set; } // As a percentage
-    public char? AsciiBrunedFallBack { get; set; }
-    public MyGame.Controls.ColorTextBox.CharData? BurnedCharDataFallBack { get; set; } // The fall back chardata if the tile is burned to 100 percent
-    public MyGame.Controls.ColorTextBox.OverlayStep BurnedCharDataOverLayFallBack { get; set; }
 
-    //  === Plant Life Related info === 
-    public bool IsVegitation { get; set; } = false;
-    public bool IsHarvestable { get; set; } = false;
-    public Dictionary<int, int>? HarvestableItem { get; set; } // item ID, weight
-    public bool IsCutable { get; set; }
-    public MyGame.Controls.ColorTextBox.CharData? CutdownCharDataFallBack { get; set; } // NewCharData for when the tile is "cut" down
-    public MyGame.Controls.ColorTextBox.OverlayStep CutdownCharDataOverlayFallBack { get; set; }
+    [NotMapped]
+    public TileRenderProfile TileRenderProfileBurnFallBack { get; set; }
 
-    // === Storage/Container Items ===
-    public InventoryComponent? ContainerInventory { get; set; }
-    public int ContainerCapacity { get; set; }
+    [NotMapped]
+    public TileRenderProfile TileRenderProfileCutDownFallBack { get; set; }
 
-    // === Item Progression ===
-    public int XP { get; set; }
-    public int Level { get; set; }
 
+    // === Components ===
+    [NotMapped]public List<TileComponents> Components { get; set; }
+    [NotMapped]public List<TileProperties> Propterties { get; set; }
     // === Time and weather Based Interactions ===
-    public DateTime? ExpiresAt { get; set; }
-    public WeatherData WeatherInteraction { get; set; }
-
-    public TileTriggerActions Triggeractions { get; set; }
-    public CoverGrade cover { get; set; } = CoverGrade.none;
+    public List<TileTriggerActions> TriggerActions { get; set; }
+    public CoverGrade Cover { get; set; } = CoverGrade.none;
 
     // Checks if the tile needs to be processed after surrounding tiles have been processed
+
+    [NotMapped]
     public TileCheckType DeferredChecks { get; set; } = TileCheckType.None;
 
     // A list of descriptions for each tile type based on the local grid's biome and sub biome
+
+    [NotMapped]
     public List<DescriptionEntry> Description { get; set; }
     // Used for tile processing. 
     public TileObject(int gridX, int gridY, int localX, int localY, TileTypes tileType, bool isWalkable, bool isRoofed, List<DescriptionEntry> description, char asciiToShow)
@@ -107,7 +77,8 @@ public class TileObject
         TileType = tileType;
         IsWalkable = isWalkable;
         Description = description;
-        CharData.Char = asciiToShow;
+        TileRenderProfile = new TileRenderProfile();
+        TileRenderProfile.CharData.Char = asciiToShow;
         IsFlammable = false;
     }
     public TileObject()
@@ -125,5 +96,14 @@ public class TileObject
             subBiome: subBiome,
             season: season,
             weather: weather));
+    }
+    public bool IsBurned()
+    {
+        foreach (var tileProperties in Propterties)
+        {
+            if (tileProperties.TileProperty == TilePropertie.Burned)
+                return true;
+        }
+        return false;
     }
 }

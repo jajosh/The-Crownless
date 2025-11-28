@@ -1,10 +1,12 @@
-﻿using Microsoft.VisualBasic.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.Logging;
 using MyGame.Controls;
 using System.CodeDom;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Windows.Forms.Design.AxImporter;
+using SQLitePCL;
 
 public class MapManager : MapEngine
 {
@@ -25,8 +27,7 @@ public class MapManager : MapEngine
 
         List<LocationObject> Locations = JsonLoader.LoadFromJson<List<LocationObject>>(FilePaths.GridFilePath);
         BugHunter.Log(Locations.Count.ToString());
-
-
+      
         foreach (var Location in Locations)
         {
 
@@ -57,41 +58,14 @@ public class MapManager : MapEngine
                 }
             }
             
+            
         }
 
-       tiler.FinalizeTiles(this);
+        tiler.FinalizeTiles(this);
        BugHunter.Log("Tiles have been Finalized");
     }
     #region === Query functions === 
-    /// <summary>
-    /// Queries LocationObjects by applying the predicate to each object.
-    /// Returns an IQueryable for deferred execution and further chaining.
-    /// </summary>
-    public static IQueryable<LocationObject> Query(Expression<Func<LocationObject, bool>> predicate)
-    {
-        return LocationKey.Values.AsQueryable().Where(predicate);
-    }
-
-    /// <summary>
-    /// Queries GridObjects by applying the predicate to each object.
-    /// Returns an IQueryable for deferred execution and further chaining.
-    /// Note: Since GridObjects lack IDs, results are based solely on object properties.
-    /// </summary>
-    public static IQueryable<GridObject> Query(Expression<Func<GridObject, bool>> predicate)
-    {
-        return GridKey.Values.AsQueryable().Where(predicate);
-    }
-
-    /// <summary>
-    /// Queries TileObjects by applying the predicate to each object.
-    /// Returns an IQueryable for deferred execution and further chaining.
-    /// Note: Since TileObjects lack IDs, results are based solely on object properties.
-    /// </summary>
-    public static IQueryable<TileObject> Query(Expression<Func<TileObject, bool>> predicate)
-    {
-        return MapKey.Values.AsQueryable().Where(predicate);
-    }
-
+    
     #endregion
     public void AddDescription(int weight, string text, GridBiomeType? biome = null, GridBiomeSubType? subBiome = null, SeasonData? season = null, WeatherData? weather = null)
     {
@@ -120,12 +94,12 @@ public class MapManager : MapEngine
             for (int localX = 0; localX < width; localX++)
             {
                 var key = (player.Root.GridX, player.Root.GridY, (localX, localY));
-                char displayChar = MapKey.TryGetValue(key, out var tile) ? tile.CharData.Char : ' ';
+                char displayChar = MapKey.TryGetValue(key, out var tile) ? tile.TileRenderProfile.CharData.Char : ' ';
 
                 if (localX == player.Root.LocalX && localY == player.Root.LocalY)
                     displayChar = '@';
 
-                ctb.Append(tile.CharData);
+                ctb.Append(tile.TileRenderProfile.CharData);
 
                 startPos++;
             }
@@ -135,6 +109,22 @@ public class MapManager : MapEngine
 
         ctb.ResumeLayout();  // Optional: Resume after update
                              // row++;  // If you still need this for external tracking, keep it; otherwise remove
+    }
+
+    public SeasonData CurrentSeason()
+    {
+
+        return SeasonData.Any;
+    }
+    public GridBiomeSubType CurrentSubBiome()
+    {
+
+        return GridBiomeSubType.Any;
+    }
+    public GridBiomeType CurrentBiome()
+    {
+
+        return GridBiomeType.Any;
     }
 
 }

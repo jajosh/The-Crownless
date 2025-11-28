@@ -33,6 +33,8 @@ public static class GameFactory
             var npcType = new NPCTypeManager();
             Log("NPCTypeManager created successfully.");
 
+            var weather = new WeatherManager();
+
             var engine = new GameEngine(
                 beeper: beeper,
                 fileManager: fileManager,
@@ -40,7 +42,8 @@ public static class GameFactory
                 player: player,
                 processor: processor,
                 map: map,
-                npcType: npcType
+                npcType: npcType,
+                weather: weather
             );
             Log("GameEngine created successfully.");
 

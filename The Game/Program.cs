@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 using WindowsFormsApp1;
-
+using SQLitePCL;
 namespace The_Game
 {
 
@@ -18,6 +18,7 @@ namespace The_Game
         [STAThread]
         static void Main()
         {
+            Batteries_V2.Init();
             // Opens the console.
             AllocConsole();
 
@@ -27,6 +28,10 @@ namespace The_Game
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
+        }
+        public static void ShutDown()
+        {
+            GameDataBase.CloseConnection();
         }
     }
 }

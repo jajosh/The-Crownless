@@ -3,27 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
+public enum EquipmentSlotType
+{
+    Single = 0,
+    MultiRing = 1,
+    MultiBracelet = 2
+}
+// SINGLE slots — normal enum (one item per slot)
+public enum SingleEquipmentSlots
+{
+    Head, Chest, Waist, Legs, Feet, Arms, Hands, Wrists, Shoulders,
+    Neck, Back, LowerBack, Side, Cap, Belt, Tabard
+}
 
+// MULTI slots — FLAGS enum (multiple items allowed)
+[Flags]
+public enum MultiEquipmentSlots : long
+{
+    None = 0,
+    Ring1 = 1L << 0,   // 1
+    Ring2 = 1L << 1,   // 2
+    Ring3 = 1L << 2,   // 4
+    Ring4 = 1L << 3,   // 8
+    Bracelet1 = 1L << 4,   // 16
+    Bracelet2 = 1L << 5,   // 32
+    // Room for 50+ more slots!
+}
 
 public class ItemStackComponent
 {
-    public Item Item { get; set; }
+    public ItemObject Item { get; set; }
     public int StackSize { get; set; }
-    public ItemStackComponent(Item item, int quantity = 1)
+    public ItemStackComponent(ItemObject item, int quantity = 1)
     {
         Item = item;
         StackSize = quantity;
     }
     public ItemStackComponent()
     {
-        Item = new Item();
+        Item = new ItemObject();
     }
 }
 public class InventoryComponent
 {
     // Json loading key
     public Dictionary<int, int>? InventoryKey { get; set; }
-    public List<int> ArmorKey { get; set; }
+    public List<int> EquipedItemsKey { get; set; }
     //Shit you are holding
     public int Capacity { get; private set; }
     public Dictionary<int, ItemStackComponent> Inventory { get; set; }

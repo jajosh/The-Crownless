@@ -9,7 +9,7 @@ using The_Game;
 // put ALL methods here (logic!).
 internal class InventoryManager : InventoryEngine
 {
-    public bool AddItem(IInventory actor, Item item, int quantity = 1)
+    public bool AddItem(IInventory actor, ItemObject item, int quantity = 1)
     {
         bool check = false;
         // Check if the item is already in the inventory
@@ -38,23 +38,23 @@ internal class InventoryManager : InventoryEngine
         return check;
        // Needs to add the item
     }
-    public bool RemoveItem(IInventory actor, Item item, int quantity = 1)
+    public bool RemoveItem(IInventory actor, ItemObject item, int quantity = 1)
     {
         return false;
     }
-    public bool EquipItem(IInventory actor, Item item)
+    public bool EquipItem(IInventory actor, ItemObject item)
     {
         
 
         return false;
     }
-    public List<Item> GetEquippedItem(IInventory actor, EquipmentSlots slot)
+    public List<ItemObject> GetEquippedItem(IInventory actor, EquipmentSlots slot)
     {
-        List<Item> results = new List<Item>();
+        List<ItemObject> results = new List<ItemObject>();
         return results;
     }
     // Checks if the player has a particular item 
-    public bool HasItem(IInventory actor, Item item, int minQuantity = 1)
+    public bool HasItem(IInventory actor, ItemObject item, int minQuantity = 1)
     {
         ItemStackComponent itemToCheck = new ItemStackComponent(item, minQuantity);
         if (actor.Inventory.Inventory.ContainsValue(itemToCheck))

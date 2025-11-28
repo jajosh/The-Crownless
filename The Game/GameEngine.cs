@@ -14,11 +14,12 @@ public class GameEngine
     public ITileProcessorEngine Processor { get; init; }
     public MapEngine Map { get; init; }
     public INPCTypeEngine NPCType { get; init; }
+    public WeatherEngine Weather { get; init; }
 
     public List<IActionable> ActiveOnScreen { get; set; } = new();
     public List<IActionable> ActiveOnLocation { get; set; } = new();
 
-    public GameEngine(IBeeperEngine beeper, IIFileEngine fileManager, INPCEngine npc, IPlayerEngine player, ITileProcessorEngine processor, MapEngine map, INPCTypeEngine npcType)
+    public GameEngine(IBeeperEngine beeper, IIFileEngine fileManager, INPCEngine npc, IPlayerEngine player, ITileProcessorEngine processor, MapEngine map, INPCTypeEngine npcType, WeatherEngine weather)
     {
         Beeper = beeper;
         FileManager = fileManager;
@@ -27,6 +28,7 @@ public class GameEngine
         Processor = processor;
         Map = map;
         NPCType = npcType;
+        Weather = weather;
     }
 
     public void Assembly()
