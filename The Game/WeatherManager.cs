@@ -64,7 +64,7 @@ public class WeatherManager : WeatherEngine
                     { WeatherData.Snowy, 9 }, 
                     { WeatherData.Overcast, 6 }, 
                     { WeatherData.Blizzard, 3 } 
-                }, // Boosted Snowy for boreal
+                },
                 _ => throw new ArgumentOutOfRangeException(nameof(seasons))
             },
             (_, GridBiomeType.TemperateBroadleafForest) => seasons switch
@@ -75,7 +75,7 @@ public class WeatherManager : WeatherEngine
                     { WeatherData.RainHeavy, 2 }, 
                     { WeatherData.Thunderstorm, 4 }, 
                     { WeatherData.Overcast, 2 } 
-                }, // Slightly less rainy
+                },
                 SeasonData.Summer => new() { 
                     { WeatherData.Clear, 9 },
                     { WeatherData.RainLight, 3 },
@@ -92,7 +92,7 @@ public class WeatherManager : WeatherEngine
                     { WeatherData.Snowy, 6 }, 
                     { WeatherData.Overcast, 7 }, 
                     { WeatherData.Blizzard, 2 } 
-                }, // Less extreme
+                },
                 _ => throw new ArgumentOutOfRangeException(nameof(seasons))
             },
             _ => new() { { WeatherData.Clear, 10 } } // Default/fallback for other biomes

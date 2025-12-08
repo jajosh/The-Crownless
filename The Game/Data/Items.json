@@ -232,8 +232,8 @@
   },
   {
     "ID": 0,
-    "Name": "New Item",
-    "AsciiKey": "new_item",
+    "Name": "Log",
+    "AsciiKey": "/",
     "SpawnChance": 0,
     "MaxStack": 1,
     "Price": null,

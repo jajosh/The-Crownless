@@ -1,4 +1,12 @@
 To Do
-├── ICharacter needs to be inheirited by playerObject and NPC object and each of those needs an engine.   
-        ├──
+├── DataBase
+        ├── TileRepository 
+                ├──Need to finish rounding out the class
+                        ├── LootTables
+                        ├── TileObject
+                                ├── DataBase Set up
+                                ├── Corralating that with how the class is set up
+        ├── 
+├── Need to finalize the loot system
+        ├── A flow chart might help
         └── 

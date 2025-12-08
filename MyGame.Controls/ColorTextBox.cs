@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows.Forms; // This is the key namespace for the UI Timer
 using System.Windows.Forms.Design;
 using System.Windows.Forms.VisualStyles;
 
 namespace MyGame.Controls
 {
     // ========================================================================
-    // COLOR COMPONENT (Your Custom Color Class)
+    // ColorComponent (Helper Class)
     // ========================================================================
+    #region 🎨 ColorComponent (Data)
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public class ColorComponent
     {
         public int R { get; set; }
@@ -22,14 +26,15 @@ namespace MyGame.Controls
         public int B { get; set; }
         public int A { get; set; } = 255;
 
+        public ColorComponent() : this(255, 255, 255, 255) { }
         public ColorComponent(int r, int g, int b) : this(255, r, g, b) { }
 
         public ColorComponent(int a, int r, int g, int b)
         {
-            A = Math.Clamp(a, 0, 255);
-            R = Math.Clamp(r, 0, 255);
-            G = Math.Clamp(g, 0, 255);
-            B = Math.Clamp(b, 0, 255);
+            A = Clamp(a, 0, 255);
+            R = Clamp(r, 0, 255);
+            G = Clamp(g, 0, 255);
+            B = Clamp(b, 0, 255);
         }
 
         public Color ToColor() => Color.FromArgb(A, R, G, B);
@@ -37,26 +42,29 @@ namespace MyGame.Controls
         public static ColorComponent FromColor(Color color) =>
             new ColorComponent(color.A, color.R, color.G, color.B);
 
-        public static ColorComponent Lerp(ColorComponent a, ColorComponent b, float t) =>
-            new ColorComponent(
+        public static ColorComponent Lerp(ColorComponent a, ColorComponent b, float t)
+        {
+            t = Clamp(t, 0f, 1f);
+            return new ColorComponent(
                 (int)(a.A + (b.A - a.A) * t),
                 (int)(a.R + (b.R - a.R) * t),
                 (int)(a.G + (b.G - a.G) * t),
                 (int)(a.B + (b.B - a.B) * t)
             );
+        }
 
-        public static ColorComponent Multiply(ColorComponent a, float factor) =>
-            new ColorComponent(
-                a.A,
-                (int)(a.R * factor),
-                (int)(a.G * factor),
-                (int)(a.B * factor)
-            );
+        // Helper for .NET Framework compatibility
+        private static int Clamp(int value, int min, int max) => (value < min) ? min : (value > max) ? max : value;
+        private static float Clamp(float value, float min, float max) => (value < min) ? min : (value > max) ? max : value;
+
+        public override string ToString() => $"A={A}, R={R}, G={G}, B={B}";
     }
+    #endregion
 
     // ========================================================================
-    // STRING ARRAY CONVERTER (For Editable DesignTimeLines)
+    // StringArrayConverter (Helper Class)
     // ========================================================================
+    #region 🛠 StringArrayConverter (Designer)
     public class StringArrayConverter : TypeConverter
     {
         public override bool GetPropertiesSupported(ITypeDescriptorContext context) => true;
@@ -80,6 +88,7 @@ namespace MyGame.Controls
             return base.ConvertTo(context, culture, value, destinationType);
         }
     }
+    #endregion
 
     // ========================================================================
     // MAIN CONTROL: ColorTextBox
@@ -89,8 +98,10 @@ namespace MyGame.Controls
     public class ColorTextBox : Control
     {
         // --------------------------------------------------------------------
-        // Per-character data
+        // Data Structures
         // --------------------------------------------------------------------
+        #region 💾 Data Structures
+
         public class CharData
         {
             public char Char { get; set; }
@@ -99,7 +110,6 @@ namespace MyGame.Controls
 
             public float MainScale { get; set; } = 1f;
             public float ShadowScale { get; set; } = 1f;
-            public float OverlayScale { get; set; } = 1f;
 
             public float ShadowSquishX { get; set; } = 1f;
             public float ShadowSquishY { get; set; } = 1f;
@@ -116,12 +126,10 @@ namespace MyGame.Controls
             public FontStyle? OverlayFontStyle { get; set; }
             public float OverlayFontSizeMultiplier { get; set; } = 1f;
 
-            public ColorComponent? ColorShiftOverride { get; set; }
-            // Parameterless constructor (required for JSON deserialization, etc.)
-            public CharData()
-            {
-                Color = new ColorComponent(255, 255, 255); // Default white
-            }
+            public ColorComponent ColorShiftOverride { get; set; }
+
+            public CharData() { }
+            public CharData(char c) { Char = c; }
         }
 
         public class OverlayStep
@@ -130,19 +138,19 @@ namespace MyGame.Controls
             public string FontFamily { get; set; }
             public FontStyle? FontStyle { get; set; }
             public float SizeMultiplier { get; set; } = 1f;
-            // Parameterless constructor
-            public OverlayStep()
-            {
-                Color = new ColorComponent(0, 0, 0, 0); // Fully transparent
-            }
         }
 
-        // --------------------------------------------------------------------
-        // Core fields
-        // --------------------------------------------------------------------
-        private readonly List<CharData> _chars = new List<CharData>();
-        private readonly Dictionary<(string Family, float Size, FontStyle Style), Font> _fontCache = new();
+        #endregion
 
+        // --------------------------------------------------------------------
+        // Fields & State
+        // --------------------------------------------------------------------
+        #region ⚙️ Fields & State
+
+        private readonly List<CharData> _chars = new List<CharData>();
+        private readonly Dictionary<(string, float, FontStyle), Font> _fontCache = new Dictionary<(string, float, FontStyle), Font>();
+
+        // Metrics
         private float _charWidth;
         private float _lineHeight;
         private int _firstVisibleLine;
@@ -150,30 +158,34 @@ namespace MyGame.Controls
         private HorizontalAlignment _textAlign = HorizontalAlignment.Left;
         private VerticalAlignment _verticalAlign = VerticalAlignment.Top;
 
-        private int _selectionStart = -1;
-        private int _selectionLength = 0;
-
+        // Animation Timers (FIXED: Explicitly using System.Windows.Forms.Timer)
         private System.Windows.Forms.Timer _shimmerTimer;
         private int _shimmerIndex = 0;
-
         private System.Windows.Forms.Timer _pulseTimer;
         private float _totalTime = 0f;
         private DateTime _lastFrame = DateTime.MinValue;
-
         private System.Windows.Forms.Timer _backAnimTimer;
-        private ColorComponent _currentBackColor = new ColorComponent(0, 0, 0);
-        private ColorComponent _targetBackColor = new ColorComponent(0, 0, 0);
-        private Image _currentBackgroundImage;
-        private Image _targetBackgroundImage;
-        private float _backgroundAlpha = 0f;
-
-        private ColorComponent _colorShiftCurrent = new ColorComponent(255, 255, 255);
-        private ColorComponent _colorShiftTarget = new ColorComponent(255, 255, 255);
         private System.Windows.Forms.Timer _colorShiftTimer;
 
+        // Background State
+        private ColorComponent _currentBackColor = new ColorComponent(0, 0, 0);
+        private ColorComponent _colorShiftCurrent = new ColorComponent(255, 255, 255);
+        private Image _currentBackgroundImage;
+        private float _backgroundAlpha = 0f;
+
+        // Target State
+        private ColorComponent _targetBackColor = new ColorComponent(0, 0, 0);
+        private ColorComponent _colorShiftTarget = new ColorComponent(255, 255, 255);
+
+        private int _widthInChars = 51; // Default to grid width for consistency
+
+        #endregion
+
         // --------------------------------------------------------------------
-        // Appearance (Fixed: Added DesignerSerialization)
+        // Control Properties
         // --------------------------------------------------------------------
+        #region 🧱 Control Properties
+
         private ColorComponent _overlayTint = new ColorComponent(0, 0, 0, 0);
         private ColorComponent _shadowColor = new ColorComponent(120, 0, 0, 0);
         private ColorComponent _selectionBackground = ColorComponent.FromColor(SystemColors.Highlight);
@@ -181,19 +193,19 @@ namespace MyGame.Controls
 
         [Category("Appearance")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ColorComponent OverlayTint
-        {
-            get => _overlayTint;
-            set { _overlayTint = value; Invalidate(); }
-        }
+        public ColorComponent OverlayTint { get => _overlayTint; set { _overlayTint = value; Invalidate(); } }
 
         [Category("Appearance")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ColorComponent ShadowColor
-        {
-            get => _shadowColor;
-            set { _shadowColor = value; Invalidate(); }
-        }
+        public ColorComponent ShadowColor { get => _shadowColor; set { _shadowColor = value; Invalidate(); } }
+
+        [Category("Appearance")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ColorComponent SelectionBackground { get => _selectionBackground; set { _selectionBackground = value; Invalidate(); } }
+
+        [Category("Appearance")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ColorComponent SelectionColor { get => _selectionColor; set { _selectionColor = value; Invalidate(); } }
 
         [Category("Appearance"), DefaultValue(typeof(Point), "1,1")]
         public Point ShadowOffset { get; set; } = new Point(1, 1);
@@ -214,22 +226,7 @@ namespace MyGame.Controls
         [Category("Appearance"), DefaultValue(VerticalAlignment.Top)]
         public VerticalAlignment VerticalAlign { get => _verticalAlign; set { _verticalAlign = value; Invalidate(); } }
 
-        [Category("Appearance")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ColorComponent SelectionBackground
-        {
-            get => _selectionBackground;
-            set { _selectionBackground = value; Invalidate(); }
-        }
-
-        [Category("Appearance")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ColorComponent SelectionColor
-        {
-            get => _selectionColor;
-            set { _selectionColor = value; Invalidate(); }
-        }
-
+        // Global Scaling
         [Category("Appearance"), DefaultValue(1f)]
         public float GlobalMainScale { get; set; } = 1f;
 
@@ -245,6 +242,7 @@ namespace MyGame.Controls
         [Category("Appearance"), DefaultValue(1f)]
         public float ShadowSquishY { get; set; } = 1f;
 
+        // Global Font Styles
         [Category("Appearance"), DefaultValue(null)]
         public string ShadowFontFamily { get; set; }
 
@@ -257,9 +255,63 @@ namespace MyGame.Controls
         [Category("Appearance"), DefaultValue(FontStyle.Regular)]
         public FontStyle OverlayFontStyle { get; set; } = FontStyle.Regular;
 
+        #endregion
+
         // --------------------------------------------------------------------
-        // Effects
+        // Layout & Grid Locking
         // --------------------------------------------------------------------
+        #region 📏 Layout & Grid Locking
+
+        [Category("Layout"), DefaultValue(51)]
+        [Browsable(false)]
+        public int FixedWidthInChars { get; } = 51;
+
+        [Category("Layout"), DefaultValue(25)]
+        [Browsable(false)]
+        public int FixedHeightInChars { get; } = 25;
+
+        [Category("Layout"), DefaultValue(true)]
+        [Description("When true, the text buffer is locked to 51 columns and 25 rows.")]
+        [RefreshProperties(RefreshProperties.All)]
+        public bool LockToGrid { get; set; } = true;
+
+        [Category("Layout"), DefaultValue(false)]
+        public bool AutoWidthInChars { get; set; } = false;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public int WidthInChars
+        {
+            get => LockToGrid ? FixedWidthInChars : _widthInChars;
+            set
+            {
+                if (!LockToGrid)
+                {
+                    _widthInChars = value;
+                    Invalidate();
+                }
+                // Ignored if LockToGrid is true
+            }
+        }
+
+        public override Size GetPreferredSize(Size proposedSize)
+        {
+            if (LockToGrid)
+            {
+                // Calculate the required pixel width and height for a 51x25 grid
+                int requiredWidth = (int)Math.Ceiling(FixedWidthInChars * CharAdvance) + Padding.Horizontal;
+                int requiredHeight = (int)Math.Ceiling(FixedHeightInChars * _lineHeight) + Padding.Vertical;
+                return new Size(requiredWidth, requiredHeight);
+            }
+            return base.GetPreferredSize(proposedSize);
+        }
+
+        #endregion
+
+        // --------------------------------------------------------------------
+        // Effects Properties
+        // --------------------------------------------------------------------
+        #region ✨ Effects Properties
+
         [Category("Effects"), DefaultValue(true)]
         public bool EnableRipple { get; set; } = true;
 
@@ -287,10 +339,10 @@ namespace MyGame.Controls
         [Category("Effects"), DefaultValue(1200)]
         public int NeonPulseDurationMs { get; set; } = 1200;
 
-        // --------------------------------------------------------------------
-        // Color Shift
-        // --------------------------------------------------------------------
-        [Category("Appearance")]
+        [Category("Effects"), DefaultValue(0f)]
+        public float ColorShiftStrength { get; set; } = 0f;
+
+        [Category("Effects")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ColorComponent ColorShiftTarget
         {
@@ -302,55 +354,44 @@ namespace MyGame.Controls
             }
         }
 
-        [Category("Appearance"), DefaultValue(0f)]
-        public float ColorShiftStrength { get; set; } = 0f;
-
-        // --------------------------------------------------------------------
-        // Shimmer
-        // --------------------------------------------------------------------
         public List<OverlayStep> OverlaySteps { get; } = new List<OverlayStep>();
 
-        [Category("Appearance"), DefaultValue(100)]
+        [Category("Effects"), DefaultValue(100)]
         public int ShimmerIntervalMs { get; set; } = 100;
 
+        #endregion
+
         // --------------------------------------------------------------------
-        // Design
+        // Design Mode Properties
         // --------------------------------------------------------------------
+        #region 🖼️ Design Mode
+
         private string[] _designTimeLines = new[]
         {
             "ColorTextBox Ready!",
-            "Ripple + Neon Pulse",
-            "ColorComponent Power!"
+            "LockToGrid: 51x25",
+            "Coordinate Editing Enabled"
         };
 
         [Category("Design")]
-        [Description("Multi-line preview text shown in the designer. Click [...] to edit.")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        [Description("Multi-line preview text shown in the designer.")]
         [TypeConverter(typeof(StringArrayConverter))]
-        [Editor(typeof(System.ComponentModel.Design.MultilineStringEditor), typeof(System.Drawing.Design.UITypeEditor))]
-        [RefreshProperties(RefreshProperties.All)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        // FIXED: Added Content serialization to fix the design mode warning/error
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public string[] DesignTimeLines
         {
             get => _designTimeLines;
-            set
-            {
-                _designTimeLines = value ?? Array.Empty<string>();
-                Invalidate();
-            }
+            set { _designTimeLines = value ?? Array.Empty<string>(); Invalidate(); }
         }
 
-        // --------------------------------------------------------------------
-        // Layout
-        // --------------------------------------------------------------------
-        [Category("Layout"), DefaultValue(51)]
-        public int WidthInChars { get; set; } = 51;
-
-        [Category("Layout"), DefaultValue(true)]
-        public bool AutoWidthInChars { get; set; } = true;
+        #endregion
 
         // --------------------------------------------------------------------
-        // Constructor
+        // Constructor, Dispose, and Overrides
         // --------------------------------------------------------------------
+        #region 🏗️ Init & Overrides
+
         public ColorTextBox()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint |
@@ -361,13 +402,16 @@ namespace MyGame.Controls
                      ControlStyles.ResizeRedraw, true);
 
             base.BackColor = Color.Black;
+            base.ForeColor = Color.White;
             TabStop = true;
 
             UpdateMetrics();
-            if (AutoWidthInChars) RecalculateWidthInChars();
+            if (LockToGrid) InitializeGridBuffer(); // Initial padding
+            else if (AutoWidthInChars) RecalculateWidthInChars();
 
             OverlaySteps.Add(new OverlayStep { Color = _overlayTint });
 
+            // FIXED: Use System.Windows.Forms.Timer for UI thread safety
             _pulseTimer = new System.Windows.Forms.Timer { Interval = 16 };
             _pulseTimer.Tick += (s, e) => Invalidate();
             _pulseTimer.Start();
@@ -379,6 +423,7 @@ namespace MyGame.Controls
             {
                 foreach (var f in _fontCache.Values) f.Dispose();
                 _fontCache.Clear();
+                // FIXED: Timer disposal now works correctly for System.Windows.Forms.Timer
                 _shimmerTimer?.Dispose();
                 _pulseTimer?.Dispose();
                 _backAnimTimer?.Dispose();
@@ -387,19 +432,76 @@ namespace MyGame.Controls
             base.Dispose(disposing);
         }
 
-        // --------------------------------------------------------------------
-        // Metrics
-        // --------------------------------------------------------------------
-        private Font GetCachedFont(string familyName, float sizePoints, FontStyle style)
+        [Category("Appearance")]
+        [Description("The text associated with the control.")]
+        public override string Text
         {
-            string family = familyName ?? Font.FontFamily.Name;
-            var key = (family, sizePoints, style);
-            if (!_fontCache.TryGetValue(key, out var font))
+            get
             {
-                font = new Font(family, sizePoints, style);
-                _fontCache[key] = font;
+                // Returns string based on current CharData
+                return string.Join("", _chars.Select(c => c.Char));
             }
-            return font;
+            set
+            {
+                // Note: This wipes out custom colors/effects/etc. for simple text setting.
+                _chars.Clear();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    foreach (char c in value)
+                    {
+                        _chars.Add(new CharData(c) { Color = ColorComponent.FromColor(this.ForeColor) });
+                    }
+                }
+                if (LockToGrid) InitializeGridBuffer();
+                Invalidate();
+            }
+        }
+
+        public override Font Font
+        {
+            get => base.Font;
+            set
+            {
+                if (value == null) return;
+                using Graphics g = CreateGraphics();
+                float wi = g.MeasureString("i", value).Width;
+                float wM = g.MeasureString("M", value).Width;
+
+                // Force Monospace if needed for grid alignment logic
+                base.Font = Math.Abs(wi - wM) > 1f
+                    ? new Font("Consolas", value.SizeInPoints, value.Style)
+                    : value;
+
+                // Clear cache on font change to save memory
+                foreach (var f in _fontCache.Values) f.Dispose();
+                _fontCache.Clear();
+            }
+        }
+
+        #endregion
+
+        // --------------------------------------------------------------------
+        // Metrics & Helpers
+        // --------------------------------------------------------------------
+        #region 📊 Metrics & Helpers
+
+        private void InitializeGridBuffer()
+        {
+            if (!LockToGrid) return;
+
+            int totalSize = FixedWidthInChars * FixedHeightInChars;
+
+            // Pad the buffer with spaces up to the fixed size
+            while (_chars.Count < totalSize)
+            {
+                _chars.Add(new CharData(' ')); // Pad with empty CharData
+            }
+
+            // Truncate if buffer is too large
+            if (_chars.Count > totalSize)
+            {
+                _chars.RemoveRange(totalSize, _chars.Count - totalSize);
+            }
         }
 
         private void UpdateMetrics()
@@ -414,59 +516,138 @@ namespace MyGame.Controls
             float advance = CharAdvance;
             if (advance <= 0) advance = 1f;
             float available = ClientSize.Width - Padding.Horizontal;
-            WidthInChars = Math.Max(1, (int)Math.Floor(available / advance));
+            // Only used when LockToGrid is false
+            _widthInChars = Math.Max(1, (int)Math.Floor(available / advance));
+        }
+
+        private Font GetCachedFont(string familyName, float sizePoints, FontStyle style)
+        {
+            string family = familyName ?? Font.FontFamily.Name;
+            if (sizePoints <= 0) sizePoints = 1f;
+
+            var key = (family, sizePoints, style);
+            if (!_fontCache.TryGetValue(key, out var font))
+            {
+                try
+                {
+                    font = new Font(family, sizePoints, style);
+                }
+                catch
+                {
+                    font = new Font(FontFamily.GenericMonospace, sizePoints, style);
+                }
+                _fontCache[key] = font;
+            }
+            return font;
         }
 
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);
             UpdateMetrics();
-            if (AutoWidthInChars) RecalculateWidthInChars();
+            if (LockToGrid) InitializeGridBuffer();
+            else if (AutoWidthInChars) RecalculateWidthInChars();
             Invalidate();
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
-            if (AutoWidthInChars) RecalculateWidthInChars();
+            if (LockToGrid)
+            {
+                // Do nothing to WidthInChars, but refresh the visual
+            }
+            else if (AutoWidthInChars) RecalculateWidthInChars();
             Invalidate();
         }
 
         protected override void OnPaddingChanged(EventArgs e)
         {
             base.OnPaddingChanged(e);
-            if (AutoWidthInChars) RecalculateWidthInChars();
+            if (LockToGrid)
+            {
+                // Refresh only
+            }
+            else if (AutoWidthInChars) RecalculateWidthInChars();
             Invalidate();
         }
 
-        public override Font Font
-        {
-            get => base.Font;
-            set
-            {
-                if (value == null) return;
-                using Graphics g = CreateGraphics();
-                float wi = g.MeasureString("i", value).Width;
-                float wM = g.MeasureString("M", value).Width;
-                base.Font = Math.Abs(wi - wM) > 1f
-                    ? new Font("Consolas", value.SizeInPoints, value.Style)
-                    : value;
-                foreach (var f in _fontCache.Values) f.Dispose();
-                _fontCache.Clear();
-            }
-        }
-
-        private int TotalLines => (_chars.Count + WidthInChars - 1) / WidthInChars;
+        private int TotalLines => LockToGrid ? FixedHeightInChars : (_chars.Count + WidthInChars - 1) / WidthInChars;
         private int VisibleLines => _lineHeight > 0 ? Math.Max(1, (int)Math.Floor((ClientSize.Height - Padding.Vertical) / _lineHeight)) : 1;
         private float CharAdvance => _charWidth + LetterSpacing;
 
+        #endregion
+
         // --------------------------------------------------------------------
-        // Animation Helpers
+        // Public API for Data Manipulation
         // --------------------------------------------------------------------
+        #region ⌨️ Public API (Read/Write)
+
+        public List<CharData> GetCharData() => _chars;
+
+        /// <summary>
+        /// Clears the internal buffer and sets new character data.
+        /// </summary>
+        public void SetCharData(IEnumerable<CharData> newChars)
+        {
+            _chars.Clear();
+            if (newChars != null) _chars.AddRange(newChars);
+            if (LockToGrid) InitializeGridBuffer();
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Sets the CharData at a specific grid coordinate (X, Y).
+        /// X is column (0 to Width-1), Y is row (0 to Height-1).
+        /// </summary>
+        public void SetCharDataAt(int x, int y, CharData data)
+        {
+            if (!LockToGrid)
+            {
+                throw new InvalidOperationException("SetCharDataAt requires LockToGrid to be true.");
+            }
+
+            if (x < 0 || x >= FixedWidthInChars || y < 0 || y >= FixedHeightInChars)
+            {
+                throw new ArgumentOutOfRangeException("Coordinates are outside the fixed 51x25 grid.");
+            }
+
+            InitializeGridBuffer(); // Ensure buffer is padded
+
+            int index = y * FixedWidthInChars + x;
+
+            _chars[index] = data ?? new CharData(' ');
+
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Appends text to the buffer. Used primarily when LockToGrid is false.
+        /// </summary>
+        public void AppendText(string text, ColorComponent color = null)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            var c = color ?? ColorComponent.FromColor(ForeColor);
+            foreach (var ch in text)
+            {
+                _chars.Add(new CharData(ch) { Color = c });
+            }
+            if (LockToGrid) InitializeGridBuffer();
+            Invalidate();
+        }
+
+        #endregion
+
+        // --------------------------------------------------------------------
+        // Animation Logic
+        // --------------------------------------------------------------------
+        #region 🌀 Animation Logic
+
         public void RefreshShimmer()
         {
             if (OverlaySteps.Count > 1 && ShimmerIntervalMs > 0)
             {
+                // FIXED: Use System.Windows.Forms.Timer
                 _shimmerTimer ??= new System.Windows.Forms.Timer();
                 _shimmerTimer.Interval = ShimmerIntervalMs;
                 _shimmerTimer.Tick -= ShimmerTimer_Tick;
@@ -485,6 +666,7 @@ namespace MyGame.Controls
         private void StartColorShiftAnimation()
         {
             _colorShiftTimer?.Dispose();
+            // FIXED: Use System.Windows.Forms.Timer
             _colorShiftTimer = new System.Windows.Forms.Timer { Interval = 16 };
             _colorShiftCurrent = GetCurrentGlobalTint();
             _colorShiftTimer.Tick += (s, e) =>
@@ -492,14 +674,11 @@ namespace MyGame.Controls
                 float t = 0.1f;
                 _colorShiftCurrent = ColorComponent.Lerp(_colorShiftCurrent, _colorShiftTarget, t);
                 Invalidate();
-                if (ColorShiftStrength == 0f || NearlyEqual(_colorShiftCurrent, _colorShiftTarget))
+                if (ColorShiftStrength == 0f || Math.Abs(_colorShiftCurrent.R - _colorShiftTarget.R) < 1)
                     _colorShiftTimer.Stop();
             };
             _colorShiftTimer.Start();
         }
-
-        private bool NearlyEqual(ColorComponent a, ColorComponent b) =>
-            Math.Abs(a.R - b.R) + Math.Abs(a.G - b.G) + Math.Abs(a.B - b.B) < 10;
 
         private ColorComponent GetCurrentGlobalTint() =>
             ColorShiftStrength > 0f ? _colorShiftCurrent : new ColorComponent(255, 255, 255);
@@ -507,13 +686,10 @@ namespace MyGame.Controls
         private ColorComponent ApplyColorShift(ColorComponent baseColor, CharData cd)
         {
             if (ColorShiftStrength <= 0f) return baseColor;
-            if (cd.ColorShiftOverride is ColorComponent ov) return ov;
+            if (cd.ColorShiftOverride != null) return cd.ColorShiftOverride;
             return ColorComponent.Lerp(baseColor, GetCurrentGlobalTint(), ColorShiftStrength);
         }
 
-        // --------------------------------------------------------------------
-        // Background Animation
-        // --------------------------------------------------------------------
         public void SetBackColor(ColorComponent color, int fadeMs = 300)
         {
             _targetBackColor = color;
@@ -529,7 +705,8 @@ namespace MyGame.Controls
             int steps = Math.Max(1, fadeMs / 16);
             int step = 0;
 
-            StopBackAnim();
+            _backAnimTimer?.Stop();
+            // FIXED: Use System.Windows.Forms.Timer
             _backAnimTimer = new System.Windows.Forms.Timer { Interval = 16 };
             _backAnimTimer.Tick += (s, e) =>
             {
@@ -538,58 +715,23 @@ namespace MyGame.Controls
                 _currentBackColor = ColorComponent.Lerp(start, color, t);
                 base.BackColor = _currentBackColor.ToColor();
                 Invalidate();
-                if (step >= steps) StopBackAnim();
+                if (step >= steps) _backAnimTimer.Stop();
             };
             _backAnimTimer.Start();
         }
 
-        public void SetBackgroundImage(Image image, int fadeMs = 300)
-        {
-            _targetBackgroundImage = image;
-            if (fadeMs <= 0)
-            {
-                _currentBackgroundImage = image;
-                _backgroundAlpha = image != null ? 1f : 0f;
-                Invalidate();
-                return;
-            }
-
-            Image startImg = _currentBackgroundImage;
-            float startAlpha = _backgroundAlpha;
-            float targetAlpha = image != null ? 1f : 0f;
-
-            int steps = Math.Max(1, fadeMs / 16);
-            int step = 0;
-
-            StopBackAnim();
-            _backAnimTimer = new System.Windows.Forms.Timer { Interval = 16 };
-            _backAnimTimer.Tick += (s, e) =>
-            {
-                step++;
-                float t = step / (float)steps;
-                _backgroundAlpha = startAlpha + (targetAlpha - startAlpha) * t;
-                if (image != null && startImg == null) _currentBackgroundImage = image;
-                Invalidate();
-                if (step >= steps) { _currentBackgroundImage = image; StopBackAnim(); }
-            };
-            _backAnimTimer.Start();
-        }
-
-        private void StopBackAnim()
-        {
-            _backAnimTimer?.Stop();
-            _backAnimTimer?.Dispose();
-            _backAnimTimer = null;
-        }
+        #endregion
 
         // --------------------------------------------------------------------
-        // DrawChar with Ripple & Squish
+        // Rendering
         // --------------------------------------------------------------------
+        #region 🖌️ Rendering Core
+
         private void DrawChar(Graphics g, float baseX, float baseY, char ch, ColorComponent colorComp, Font font,
                               float scale, float squishX, float squishY, Point offset,
                               float rippleX, float rippleY, StringFormat sf)
         {
-            if (ch == ' ') return;
+            if (ch == ' ' || colorComp.A <= 0) return;
 
             float drawX = baseX + offset.X + rippleX;
             float drawY = baseY + offset.Y + rippleY;
@@ -608,11 +750,9 @@ namespace MyGame.Controls
             g.Restore(state);
         }
 
-        // --------------------------------------------------------------------
-        // OnPaint
-        // --------------------------------------------------------------------
         protected override void OnPaint(PaintEventArgs e)
         {
+            // --- Time Management ---
             var now = DateTime.Now;
             if (_lastFrame != DateTime.MinValue)
             {
@@ -621,7 +761,7 @@ namespace MyGame.Controls
             }
             _lastFrame = now;
 
-            // === BACKGROUND ===
+            // --- Background Drawing ---
             e.Graphics.Clear(_currentBackColor.ToColor());
             if (_currentBackgroundImage != null && _backgroundAlpha > 0.01f)
             {
@@ -635,12 +775,13 @@ namespace MyGame.Controls
             }
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            var sf = StringFormat.GenericTypographic;
+            using var sf = (StringFormat)StringFormat.GenericTypographic.Clone();
 
-            // === DESIGN MODE ===
+            // --- Design Mode Preview ---
             if (DesignMode && _chars.Count == 0)
             {
-                if (_designTimeLines == null || _designTimeLines.Length == 0) return;
+                // 
+                // (Design mode rendering logic remains as a fallback display)
                 float y = Padding.Top;
                 foreach (var line in _designTimeLines)
                 {
@@ -658,64 +799,54 @@ namespace MyGame.Controls
                 return;
             }
 
-            // === NEON PULSE ===
+            // --- Neon Pulse Effect Calculation ---
             if (EnableNeonPulse && NeonPulseDurationMs > 0)
             {
-                float pulseT = (float)Math.Sin(_totalTime / NeonPulseDurationMs * Math.PI * 2) * 0.5f + 0.5f;
+                float pulseT = (float)Math.Sin(_totalTime / (NeonPulseDurationMs / 1000f) * Math.PI * 2) * 0.5f + 0.5f;
                 float scale = NeonPulseMinScale + (NeonPulseMaxScale - NeonPulseMinScale) * pulseT;
                 GlobalOverlayScale = scale;
                 GlobalShadowScale = scale * 0.8f;
-                byte a = (byte)(150 + pulseT * 105);
-                OverlayTint = new ColorComponent(a, 0, 255, 255);
+
+                byte a = (byte)(100 + pulseT * 155);
+                OverlayTint = new ColorComponent(a, OverlayTint.R, OverlayTint.G, OverlayTint.B);
             }
 
-            // === PAINT LOOP ===
+            // --- Vertical Alignment Calculation ---
             float yOffset = 0f;
             if (TotalLines <= VisibleLines && _firstVisibleLine == 0)
             {
                 float extra = ClientSize.Height - Padding.Vertical - TotalLines * _lineHeight;
                 if (extra > 0)
+                {
                     yOffset = VerticalAlign == VerticalAlignment.Center ? extra / 2f :
                               VerticalAlign == VerticalAlignment.Bottom ? extra : 0f;
+                }
             }
 
+            // --- Main Draw Loop ---
             float yPos = Padding.Top + yOffset;
             int row = _firstVisibleLine;
+            int maxChars = _chars.Count;
 
             while (yPos < ClientSize.Height - Padding.Bottom && row < TotalLines)
             {
                 int startIdx = row * WidthInChars;
                 float charTimeOffset = row * 0.3f;
 
-                int effectiveLength = 0;
-                for (int col = 0; col < WidthInChars; col++)
-                {
-                    int idx = startIdx + col;
-                    if (idx >= _chars.Count) break;
-                    if (_chars[idx].Char != ' ' || _chars[idx].IsSelected)
-                        effectiveLength = col + 1;
-                }
-
+                // --- Alignment Check (Ignored/simplified when locked) ---
+                int effectiveRowWidth = LockToGrid ? WidthInChars : Math.Min(WidthInChars, maxChars - startIdx);
                 float offsetX = 0f;
-                if (TextAlign != HorizontalAlignment.Left && effectiveLength > 0)
-                {
-                    float unused = WidthInChars - effectiveLength;
-                    offsetX = TextAlign == HorizontalAlignment.Center ? unused / 2f * CharAdvance :
-                              unused * CharAdvance;
-                }
-
                 float baseX = Padding.Left + offsetX;
 
-                float x = baseX;
-                float xMain = baseX;
-
-                for (int col = 0; col < WidthInChars; col++)
+                for (int col = 0; col < effectiveRowWidth; col++)
                 {
                     int idx = startIdx + col;
-                    if (idx >= _chars.Count) break;
+                    if (idx >= maxChars) break;
                     var cd = _chars[idx];
 
-                    // === RIPPLE ===
+                    float xPos = baseX + (col * CharAdvance);
+
+                    // --- RIPPLE CALCULATION ---
                     float rippleX = 0f, rippleY = 0f;
                     if (EnableRipple)
                     {
@@ -725,7 +856,7 @@ namespace MyGame.Controls
                             rippleX = (float)Math.Cos(phase) * RippleAmplitude * 0.5f;
                     }
 
-                    // === SHADOW PASS ===
+                    // --- SHADOW PASS ---
                     if (ShadowColor.A > 0 && cd.Char != ' ' && !cd.IsSelected)
                     {
                         string family = cd.ShadowFontFamily ?? ShadowFontFamily;
@@ -737,16 +868,16 @@ namespace MyGame.Controls
 
                         using Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
                         var shadowCol = ApplyColorShift(ShadowColor, cd);
-                        DrawChar(e.Graphics, x, yPos, cd.Char, shadowCol, font, scale, squishX, squishY, ShadowOffset, rippleX, rippleY, sf);
+                        DrawChar(e.Graphics, xPos, yPos, cd.Char, shadowCol, font, scale, squishX, squishY, ShadowOffset, rippleX, rippleY, sf);
                     }
 
-                    // === MAIN PASS ===
+                    // --- MAIN PASS ---
                     if (cd.Char != ' ')
                     {
                         if (cd.IsSelected)
                         {
                             using var bg = new SolidBrush(SelectionBackground.ToColor());
-                            e.Graphics.FillRectangle(bg, xMain, yPos, CharAdvance, _lineHeight);
+                            e.Graphics.FillRectangle(bg, xPos, yPos, CharAdvance, _lineHeight);
                         }
 
                         string family = cd.MainFontFamily;
@@ -757,96 +888,39 @@ namespace MyGame.Controls
                         using Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
                         var baseCol = cd.IsSelected ? SelectionColor : cd.Color;
                         var finalCol = ApplyColorShift(baseCol, cd);
-                        DrawChar(e.Graphics, xMain, yPos, cd.Char, finalCol, font, scale, 1f, 1f, Point.Empty, rippleX, rippleY, sf);
+                        DrawChar(e.Graphics, xPos, yPos, cd.Char, finalCol, font, scale, 1f, 1f, Point.Empty, rippleX, rippleY, sf);
                     }
 
-                    // === OVERLAY PASS ===
+                    // --- OVERLAY/SHIMMER PASS ---
                     if (OverlaySteps.Count > 0)
                     {
-                        var step = OverlaySteps[_shimmerIndex % OverlaySteps.Count];
-                        if (step.Color.A > 0 && cd.Char != ' ')
+                        int stepIdx = _shimmerIndex >= 0 && _shimmerIndex < OverlaySteps.Count ? _shimmerIndex : 0;
+                        var step = OverlaySteps[stepIdx];
+
+                        var blendedOverlayColor = step.Color;
+                        if (OverlayTint.A > 0)
+                        {
+                            blendedOverlayColor = ColorComponent.Lerp(step.Color, OverlayTint, 0.5f);
+                        }
+
+                        if (blendedOverlayColor.A > 0 && cd.Char != ' ')
                         {
                             string family = cd.OverlayFontFamily ?? step.FontFamily ?? OverlayFontFamily;
                             FontStyle style = cd.OverlayFontStyle ?? step.FontStyle ?? OverlayFontStyle;
-                            float sizeMult = cd.OverlayFontSizeMultiplier * (step.SizeMultiplier * GlobalOverlayScale);
-                            float scale = cd.OverlayScale * GlobalOverlayScale;
+                            float sizeMult = cd.OverlayFontSizeMultiplier * step.SizeMultiplier * GlobalOverlayScale;
+                            float scale = GlobalOverlayScale;
 
                             using Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
-                            var finalCol = ApplyColorShift(step.Color, cd);
-                            DrawChar(e.Graphics, x, yPos, cd.Char, finalCol, font, scale, 1f, 1f, OverlayOffset, rippleX, rippleY, sf);
+                            DrawChar(e.Graphics, xPos, yPos, cd.Char, blendedOverlayColor, font, scale, 1f, 1f, OverlayOffset, rippleX, rippleY, sf);
                         }
                     }
-
-                    x += CharAdvance;
-                    xMain += CharAdvance;
-                }
+                } // End Column Loop
 
                 yPos += _lineHeight;
                 row++;
-            }
+            } // End Row Loop
         }
 
-        // --------------------------------------------------------------------
-        // Public API
-        // --------------------------------------------------------------------
-        public void Append(char c, ColorComponent color,
-                           float mainScale = 1f, float shadowScale = 1f, float overlayScale = 1f,
-                           float shadowSquishX = 1f, float shadowSquishY = 1f)
-        {
-            _chars.Add(new CharData
-            {
-                Char = c,
-                Color = color,
-                MainScale = mainScale,
-                ShadowScale = shadowScale,
-                OverlayScale = overlayScale,
-                ShadowSquishX = shadowSquishX,
-                ShadowSquishY = shadowSquishY
-            });
-            Invalidate();
-        }
-
-        public void Append(CharData charData)
-        {
-            if (charData == null) throw new ArgumentNullException(nameof(charData));
-            _chars.Add(charData);
-            Invalidate();
-        }
-
-        public void Clear()
-        {
-            _chars.Clear();
-            _firstVisibleLine = 0;
-            ClearSelection();
-            Invalidate();
-        }
-
-        public void Select(int start, int length)
-        {
-            start = Math.Max(0, Math.Min(start, _chars.Count));
-            length = Math.Max(0, Math.Min(length, _chars.Count - start));
-
-            if (start == _selectionStart && length == _selectionLength) return;
-
-            ClearSelection();
-            _selectionStart = start;
-            _selectionLength = length;
-
-            if (length > 0)
-                for (int i = start; i < start + length; i++)
-                    _chars[i].IsSelected = true;
-
-            Invalidate();
-        }
-
-        public void ClearSelection()
-        {
-            if (_selectionLength == 0) return;
-            for (int i = _selectionStart; i < _selectionStart + _selectionLength && i < _chars.Count; i++)
-                _chars[i].IsSelected = false;
-            _selectionStart = -1;
-            _selectionLength = 0;
-            Invalidate();
-        }
+        #endregion
     }
 }

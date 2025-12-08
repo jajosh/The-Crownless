@@ -95,7 +95,7 @@ public class DescriptionEntry
         TileObject? tile = null;
         try
         {
-            tile = MapManager.GetPlayerTile(player);
+            tile = TileRepository.Query(new { RootGridX = player.Root.GridX, RootGridY = player.Root.GridY, RootLocalX = player.Root.LocalX, RootLocalY = player.Root.LocalY });
         }
         catch (Exception ex)
         {

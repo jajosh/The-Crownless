@@ -13,9 +13,7 @@ public class GameDataBase
         connectionString = $"Data Source={dbPath};";
         MyConnection = new SqliteConnection(connectionString);
         MyConnection.Open();
-	}
-    public static void CloseConnection()
-    {
         MyConnection.Close();
-    }
+	}
+    
 }

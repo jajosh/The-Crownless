@@ -9,7 +9,7 @@ public enum TileCheckType
     CheckTriggerCoordinets = 1 << 2
     // Add more as needed
 }
-public enum TilePropertie
+public enum TileProperty
 {
     Burned
 }
@@ -73,7 +73,7 @@ public class TileProperties
 {
     // Tile ID
     public int TileID { get; set; }
-    public TilePropertie TileProperty { get; set; }
+    public TileProperty TileProperty { get; set; }
 }
 public class TileRenderProfile
 {

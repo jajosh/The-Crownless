@@ -1,10 +1,13 @@
 ﻿using System;
 public enum TileStates
 {
+    Base,
     Open,
     Closed,
     Plant,
-    NoPlant
+    NoPlant,
+    CutDown,
+    Burned
 
 }
 public class TriggerCoordinets

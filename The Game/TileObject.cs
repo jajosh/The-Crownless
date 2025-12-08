@@ -11,10 +11,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 // The Tile object
 public class TileObject
 {
-    public int TileId;
-    // Saves as json
-    [NotMapped]
-    public TileRenderProfile TileRenderProfile { get; set; }
+    public int TileId { get; set; }
+    public TileRenderProfile BaseRender { get; set; }
 
     // Locational Data
     public int RootGridX { get; set; }
@@ -35,25 +33,15 @@ public class TileObject
         }
     }
 
-    // Meta Datarandom spawned items. Like a bow sitting on a table
+    // Meta Data + random spawned items. Like a bow sitting on a table
     public TileTypes TileType { get; set; }
-    public bool IsWalkable { get; set; } = true;
-    public bool IsRoofed { get; set; } = false;
-    public bool IsCovered { get; set; } = false;
 
-    public bool IsFlammable { get; set; } = true;
-    public int BurnAmount { get; set; } // As a percentage
 
-    [NotMapped]
-    public TileRenderProfile TileRenderProfileBurnFallBack { get; set; }
-
-    [NotMapped]
-    public TileRenderProfile TileRenderProfileCutDownFallBack { get; set; }
 
 
     // === Components ===
     [NotMapped]public List<TileComponents> Components { get; set; }
-    [NotMapped]public List<TileProperties> Propterties { get; set; }
+    [NotMapped]public List<TileProperties> Properties { get; set; }
     // === Time and weather Based Interactions ===
     public List<TileTriggerActions> TriggerActions { get; set; }
     public CoverGrade Cover { get; set; } = CoverGrade.none;
@@ -75,11 +63,7 @@ public class TileObject
         Root.LocalX = localX;
         Root.LocalY = localY;
         TileType = tileType;
-        IsWalkable = isWalkable;
         Description = description;
-        TileRenderProfile = new TileRenderProfile();
-        TileRenderProfile.CharData.Char = asciiToShow;
-        IsFlammable = false;
     }
     public TileObject()
     {
@@ -99,9 +83,9 @@ public class TileObject
     }
     public bool IsBurned()
     {
-        foreach (var tileProperties in Propterties)
+        foreach (var tileProperties in Properties)
         {
-            if (tileProperties.TileProperty == TilePropertie.Burned)
+            if (tileProperties.TileProperty == TileProperty.Burned)
                 return true;
         }
         return false;
