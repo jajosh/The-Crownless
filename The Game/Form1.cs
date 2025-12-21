@@ -54,7 +54,7 @@ namespace The_Game
                     break;
             }
 
-            GridObject currentGrid = (GridObject)MapManager.QueryGrid(a => a.GridX == gridX && a.GridY == gridY);
+            GridObject currentGrid = GridRepository.Query((GridObject a) => a.GridX == gridX && a.GridY == gridY);
             // Tentative new position
             int newLocalX = localX + deltaX;
             int newLocalY = localY + deltaY;
@@ -70,10 +70,11 @@ namespace The_Game
             GridObject newGrid = (GridObject)MapManager.QueryGrid(predicate: a => a.GridX == newGridX && a.GridY == newGridY);
             if (currentGrid == newGrid)
             {
-                TileObject currentTile = (TileObject)MapManager.QueryTile((TileObject a) => a.Root.GridX == gridX && a.Root.GridY == gridY && a.Root.LocalX == localX && a.Root.LocalY == localY);
+                TileObject currentTile = TileRepository.Query((TileObject a) => a.Root.GridX == gridX && a.Root.GridY == gridY && a.Root.LocalX == localX && a.Root.LocalY == localY);
                 ctbTheMap.Select();
 
             }
         }
+
     }
 }

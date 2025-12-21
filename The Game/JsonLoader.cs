@@ -64,7 +64,7 @@ public static class JsonLoader
         string jsonString = Encoding.UTF8.GetString(jsonBytes);
 
         // 4. Deserialize the JSON string int the target object type (T)
-        T result = JsonSerializer.Deserialize<T>(jsonString);
+        T result = JsonSerializer.Deserialize<T>(jsonString, Options);
         return result;
     }
     public static byte[] SerializeJsonBlob<T>(T data)
@@ -78,7 +78,7 @@ public static class JsonLoader
 
         // 2. Serialize the target object type (T) into a JSON string
         //    Note: You can pass JsonSerializerOptions here if needed (e.g., camelCase)
-        string jsonString = JsonSerializer.Serialize<T>(data);
+        string jsonString = JsonSerializer.Serialize<T>(data, Options);
 
         // 3. Encode the JSON string into a raw byte array (BLOB) using UTF-8 encoding
         byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonString);

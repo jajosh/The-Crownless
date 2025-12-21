@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 // Used the dehydrated tiles. 
 public class GridObject
 {
+    public int GridID { get; set; }
     // This is stored as JSON text in one column
     public string GridMapKeyJson { get; set; } = "[]"; // default empty list
 
@@ -21,8 +22,8 @@ public class GridObject
 
     public int GridX { get; set; }
     public int GridY { get; set; }
-    public GridBiomeType Biome { get; set; }
-    public GridBiomeSubType SubBiome { get; set; }
+    public GridBiomeType Biome { get; set; } // E.G. BorelForest, TemperateBroadleadForest
+    public GridBiomeSubType SubBiome { get; set; } // E.G. Town, HighTower, Farm, Forest
     public int RandomEventChance { get; set; }
     [NotMapped]
     public List<DescriptionEntry> DescriptionEntries { get; set; } = new();

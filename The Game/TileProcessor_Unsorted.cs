@@ -3,14 +3,15 @@ public partial class TileProcessor
 {
     public static TileObject OnTree(int GridX, int GridY, int LocalX, int LocalY, char ascii) =>
         new TileObject(GridX, GridY, LocalX, LocalY, TileTypes.empty, false, false, new(), ascii);
-    public static TileObject OnTree(int GridX, int GridY, int LocalX, int LocalY, char ascii)
-    {
-        TileObject tile = new TileObject(GridX, GridY, LocalX, LocalY, TileTypes.Tree, false, false, new(), ascii);
-        Dictionary<int, int> loot = new Dictionary<int, int>();
-        loot.Add(1,)
-        HarvestablePlantComponent harvestablePlantComponent = new HarvestablePlantComponent(false, )
-        tile.Components.Add(harvestablePlantComponent);
-    }
+    // ♣
+    //public static TileObject OnTree(int GridX, int GridY, int LocalX, int LocalY, char ascii)
+    //{
+    //    TileObject tile = new TileObject(GridX, GridY, LocalX, LocalY, TileTypes.Tree, false, false, new(), ascii);
+    //    Dictionary<int, int> loot = new Dictionary<int, int>();
+    //    loot.Add(1, )
+    //    HarvestablePlantComponent harvestablePlantComponent = new HarvestablePlantComponent(false, )
+    //    tile.Components.Add(harvestablePlantComponent);
+    //}
 
 
 

@@ -49,8 +49,8 @@ public enum Properties : long
 }
 public enum PrimaryMaterial { Wood, Leather, Metal }
 public enum SecondaryMaterial { Wood, Leather, Iron, Steel, Adamantian }
-public enum PrimaryType { Sword, } //  For Craftable items
-public enum SecondaryType { ShortSword }
+public enum PrimaryType { Weapon, Food, Potion,  } //  Item Base Type
+public enum SecondaryType { ShortSword } // Item Specific type
 public enum Rarity { Common, Uncommon, Rare, Epic, Legendary }
 
 
@@ -63,69 +63,31 @@ public class ItemObject
 
     // Basic Attributes
     public float Weight { get; set; }
-    public Rarity Rarity { get; set; }
-    [NotMapped]public List<ItemTags> Tags { get; set; }
+    public Rarity Rarity { get; set; } //
 
-
-    public PrimaryType PrimaryType { get; set; }
-    // Single slot items
-    public SingleEquipmentSlots? SingleSlot { get; set; }
-    // Multi slot items (bitmask)
-    public MultiEquipmentSlots MultiSlots { get; set; }
-    // Helper: Get all valid slots for this item
-    public PrimaryMaterial material { get; set; }
-    public SecondaryMaterial SecondaryMaterial { get; set; }
-    [NotMapped]
-    public IEnumerable<MultiEquipmentSlots> ValidMultiSlots
-    {
-        get
-        {
-            if (MultiSlots == MultiEquipmentSlots.None) yield break;
-            for (int i = 0; i < 64; i++)
-            {
-                var slot = (MultiEquipmentSlots)(1L << i);
-                if (MultiSlots.HasFlag(slot))
-                    yield return slot;
-            }
-        }
-    }
+    // Item Type Infor
+    public PrimaryType PrimaryType { get; set; }// E.G. Weapon, Food
+    public SecondaryType? SecondaryType { get; set; } // E.G. ShortSword
+    public PrimaryMaterial? material { get; set; } // E.G. Wood, stone, organic
+    public SecondaryMaterial? SecondaryMaterial { get; set; } // E.G. Item inlays. Like a golden hand guard on a sword
+   
 
     // Economy / Inventory
     public int MaxStack { get; set; }
-    public int SpawnChance { get; set; }
-    public int? Price { get; set; }
-    public bool CanStore { get; set; }
+    public int Price { get; set; } // Base Sell Price
+    public bool CanStore { get; set; } // 0 1, 0 = true
 
-    // Text / Display
-    public List<RecordRandomText>? LoreText { get; set; }
-    public List<RecordRandomText> EncumbranceErrorMessages { get; set; } = new();
+    // Text / Display --- Saved as a JsonBlob
+    public List<DescriptionEntry>? LoreText { get; set; }
+    public List<DescriptionEntry> EncumbranceErrorMessages { get; set; } = new();
 
-    // Component-Based System
-    private List<ItemComponentDictionaryEntry> _entries = new();
-    [NotMapped]public Dictionary<string, IItemComponent> Components => _entries.ToDictionary(e => e.Key, e => e.Value);
+    // Meta Data
+    [NotMapped]public List<IItemComponent> Components { get; set; } // Separate DB table
+    public Dictionary<TriggerEnum, ActionObject> TriggerData { get; set; } // JsonBlob
 
-    internal List<ItemComponentDictionaryEntry> Entries
-    {
-        get => _entries;
-        set => _entries = value;
-    }
+    
 
-    // Trigger System
-    public Dictionary<TriggerEnum, ActionObject> TriggerData { get; } = new();
-
-    public bool TryGetComponent<T>(out T component) where T : class, IItemComponent
-    {
-        if (Components.TryGetValue(typeof(T).Name, out IItemComponent raw))
-        {
-            component = (T)raw;
-            return true;
-        }
-        component = default!;
-        return false;
-    }
-
-    public void AddComponent<T>(T comp) where T : class, IItemComponent
-        => Components[typeof(T).Name] = comp;
+    
     public object Clone()
     {
         // Shallow copy for now; extend for deep if needed

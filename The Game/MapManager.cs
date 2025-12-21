@@ -10,14 +10,6 @@ using SQLitePCL;
 
 public class MapManager : MapEngine
 {
-    // Explicit interface property implementations for MapEngine
-    Dictionary<(int, int, (int, int)), TileObject> MapEngine.MapKey => MapKey;
-    Dictionary<(int, int), GridObject> MapEngine.GridKey => GridKey;
-    Dictionary<int, LocationObject> MapEngine.LocationKey => LocationKey;
-
-    public static Dictionary<(int, int, (int, int)), TileObject> MapKey = new Dictionary<(int, int, (int, int)), TileObject>();
-    public static Dictionary<(int, int), GridObject> GridKey = new Dictionary<(int, int), GridObject>();
-    public static Dictionary<int, LocationObject> LocationKey = new Dictionary<int, LocationObject>();
 
     public MapManager()
     {

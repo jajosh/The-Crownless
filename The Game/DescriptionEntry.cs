@@ -20,11 +20,26 @@ public enum ObjectDeffinitionType
     Location,
     Action,
 }
-public class DescriptionEntry
+public enum DialogCategory
+{
+    Ambient,
+    Combat,
+    Ally,
+    Friendly,
+    Description,
+    Rare
+}
+public enum DialogSpeaker
+{
+    NPC,
+    Player,
+    Narration
+}
+public record DescriptionEntry
 {
     public int ID { get; set; }
     public string TextEntry { get; set; }
-    public ObjectDeffinitionType DescriptionType { get; set; }
+    public ObjectDeffinitionType DescriptionType { get; set; } // E.G. Item, Tile, Grid
     public int TypeID { get; set; }
     public int DescriptionWeight { get; set; }
     public GridBiomeType? Biome { get; set; }
@@ -36,6 +51,11 @@ public class DescriptionEntry
     // In your DescriptionEntry class
     public IReadOnlyList<DescriptionEntryFlag>? RequiredFlags { get; set; }
     public IReadOnlyList<DescriptionEntryFlag>? ForbiddenFlags { get; set; }
+
+
+    // Categorization
+    public List<DialogCategory> Categories { get; set; } // E.G Combat, Ally, Ambient
+    public DialogSpeaker Speaker { get; set; } // E.G. NPC, player, ally
 
 
     public DescriptionEntry(

@@ -14,20 +14,20 @@ public class TileRepository : GameDataBase
     }
     public static TileObject Query(object criteria)
     {
-        if (criteria == null)
+        if (criteria == null) // Null check
         {
             BugHunter.LogException(new ArgumentNullException(nameof(criteria)));
-            return null; // Or throw
+            return null;
         }
 
         Type criteriaType = criteria.GetType();
-        var whereClauses = new List<string>(); // Fixed spelling
+        var whereClauses = new List<string>();
         var parameters = new List<SqliteParameter>();
 
         foreach (PropertyInfo prop in criteriaType.GetProperties())
         {
             object value = prop.GetValue(criteria);
-            if (value != null && !IsDefaultValue(value)) // Assume IsDefaultValue is implemented
+            if (value != null && !IsDefaultValue(value))
             {
                 string columnName = prop.Name;
                 whereClauses.Add($"{columnName} = @{columnName}");
@@ -44,7 +44,8 @@ public class TileRepository : GameDataBase
         string query = $@"
             SELECT * 
             FROM TileObject 
-            LEFT JOIN RandomText ON TileObject.TileID = RandomText.TileID  -- Assuming 'RandomText' and FK
+            LEFT JOIN DescriptionEntry ON TileObject.TileID = DescriptionEntry.TypeID 
+            AND DescriptionEntry.DescriptionType = 'Tile'
             LEFT JOIN TileComponents ON TileObject.TileID = TileComponents.TileID
             LEFT JOIN TileProperties ON TileObject.TileID = TileProperties.TileID
             WHERE {whereClause} 
@@ -80,14 +81,6 @@ public class TileRepository : GameDataBase
         }
         return false;
     }
-    /// <summary>
-    /// Retrieves a complete tile object, including its components and properties, from the database using the specified
-    /// tile ID.
-    /// </summary>
-    /// <param name="tileId">The unique identifier of the tile to retrieve. Must correspond to an existing tile in the database.</param>
-    /// <param name="connectionstring">The connection string used to establish a connection to the SQLite database.</param>
-    /// <returns>A <see cref="TileObject"/> containing the tile's data, components, and properties if found; otherwise, <see
-    /// langword="null"/>.</returns>
     public TileObject GetTileFullObject(int tileId, string connectionstring)
     {
         TileObject tile = null;
@@ -195,7 +188,6 @@ public class TileRepository : GameDataBase
             command.Parameters.AddWithValue(@"RootLocalX", tile.RootLocalX);
             command.Parameters.AddWithValue(@"RootLocalY", tile.RootLocalY);
             command.Parameters.AddWithValue(@"TileType", tile.TileType.ToString());
-            command.Parameters.AddWithValue(@"Cover", tile.Cover.ToString());
 
             // 2. Map the Metadata (JSON BLOB)
             // Convert the C# object back to a UTF-8 byte array (the BLOB format)
@@ -209,17 +201,30 @@ public class TileRepository : GameDataBase
     private void InsertComponents(int tileId, List<TileComponents> components, SqliteConnection connection, SqliteTransaction transaction)
     {
         string sql = @"
-            INSERT INTO TileComponents (TileId, TileComponent)
-            VALUES (@TileId, @TileComponent);";
-        foreach (var component in components)
-        {
-            using (var command = new SqliteCommand(sql, connection, transaction))
-            {
-                command.Parameters.AddWithValue(@"TileId", tileId);
+        INSERT INTO TileComponents (TileId, ComponentTypeName, SerializedData)
+        VALUES (@TileId, @TypeName, @Data);";
 
-                command.Parameters.AddWithValue(@"TileComponent", component.TileComponent);
+        // Use a single command object and reset parameters for efficiency
+        using (var command = new SqliteCommand(sql, connection, transaction))
+        {
+            // Define parameters once
+            command.Parameters.Add("@TileId", SqliteType.Integer);
+            command.Parameters.Add("@TypeName", SqliteType.Text);
+            command.Parameters.Add("@Data", SqliteType.Blob);
+
+            foreach (var component in components)
+            {
+                // 1. Serialize the complex object into a byte array (BLOB)
+                byte[] componentData = JsonLoader.SerializeJsonBlob(component.TileComponent);
+
+                // 2. Set the parameter values
+                command.Parameters["@TileId"].Value = tileId;
+                command.Parameters["@TypeName"].Value = component.TileComponent.GetType().Name; // e.g., "CuttablePlantComponent"
+                command.Parameters["@Data"].Value = componentData;
+
+                command.ExecuteNonQuery();
             }
-        }
+        } // Command is disposed here
     }
     private void InsertProperties(int tileId, List<TileProperties> properties, SqliteConnection connection, SqliteTransaction transaction)
     {
@@ -251,6 +256,3 @@ public class TileRepository : GameDataBase
         }
     }
 }
-
-
-

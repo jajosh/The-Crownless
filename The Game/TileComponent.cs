@@ -1,20 +1,16 @@
 ﻿using MyGame.Controls;
 using System;
-
+public enum TrapType { }
 public interface TileComponent { }
 public record CuttablePlantComponent(
     Dictionary<int, int>/*weight, item ID*/ ITemObjectID, int Respawn,
     bool IsCuttable,
-    List<ColorTextBox.CharData> CutDownCharDataFallBack,
-    List<ColorTextBox.OverlayStep> CutDownOverlayFallBack
-) : TileComponent;
+    List<TileRenderProfile> VisualFallBack) : TileComponent;
 
 public record HarvestablePlantComponent(
-    List<ItemStackComponent>, int Respawn,
+    List<ItemStackComponent> Loot, int Respawn,
     Dictionary<int, int> HarvestableItem,               // itemId → amount
-    List<ColorTextBox.CharData> HarvestCharDataFallBack,
-    List<ColorTextBox.OverlayStep> HarvestOverlayFallBack
-) : TileComponent;
+    List<TileRenderProfile> VisualFallBack) : TileComponent;
 
 public record TileInventoryComponent(
     int ITemObjectID,
@@ -23,15 +19,37 @@ public record TileInventoryComponent(
 public record IsFlammableComponent(
     int ITemObjectID,
     bool IsFlammable, 
-    int BurnAmount, 
-    List<ColorTextBox.CharData> BurnedCharFallBack,
-    List<ColorTextBox.OverlayStep> BurnedOverLayFallBack) : TileComponent;
+    int BurnAmount,
+    List<TileRenderProfile> VisualFallBack) : TileComponent;
 
-public record Walkable(
+public record WalkableComponent(
     bool IsWalkable,
     bool IsRoofed,
-    int MovementPenalty) : TileComponent;
+    float WalkabilityCost) : TileComponent;
 
-public record Cover(
+public record CoverComponent(
     bool IsCover,
     CoverGrade Cover) : TileComponent;
+public record DestructibleComponent(
+    HealthComponent Health,
+    Dictionary<DamageTypes, int /*Damage type, resistance value*/> Resistances,
+    Dictionary<DamageTypes, int /*Damage type, Vulerbilities value*/> Vulerbilities) : TileComponent;
+public record OpenableComonent(
+    bool isOpen,
+    bool CanBeLocked,
+    bool CanBeLockedPicked,
+    bool RequiresKey,
+    int LockPickDC) : TileComponent;
+public record ChestComponent(
+    InventoryComponent Inventory,
+    bool AccessToRandomDropTable,
+    LootTableCatigory Table) : TileComponent;
+public record TrapComponent(
+    int DamageDie,
+    int DamageDieAmount,
+    TrapType Type) : TileComponent;
+public record Respawnable(
+    ) : TileComponent;
+public record TiledEffectComponent(
+    int EffectID
+    int Interval) : TileComponent;

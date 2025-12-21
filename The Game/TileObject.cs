@@ -11,17 +11,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 // The Tile object
 public class TileObject
 {
+    // --- 🧩 Tile Core Identity & Rendering ---
     public int TileId { get; set; }
     public TileRenderProfile BaseRender { get; set; }
 
-    // Locational Data
+    public TileTypes TileType { get; set; }
+
+    // --- 🗺️ Locational Data (RootComponent Coordinates) ---
     public int RootGridX { get; set; }
     public int RootGridY { get; set; }
     public int RootLocalX { get; set; }
     public int RootLocalY { get; set; }
-
-    [NotMapped]
-    public RootComponent Root
+    [NotMapped] public RootComponent Root
     {
         get => new RootComponent(RootGridX, RootGridY, RootLocalX, RootLocalY);
         set
@@ -33,28 +34,20 @@ public class TileObject
         }
     }
 
-    // Meta Data + random spawned items. Like a bow sitting on a table
-    public TileTypes TileType { get; set; }
 
-
-
-
-    // === Components ===
-    [NotMapped]public List<TileComponents> Components { get; set; }
-    [NotMapped]public List<TileProperties> Properties { get; set; }
-    // === Time and weather Based Interactions ===
-    public List<TileTriggerActions> TriggerActions { get; set; }
+    // --- ⚙️ Behavior and Interaction Components ---
+    [NotMapped]public List<TileComponents> Components { get; set; }// Separate Table
+    [NotMapped]public List<TileProperties> Properties { get; set; } // Separate Table
+    public List<TileEffectState> Effects { get; set; } // JsonBlob
+    public List<TileTriggerActions> TriggerActions { get; set; } // JsonBlob
     public CoverGrade Cover { get; set; } = CoverGrade.none;
 
-    // Checks if the tile needs to be processed after surrounding tiles have been processed
+    // --- 📝 State and Deferred Processing ---
+    [NotMapped] public TileCheckType DeferredChecks { get; set; } = TileCheckType.None; // initial Tile processing only, not needed in game
+    [NotMapped] public List<DescriptionEntry> Description { get; set; }// Separate Table
+    [NotMapped] public ICharacter? Occupant { get; set; }
 
-    [NotMapped]
-    public TileCheckType DeferredChecks { get; set; } = TileCheckType.None;
 
-    // A list of descriptions for each tile type based on the local grid's biome and sub biome
-
-    [NotMapped]
-    public List<DescriptionEntry> Description { get; set; }
     // Used for tile processing. 
     public TileObject(int gridX, int gridY, int localX, int localY, TileTypes tileType, bool isWalkable, bool isRoofed, List<DescriptionEntry> description, char asciiToShow)
     {

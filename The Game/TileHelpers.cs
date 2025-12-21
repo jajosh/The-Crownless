@@ -67,12 +67,14 @@ public class TileComponents
 {
     // Tile ID
     public int TileID { get; set; }
-    public TileComponent TileComponent { get; set; }
+    public string? ComponentTypeName { get; set; }
+    public TileComponent? TileComponent { get; set; }
 }
 public class TileProperties
 {
     // Tile ID
     public int TileID { get; set; }
+    public string PropertyTypeName { get; set; }
     public TileProperty TileProperty { get; set; }
 }
 public class TileRenderProfile

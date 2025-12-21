@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             plTheWorldsWindow = new Panel();
-            ctbTheMap = new MyGame.Controls.ColorTextBox();
             label3 = new Label();
             label1 = new Label();
             lblLocalY = new Label();
@@ -55,6 +55,7 @@
             Inventory = new TabPage();
             Journal = new TabPage();
             tabPage3 = new TabPage();
+            ctbTheMap = new MyGame.Controls.ColorTextBox();
             plTheWorldsWindow.SuspendLayout();
             pnlMessageBoard.SuspendLayout();
             panel1.SuspendLayout();
@@ -77,29 +78,6 @@
             plTheWorldsWindow.Name = "plTheWorldsWindow";
             plTheWorldsWindow.Size = new Size(453, 461);
             plTheWorldsWindow.TabIndex = 0;
-            // 
-            // ctbTheMap
-            // 
-            ctbTheMap.Anchor = AnchorStyles.None;
-            ctbTheMap.BackColor = Color.DarkGray;
-            ctbTheMap.DesignTimeLines = new string[]
-    {
-    "ColorTextBox Ready!",
-    "[Design Mode]"
-    };
-            ctbTheMap.ForeColor = Color.DarkGray;
-            ctbTheMap.LetterSpacing = -3;
-            ctbTheMap.Location = new Point(4, 53);
-            ctbTheMap.Margin = new Padding(3, 3, 0, 3);
-            ctbTheMap.Name = "ctbTheMap";
-            ctbTheMap.ShadowOffset = new Point(1, 2);
-            ctbTheMap.Size = new Size(445, 386);
-            ctbTheMap.TabIndex = 7;
-            ctbTheMap.Text = "colorTextBox1";
-            ctbTheMap.TextAlign = HorizontalAlignment.Center;
-            ctbTheMap.VerticalAlign = System.Windows.Forms.VisualStyles.VerticalAlignment.Center;
-            ctbTheMap.WidthInChars = 52;
-            ctbTheMap.KeyPress += ctbTheMap_KeyPress;
             // 
             // label3
             // 
@@ -400,12 +378,30 @@
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
             // 
+            // ctbTheMap
+            // 
+            ctbTheMap.BackColor = Color.Black;
+            ctbTheMap.DesignTimeLines = new string[]
+    {
+    "ColorTextBox Ready!",
+    "LockToGrid: 51x25",
+    "Coordinate Editing Enabled"
+    };
+            ctbTheMap.ForeColor = Color.White;
+            ctbTheMap.GlobalOverlayScale = 1.227463F;
+            ctbTheMap.GlobalShadowScale = 0.9819704F;
+            ctbTheMap.Location = new Point(13, 72);
+            ctbTheMap.Name = "ctbTheMap";
+            ctbTheMap.Size = new Size(417, 325);
+            ctbTheMap.TabIndex = 7;
+            ctbTheMap.Text = resources.GetString("ctbTheMap.Text");
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.AppWorkspace;
-            ClientSize = new Size(914, 601);
+            ClientSize = new Size(1225, 829);
             Controls.Add(panel4);
             Controls.Add(panel1);
             Controls.Add(pnlMessageBoard);
@@ -453,6 +449,7 @@
         private Label lblPlayerName;
         private Label label5;
         private RichTextBox rtbMessages;
+        private MyGame.Controls.ColorTextBox colorTextBox1;
         private MyGame.Controls.ColorTextBox ctbTheMap;
     }
 }

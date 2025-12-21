@@ -728,26 +728,41 @@ namespace MyGame.Controls
         #region 🖌️ Rendering Core
 
         private void DrawChar(Graphics g, float baseX, float baseY, char ch, ColorComponent colorComp, Font font,
-                              float scale, float squishX, float squishY, Point offset,
-                              float rippleX, float rippleY, StringFormat sf)
+                       float scale, float squishX, float squishY, Point offset,
+                       float rippleX, float rippleY, StringFormat sf)
         {
             if (ch == ' ' || colorComp.A <= 0) return;
+
+            // Safety check for NaN or Infinity which crashes GDI+
+            if (float.IsNaN(baseX) || float.IsNaN(baseY) || float.IsNaN(scale)) return;
 
             float drawX = baseX + offset.X + rippleX;
             float drawY = baseY + offset.Y + rippleY;
 
             var state = g.Save();
-            float centerX = baseX + CharAdvance / 2f + offset.X;
-            float centerY = baseY + _lineHeight / 2f + offset.Y;
+            try
+            {
+                float centerX = baseX + CharAdvance / 2f + offset.X;
+                float centerY = baseY + _lineHeight / 2f + offset.Y;
+                float effectiveScaleX = scale * squishX;
+                float effectiveScaleY = scale * squishY;
 
-            g.TranslateTransform(centerX, centerY);
-            g.ScaleTransform(scale * squishX, scale * squishY);
-            g.TranslateTransform(-centerX, -centerY);
+                // FIXED: Only draw if the scale is visible. 
+                // If scale is ~0, we simply don't draw, rather than drawing untransformed.
+                if (effectiveScaleX > 0.001f && effectiveScaleY > 0.001f)
+                {
+                    g.TranslateTransform(centerX, centerY);
+                    g.ScaleTransform(effectiveScaleX, effectiveScaleY);
+                    g.TranslateTransform(-centerX, -centerY);
 
-            using var b = new SolidBrush(colorComp.ToColor());
-            g.DrawString(ch.ToString(), font, b, drawX, drawY, sf);
-
-            g.Restore(state);
+                    using var b = new SolidBrush(colorComp.ToColor());
+                    g.DrawString(ch.ToString(), font, b, drawX, drawY, sf);
+                }
+            }
+            finally
+            {
+                g.Restore(state);
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -780,7 +795,6 @@ namespace MyGame.Controls
             // --- Design Mode Preview ---
             if (DesignMode && _chars.Count == 0)
             {
-                // 
                 // (Design mode rendering logic remains as a fallback display)
                 float y = Padding.Top;
                 foreach (var line in _designTimeLines)
@@ -866,7 +880,9 @@ namespace MyGame.Controls
                         float squishX = cd.ShadowSquishX * ShadowSquishX;
                         float squishY = cd.ShadowSquishY * ShadowSquishY;
 
-                        using Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
+                        // FIXED: Removed 'using'. Do NOT dispose cached fonts!
+                        Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
+
                         var shadowCol = ApplyColorShift(ShadowColor, cd);
                         DrawChar(e.Graphics, xPos, yPos, cd.Char, shadowCol, font, scale, squishX, squishY, ShadowOffset, rippleX, rippleY, sf);
                     }
@@ -885,7 +901,9 @@ namespace MyGame.Controls
                         float sizeMult = cd.MainFontSizeMultiplier * GlobalMainScale;
                         float scale = cd.MainScale * GlobalMainScale;
 
-                        using Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
+                        // FIXED: Removed 'using'. Do NOT dispose cached fonts!
+                        Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
+
                         var baseCol = cd.IsSelected ? SelectionColor : cd.Color;
                         var finalCol = ApplyColorShift(baseCol, cd);
                         DrawChar(e.Graphics, xPos, yPos, cd.Char, finalCol, font, scale, 1f, 1f, Point.Empty, rippleX, rippleY, sf);
@@ -908,9 +926,11 @@ namespace MyGame.Controls
                             string family = cd.OverlayFontFamily ?? step.FontFamily ?? OverlayFontFamily;
                             FontStyle style = cd.OverlayFontStyle ?? step.FontStyle ?? OverlayFontStyle;
                             float sizeMult = cd.OverlayFontSizeMultiplier * step.SizeMultiplier * GlobalOverlayScale;
-                            float scale = GlobalOverlayScale;
+                            float scale = GlobalOverlayScale; // Assuming standard scale for overlay, or derive from step
 
-                            using Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
+                            // FIXED: Removed 'using'. Do NOT dispose cached fonts!
+                            Font font = GetCachedFont(family, Font.SizeInPoints * sizeMult, style);
+
                             DrawChar(e.Graphics, xPos, yPos, cd.Char, blendedOverlayColor, font, scale, 1f, 1f, OverlayOffset, rippleX, rippleY, sf);
                         }
                     }
@@ -918,7 +938,7 @@ namespace MyGame.Controls
 
                 yPos += _lineHeight;
                 row++;
-            } // End Row Loop
+            }
         }
 
         #endregion

@@ -3,10 +3,16 @@ To Do
         ├── TileRepository 
                 ├──Need to finish rounding out the class
                         ├── LootTables
-                        ├── TileObject
+                        ├── TileObject - Check
                                 ├── DataBase Set up
                                 ├── Corralating that with how the class is set up
-        ├── 
+        ├──  
 ├── Need to finalize the loot system
         ├── A flow chart might help
         └── 
+Dictionary<DamageTypes, int /*Damage type, resistance value*/> Resistances,
+Dictionary<DamageTypes, int /*Damage type, Vulerbilities value*/> Vulerbilities
+        Need to add this to player, NPC, NPC Type + any other relevant classes that have health. Standerdize things
+
+
+Naudio has built in features to read midis 

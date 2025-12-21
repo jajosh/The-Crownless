@@ -155,7 +155,7 @@ public class PlayerObject : ICharacter
                 if (itemStack == null)
                     continue;
 
-                if (itemStack.Item.PrimaryType == PrimaryType.Sword)
+                if (itemStack.Item.PrimaryType == PrimaryType.Weapon)
                 {
                     return true;
                 }

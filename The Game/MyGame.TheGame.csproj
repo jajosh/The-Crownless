@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MyGame.Controls\MyGame.Controls\MyGame.Controls.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="MyGame.Controls">
       <HintPath>..\MyGame.Controls\bin\Debug\net10.0-windows7.0\MyGame.Controls.dll</HintPath>
     </Reference>
