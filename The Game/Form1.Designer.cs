@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             plTheWorldsWindow = new Panel();
+            ctbTheMap = new MyGame.Controls.ColorTextBox();
             label3 = new Label();
             label1 = new Label();
             lblLocalY = new Label();
@@ -55,7 +55,7 @@
             Inventory = new TabPage();
             Journal = new TabPage();
             tabPage3 = new TabPage();
-            ctbTheMap = new MyGame.Controls.ColorTextBox();
+            colorDialog1 = new ColorDialog();
             plTheWorldsWindow.SuspendLayout();
             pnlMessageBoard.SuspendLayout();
             panel1.SuspendLayout();
@@ -76,8 +76,22 @@
             plTheWorldsWindow.Location = new Point(232, 4);
             plTheWorldsWindow.Margin = new Padding(4);
             plTheWorldsWindow.Name = "plTheWorldsWindow";
-            plTheWorldsWindow.Size = new Size(453, 461);
+            plTheWorldsWindow.Size = new Size(439, 434);
             plTheWorldsWindow.TabIndex = 0;
+            // 
+            // ctbTheMap
+            // 
+            ctbTheMap.CharHeight = 14F;
+            ctbTheMap.CharWidth = 8F;
+            ctbTheMap.Font = new Font("JetBrains Mono", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 1, true);
+            ctbTheMap.FixedWidthInChars = 51;
+            ctbTheMap.Location = new Point(14, 70);
+            ctbTheMap.Name = "ctbTheMap";
+            ctbTheMap.FixedHeightInChars = 25;
+            ctbTheMap.Size = new Size(411, 355);
+            ctbTheMap.TabIndex = 7;
+            ctbTheMap.Text = "colorTextBoxControl1";
+            ctbTheMap.KeyPress += ctbTheMap_KeyPress;
             // 
             // label3
             // 
@@ -107,7 +121,7 @@
             lblLocalY.AutoSize = true;
             lblLocalY.BackColor = Color.DarkGray;
             lblLocalY.Font = new Font("JetBrains Mono", 8.999999F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblLocalY.Location = new Point(372, 34);
+            lblLocalY.Location = new Point(348, 34);
             lblLocalY.Margin = new Padding(4, 0, 4, 0);
             lblLocalY.Name = "lblLocalY";
             lblLocalY.Size = new Size(77, 16);
@@ -119,7 +133,7 @@
             lblLocalX.AutoSize = true;
             lblLocalX.BackColor = Color.DarkGray;
             lblLocalX.Font = new Font("JetBrains Mono", 8.999999F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblLocalX.Location = new Point(287, 34);
+            lblLocalX.Location = new Point(260, 34);
             lblLocalX.Margin = new Padding(4, 0, 4, 0);
             lblLocalX.Name = "lblLocalX";
             lblLocalX.Size = new Size(77, 16);
@@ -131,7 +145,7 @@
             lblGridY.AutoSize = true;
             lblGridY.BackColor = Color.DarkGray;
             lblGridY.Font = new Font("JetBrains Mono", 8.999999F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblGridY.Location = new Point(96, 34);
+            lblGridY.Location = new Point(115, 34);
             lblGridY.Margin = new Padding(4, 0, 4, 0);
             lblGridY.Name = "lblGridY";
             lblGridY.Size = new Size(84, 16);
@@ -143,7 +157,7 @@
             lblGridX.AutoSize = true;
             lblGridX.BackColor = Color.DarkGray;
             lblGridX.Font = new Font("JetBrains Mono", 8.999999F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblGridX.Location = new Point(4, 34);
+            lblGridX.Location = new Point(14, 34);
             lblGridX.Margin = new Padding(4, 0, 4, 0);
             lblGridX.Name = "lblGridX";
             lblGridX.Size = new Size(84, 16);
@@ -157,15 +171,16 @@
             pnlMessageBoard.Location = new Point(7, 446);
             pnlMessageBoard.Margin = new Padding(4);
             pnlMessageBoard.Name = "pnlMessageBoard";
-            pnlMessageBoard.Size = new Size(850, 139);
+            pnlMessageBoard.Size = new Size(889, 139);
             pnlMessageBoard.TabIndex = 1;
+            pnlMessageBoard.Paint += pnlMessageBoard_Paint;
             // 
             // rtbMessages
             // 
             rtbMessages.Location = new Point(2, 4);
             rtbMessages.Margin = new Padding(4);
             rtbMessages.Name = "rtbMessages";
-            rtbMessages.Size = new Size(844, 132);
+            rtbMessages.Size = new Size(883, 132);
             rtbMessages.TabIndex = 0;
             rtbMessages.Text = "";
             // 
@@ -320,7 +335,7 @@
             // 
             panel4.BackColor = Color.Black;
             panel4.Controls.Add(tbcDynamic);
-            panel4.Location = new Point(693, 4);
+            panel4.Location = new Point(679, 4);
             panel4.Margin = new Padding(4);
             panel4.Name = "panel4";
             panel4.Size = new Size(217, 401);
@@ -333,11 +348,11 @@
             tbcDynamic.Controls.Add(tabPage3);
             tbcDynamic.Font = new Font("JetBrains Mono", 8.999999F, FontStyle.Regular, GraphicsUnit.Point, 0);
             tbcDynamic.ItemSize = new Size(50, 20);
-            tbcDynamic.Location = new Point(14, 15);
+            tbcDynamic.Location = new Point(4, 9);
             tbcDynamic.Margin = new Padding(4);
             tbcDynamic.Name = "tbcDynamic";
             tbcDynamic.SelectedIndex = 0;
-            tbcDynamic.Size = new Size(203, 386);
+            tbcDynamic.Size = new Size(209, 388);
             tbcDynamic.TabIndex = 0;
             tbcDynamic.Tag = "";
             // 
@@ -349,7 +364,7 @@
             Inventory.Margin = new Padding(4);
             Inventory.Name = "Inventory";
             Inventory.Padding = new Padding(4);
-            Inventory.Size = new Size(195, 358);
+            Inventory.Size = new Size(201, 360);
             Inventory.TabIndex = 0;
             Inventory.Text = "tabPage1";
             Inventory.UseVisualStyleBackColor = true;
@@ -362,7 +377,7 @@
             Journal.Margin = new Padding(4);
             Journal.Name = "Journal";
             Journal.Padding = new Padding(4);
-            Journal.Size = new Size(195, 358);
+            Journal.Size = new Size(201, 360);
             Journal.TabIndex = 1;
             Journal.Text = "tabPage2";
             Journal.UseVisualStyleBackColor = true;
@@ -373,35 +388,17 @@
             tabPage3.Margin = new Padding(4);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(4);
-            tabPage3.Size = new Size(195, 358);
+            tabPage3.Size = new Size(201, 360);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // ctbTheMap
-            // 
-            ctbTheMap.BackColor = Color.Black;
-            ctbTheMap.DesignTimeLines = new string[]
-    {
-    "ColorTextBox Ready!",
-    "LockToGrid: 51x25",
-    "Coordinate Editing Enabled"
-    };
-            ctbTheMap.ForeColor = Color.White;
-            ctbTheMap.GlobalOverlayScale = 1.227463F;
-            ctbTheMap.GlobalShadowScale = 0.9819704F;
-            ctbTheMap.Location = new Point(13, 72);
-            ctbTheMap.Name = "ctbTheMap";
-            ctbTheMap.Size = new Size(417, 325);
-            ctbTheMap.TabIndex = 7;
-            ctbTheMap.Text = resources.GetString("ctbTheMap.Text");
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.AppWorkspace;
-            ClientSize = new Size(1225, 829);
+            ClientSize = new Size(899, 603);
             Controls.Add(panel4);
             Controls.Add(panel1);
             Controls.Add(pnlMessageBoard);
@@ -449,7 +446,7 @@
         private Label lblPlayerName;
         private Label label5;
         private RichTextBox rtbMessages;
-        private MyGame.Controls.ColorTextBox colorTextBox1;
+        private ColorDialog colorDialog1;
         private MyGame.Controls.ColorTextBox ctbTheMap;
     }
 }

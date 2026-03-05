@@ -1,25 +1,16 @@
 ﻿using System.Text.Json;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 
 // Used the dehydrated tiles. 
 public class GridObject
 {
     public int GridID { get; set; }
-    // This is stored as JSON text in one column
-    public string GridMapKeyJson { get; set; } = "[]"; // default empty list
-
-    // Runtime property — NOT mapped to DB
-    [NotMapped]
-    public List<string> GridMapKey
-    {
-        get => string.IsNullOrEmpty(GridMapKeyJson)
-            ? new List<string>()
-            : JsonSerializer.Deserialize<List<string>>(GridMapKeyJson)!;
-        set => GridMapKeyJson = JsonSerializer.Serialize(value);
-    }
-
+    public List<string> GridMapKey { get; set; }
+    [JsonIgnore]
+    public int LocationID { get; set; }
     public int GridX { get; set; }
     public int GridY { get; set; }
     public GridBiomeType Biome { get; set; } // E.G. BorelForest, TemperateBroadleadForest
@@ -28,8 +19,9 @@ public class GridObject
     [NotMapped]
     public List<DescriptionEntry> DescriptionEntries { get; set; } = new();
     [NotMapped]
-    public Dictionary<char, TileAddData>? TileAdds { get; set; } = new();
-
+    public Dictionary<char, TileAddData>? TileAdds { get; set; } = new(); // Adds desriptions to the tiles
+    [NotMapped]
+    public List<TileObject> RenderCell { get; set; } // used for cell rendering
     public GridObject() { }
 
     /// <summary>
@@ -39,8 +31,9 @@ public class GridObject
     public void AddDescription(int weight, string text, GridBiomeType? biome = null, GridBiomeSubType? subBiome = null, SeasonData? season = null, WeatherData? weather = null)
     {
         DescriptionEntries.Add(new DescriptionEntry
-    (
-            text, weight, biome, subBiome, season, weather));
+        (
+            text, weight, biome, subBiome, season, weather)
+        );
     }
 }
 public class TileAddData

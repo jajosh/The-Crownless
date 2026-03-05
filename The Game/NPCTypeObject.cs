@@ -57,7 +57,7 @@ public record NPCTypeObject
     /// <summary>
     /// Null means "fall back to global list".
     /// </summary>
-    public List<RecordRandomText>? RandomDialog { get; set; }
+    public List<DescriptionEntry>? RandomDialog { get; set; }
     #endregion
 
     #region Naming

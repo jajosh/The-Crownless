@@ -10,7 +10,7 @@ public class NPCManager : INPCEngine
 	{
 	}
     #region === IActionable ===
-    // checks if the NPC can attack. Tied to IActionable
+        // checks if the NPC can attack. Tied to IActionable
     public bool CanAttack(IActionable target)
     {
         //RootComponent caster = Root;

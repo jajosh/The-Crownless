@@ -1,7 +1,7 @@
 ﻿using System;
-using The_Game;
-using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
+using The_Game;
 
 // The Player Object
 public class PlayerObject : ICharacter
@@ -28,6 +28,19 @@ public class PlayerObject : ICharacter
         };
 
     public int pronounKey = 3; // Default
+    private TileRenderProfile _render = new TileRenderProfile("△");
+
+    public TileRenderProfile Render
+    {
+        get
+        {
+            _render.CharData.MainChar = "△";
+            _render.CharData.ShadowChar = "△";
+            _render.CharData.TintChar = "△";
+            return _render;
+        }
+        set => _render = value;
+    }
     #endregion
 
     // === Actions (IActionable) ===
@@ -61,7 +74,7 @@ public class PlayerObject : ICharacter
     public PlayerObject()
     {
         Inventory = null;
-        InventoryData = new List<int>();
+        // InventoryData = new List<int>();
         Health = new HealthComponent();
         Skills = new SkillComponent();
         Name = string.Empty;
@@ -131,10 +144,11 @@ public class PlayerObject : ICharacter
     }
     public bool IsWearingMetal()
     {
+        if (Inventory?.EquipedItems == null) return false;
         foreach (var item in Inventory.EquipedItems)
         {
             foreach (var stack in item.Value)
-                {
+            {
                 if (stack.Item.material == PrimaryMaterial.Metal)
                 {
                     return true;
@@ -145,6 +159,7 @@ public class PlayerObject : ICharacter
     }
     public bool IsWieldingSword()
     {
+        if (Inventory?.EquipedItems == null) return false;
         foreach (var slotPair in Inventory.EquipedItems)
         {
             EquipmentSlots slot = slotPair.Key;                   // e.g. Head, Chest, Weapon, etc.

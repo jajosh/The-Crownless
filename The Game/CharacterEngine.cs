@@ -1,12 +1,15 @@
 ﻿using The_Game;
 using WindowsFormsApp1;
 using Newtonsoft.Json;
+using MyGame.Controls;
 
-public interface ICharacter : ISkills, IActor, IActionable, IInventory { }
+public interface ICharacter : ISkills, IActor, IActionable, IInventory 
+{ }
 public interface IActionable
 {
     // ─── Identity ───────────────────────────────────────────────
     string Name { get; set; }
+    TileRenderProfile Render { get; set; }
     RaceComponent Race { get; set; }
 
     // ─── Components ─────────────────────────────────────────────
@@ -16,6 +19,8 @@ public interface IActionable
     // ─── Data & State ───────────────────────────────────────────
     List<TriggerConfig> TriggerKey { get; set; } // Used for hydration
     List<ActionObject> TriggerData { get; set; }
+    
+    // === Visual ===
 
 
     bool CanAttack(IActionable target);

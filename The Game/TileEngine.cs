@@ -7,6 +7,6 @@ public interface ITileEngine
         GameEngine engine,
         List<DescriptionEntry> descriptions,
         CancellationToken dddddddct = default);
-    void FinalizeTiles(MapManager map);
-    TileObject ProcessTile(char ascii, int gridX, int gridY, int LocalX, int LocalY);
-}   
+    void FinalizeTiles(MapManager map, List<TileObject> tiles, List<GridObject> grids);
+    TileObject ProcessTile(string ascii, int gridX, int gridY, int LocalX, int LocalY);
+}

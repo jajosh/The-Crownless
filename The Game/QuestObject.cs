@@ -39,19 +39,19 @@ public class FetchQuestData
 
 public class KillQuestData
 {
-    public List<int> NeededItems { get; set; } = new();
-    public List<int> TargetNPCs { get; set; } = new();
-    public int TurnInNPC { get; set; }
+    public List<int>? NeededItems { get; set; } = new();
+    public List<int>? TargetNPCs { get; set; } = new();
+    public int? TurnInNPC { get; set; }
 }
 
 public class SpeakQuestData
 {
-    public List<int> TargetNPCsID { get; set; } = new();
+    public List<int>? TargetNPCsID { get; set; } = new();
 }
 
 public class DefendQuestData
 {
-    public List<int> TargetNPCs { get; set; } = new();
-    public List<int> Monsters { get; set; } = new();
+    public List<int>? TargetNPCs { get; set; } = new();
+    public List<int>? Monsters { get; set; } = new();
 }
 

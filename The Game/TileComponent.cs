@@ -2,6 +2,10 @@
 using System;
 public enum TrapType { }
 public interface TileComponent { }
+
+public record IsRoofedComponent(
+    bool IsRoofed
+) : TileComponent;
 public record CuttablePlantComponent(
     Dictionary<int, int>/*weight, item ID*/ ITemObjectID, int Respawn,
     bool IsCuttable,
@@ -22,9 +26,8 @@ public record IsFlammableComponent(
     int BurnAmount,
     List<TileRenderProfile> VisualFallBack) : TileComponent;
 
-public record WalkableComponent(
+public record IsWalkableComponent(
     bool IsWalkable,
-    bool IsRoofed,
     float WalkabilityCost) : TileComponent;
 
 public record CoverComponent(
@@ -51,5 +54,5 @@ public record TrapComponent(
 public record Respawnable(
     ) : TileComponent;
 public record TiledEffectComponent(
-    int EffectID
+    int EffectID,
     int Interval) : TileComponent;

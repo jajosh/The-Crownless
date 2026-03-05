@@ -16,6 +16,7 @@ public class GameEngine
     public INPCTypeEngine NPCType { get; init; }
     public WeatherEngine Weather { get; init; }
 
+
     public List<IActionable> ActiveOnScreen { get; set; } = new();
     public List<IActionable> ActiveOnLocation { get; set; } = new();
 
@@ -34,6 +35,7 @@ public class GameEngine
     public void Assembly()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         // Components initialize THEMSELVES
     }
 }

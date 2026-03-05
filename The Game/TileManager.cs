@@ -5,120 +5,178 @@ public class TileManager : ITileEngine
 {
     public Random random = new Random();
     public TileManager()
-	{
-	}
+    {
+    }
     // Picks a random description based on current conditions
     /// <summary>
     /// Finds a random DescriptionEntry that matches current game conditions, weighted by Weight
     /// </summary>
     public static DescriptionEntry? GetRandomMatchingDescription(GameEngine engine, List<DescriptionEntry> descriptions)
     {
-        if (engine == null || descriptions == null || !descriptions.Any())
+        if (engine == null || descriptions == null || descriptions.Count == 0)
             return null;
 
-        // Step 1: Filter matching entries
-        var matching = descriptions
-            .Where(entry => entry.Matches(engine, f))
-            .ToList();
+        DescriptionEntry? selected = null;
+        int totalWeight = 0;
+        int matchCount = 0;
 
-        if (!matching.Any())
-            return null;
-
-        // Step 2: Weighted random selection
-        int totalWeight = matching.Sum(entry => entry.Weight);
-        if (totalWeight == 0)
-            return matching[Random.Shared.Next(matching.Count)]; // fallback uniform
-
-        int randomWeight = Random.Shared.Next(totalWeight);
-        int currentWeight = 0;
-
-        foreach (var entry in matching)
+        foreach (var entry in descriptions)
         {
-            currentWeight += entry.Weight;
-            if (randomWeight < currentWeight)
-                return entry;
+            if (entry.Matches(engine))
+            {
+                matchCount++;
+                int weight = Math.Max(0, entry.Weight);
+                totalWeight += weight;
+
+                // If weights are present, use weighted selection logic
+                if (totalWeight > 0)
+                {
+                    if (Random.Shared.Next(totalWeight) < weight)
+                    {
+                        selected = entry;
+                    }
+                }
+                // Fallback: Uniform selection if all weights encountered so far are 0
+                else
+                {
+                    if (Random.Shared.Next(matchCount) == 0)
+                    {
+                        selected = entry;
+                    }
+                }
+            }
         }
 
-        return matching.Last(); // fallback
+        return selected;
     }
 
     /// <summary>
     /// Async version (if you're doing DB calls or anything)
     /// </summary>
     public static async Task<DescriptionEntry?> GetRandomMatchingDescriptionAsync(
-        GameEngine engine,
-        List<DescriptionEntry> descriptions,
-        CancellationToken ct = default)
+     GameEngine engine,
+     List<DescriptionEntry> descriptions,
+     CancellationToken ct = default)
     {
-        if (engine == null || descriptions == null || !descriptions.Any())
+        if (engine == null || descriptions == null || descriptions.Count == 0)
             return null;
 
-        // Filter matching (async if needed)
-        var matching = descriptions
-            .Where(entry => entry.Matches(engine, f))
-            .ToList();
+        DescriptionEntry? selected = null;
+        int totalWeight = 0;
+        int matchCount = 0;
 
-        if (!matching.Any())
-            return null;
-
-        int totalWeight = matching.Sum(entry => entry.Weight);
-        if (totalWeight == 0)
-            return matching[Random.Shared.Next(matching.Count)];
-
-        int randomWeight = Random.Shared.Next(totalWeight);
-        int currentWeight = 0;
-
-        foreach (var entry in matching)
+        foreach (var entry in descriptions)
         {
-            currentWeight += entry.Weight;
-            if (randomWeight < currentWeight)
-                return entry;
+            // Stop processing if the cancellation token is triggered
+            ct.ThrowIfCancellationRequested();
+
+            // Assuming MatchesAsync is the new async version of your check
+            if (await entry.MatchesAsync(engine))
+            {
+                matchCount++;
+                int weight = Math.Max(0, entry.Weight);
+                totalWeight += weight;
+
+                if (totalWeight > 0)
+                {
+                    if (Random.Shared.Next(totalWeight) < weight)
+                        selected = entry;
+                }
+                else
+                {
+                    if (Random.Shared.Next(matchCount) == 0)
+                        selected = entry;
+                }
+            }
         }
 
-        return matching.Last();
+        return selected;
     }
-    public void FinalizeTiles(MapManager map)
+    public void FinalizeTiles(MapManager map, List<TileObject> tiles, List<GridObject> grids)
     {
-        foreach (var kvp in MapManager.MapKey)
-        {
-            TileObject tile = kvp.Value;
 
-            if (tile.DeferredChecks.HasFlag(TileCheckType.NeighborRoofed))
+        foreach (var tile in tiles)
+        {
+
+            if (tile.DeferredChecks.Contains(TileCheckType.NeighborRoofed))
             {
-                tile.IsRoofed = TileHelpers.HasRoofedNeighbor(map, tile);
+                bool HasRoofedNeighbor = TileHelpers.HasRoofedNeighbor(map, tile);
+                if (HasRoofedNeighbor)
+                {
+                    tile.Components.Add(
+                        new TileComponents
+                        {
+                            TileID = tile.TileId,
+                            ComponentTypeName = "Roofed",
+                            TileComponent = new IsRoofedComponent(
+                                true)
+                        });
+                }
             }
 
-            if (tile.DeferredChecks.HasFlag(TileCheckType.NeighborWalkable))
+            if (tile.DeferredChecks.Contains(TileCheckType.NeighborWalkable))
             {
-                tile.IsWalkable = TileHelpers.HasWalkableNeighbor(map, tile);
+                bool HasNeighborWalkable = TileHelpers.HasWalkableNeighbor(map, tile);
+                if (HasNeighborWalkable)
+                {
+                    tile.Components.Add(
+                        new TileComponents
+                        {
+                            TileID = tile.TileId,
+                            ComponentTypeName = "Roofed",
+                            TileComponent = new IsWalkableComponent(
+                                true,
+                                1)
+                        });
+                }
             }
 
             // Clear after processing
-            tile.DeferredChecks = TileCheckType.None;
+            tile.DeferredChecks.Clear();
+            // BugHunter.Log(DebugType.LOG, $" | Tile Processed {tile.BaseRender.CharData.MainChar}, {tile.RootGridX},{tile.RootGridY},{tile.RootLocalX},{tile.RootLocalY}) | ", DebugLogSeverity.telemetry);
         }
+        BugHunter.Log(DebugType.GENERICPROCESSING, "Tiles have been processed, starting SQL Transfer...", DebugLogSeverity.telemetry);
+        TileRepository repository = new TileRepository();
+        repository.SaveAllTilesToDatabase(tiles);
+        GridRepository gridRepository = new GridRepository();
+        gridRepository.SaveGridToDataBase(grids);
     }
-    public TileObject ProcessTile(char ascii, int gridX, int gridY, int LocalX, int LocalY)
+    public TileObject ProcessTile(string ascii, int gridX, int gridY, int LocalX, int LocalY)
     {
-        // 1. Check dictionary first
         if (TileProcessor._tileHandlers.TryGetValue(ascii, out var handler))
-            return handler(gridX, gridY, LocalX, LocalY, ascii); BugHunter.Log(ascii.ToString(), DebugLogSeverity.Info);
+        {
+            // Only log if it's a rare/important tile, or if you are in a verbose debug mode
+            // Otherwise, your log file will grow by megabytes per second.
+            if (ascii == "$")
+            {
+                BugHunter.Log(DebugType.TILEPROCESSING, $"Processed special tile '{ascii}' at ({gridX},{gridY})", DebugLogSeverity.INFO);
+            }
+            try
+            {
+                return handler(gridX, gridY, LocalX, LocalY, ascii);
+            }
+            catch
+            {
+                BugHunter.Log(DebugType.ERROR, $" Error processing tile. Tile Handler not found {ascii}", DebugLogSeverity.FATAL);
+            }
+        }
 
 
         // Letters handled dynamically
-        if (char.IsLetter(ascii))
+        if (ascii.Length == 1 && char.IsLetter(ascii[0]))
         {
             // 2. Fall back to reflection method
-            string methodName = "On" + ascii.ToString();
+            string methodName = "On" + ascii;
             Type type = typeof(TileProcessor);
             var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
             if (method != null)
             {
-                var processedTile = (TileObject)method.Invoke(null, new object[] { gridX, gridY, LocalX, LocalY, ascii }); 
+                var processedTile = (TileObject)method.Invoke(null, new object[] { gridX, gridY, LocalX, LocalY, ascii });
                 return processedTile;
             }
 
             // 3. If neither exist, warn and fall through to default
-            BugHunter.Log($"Warning: No handler found for letter '{ascii}' (expected {methodName})");
+            BugHunter.Log(DebugType.TILEPROCESSING, $"No handler found for letter '{ascii}' (expected {methodName})", DebugLogSeverity.WARN);
         }
         RootComponent root = new RootComponent(gridX, gridY, LocalX, LocalY);
         // Non-letter characters always go to dictionary
@@ -130,8 +188,6 @@ public class TileManager : ITileEngine
         {
             Root = new RootComponent(gridX, gridY, LocalX, LocalY),
             TileType = TileTypes.empty,
-            IsWalkable = true,
-            IsFlammable = false  // Typo? Should be IsFlammable?
         };
     }
 }

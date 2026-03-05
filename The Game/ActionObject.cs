@@ -39,9 +39,11 @@ public class CorruptingTouch : ActionObject
     public int Heal { get; }
     public CorruptingTouch(int damage = 10) : base(nameof(CorruptingTouch)) => Damage = damage;
     public new int Range = 1;
+
 #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
     public ActionRangeType RangeType = ActionRangeType.SingleTarget;
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
+
 
     public override void Execute(ICharacter caster, ICharacter target)
     {

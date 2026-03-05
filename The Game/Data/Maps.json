@@ -1,10 +1,10 @@
 [
   {
     "Type": "Settlement",
-    "ID": 0,
+    "ID": 1,
     "Name": "Unknown Location",
     "TransitionPoints": [],
-    "locationMap": [
+    "LocationMap": [
       {
         "GridMapKey": [
           "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..……………FFFFFFFFFFF",

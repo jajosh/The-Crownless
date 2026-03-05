@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-public class NPCObject : NPCManager
+public class NPCObject : NPCManager, ICharacter
 {
     public bool CanUseBonus()
     {
@@ -16,6 +16,20 @@ public class NPCObject : NPCManager
     public int TypeID { get; set; }
     public RaceComponent Race { get; set; }
     public Dictionary<string, string> Aliases { get; set; } = new();
+
+    private TileRenderProfile _render = new TileRenderProfile();
+
+    public TileRenderProfile Render
+    {
+        get
+        {
+            _render.CharData.MainChar = "@";
+            _render.CharData.ShadowChar = "@";
+            _render.CharData.TintChar = "@";
+            return _render;
+        }
+        set => _render = value;
+    }
     #endregion
 
     #region Positioning / Movement
@@ -26,7 +40,7 @@ public class NPCObject : NPCManager
     public int ActionCount { get; set; } = 1;
     public int BonusActionCount { get; set; } = 1;
 
-    public (int GridX, int GridY, int LocalX, int LocalY) GetPosition()
+    public (int GridX, int GridY, int LocalX, int LocalY) GetPosition() // !!! Need to adjust this so that it uses RootComponent !!!
     {
         if (Waypoints != null && CurrentWaypointIndex.HasValue &&
             CurrentWaypointIndex.Value >= 0 && CurrentWaypointIndex.Value < Waypoints.Count)
@@ -53,7 +67,7 @@ public class NPCObject : NPCManager
     #endregion
 
     #region Dialog
-    public List<RecordRandomText>? RandomDialog { get; set; }
+    public List<DescriptionEntry>? RandomDialog { get; set; }
     public bool UseStaticRandomDialog { get; set; }
     public char? Ascii { get; set; }
     #endregion
@@ -69,7 +83,19 @@ public class NPCObject : NPCManager
 
     public NPCObject()
     {
-        
+        TriggerKey = new List<TriggerConfig>();
+        TriggerData = new List<ActionObject>();
+        Money = new Dictionary<CoinType, int>();
+        Waypoints = new List<(int, int, int, int)>();
+        Languages = new List<Languages>();
+        DamageResistance = new List<DamageTypes>();
+        DamageImmunities = new List<DamageTypes>();
+        ConditionImmunities = new List<Conditions>();
+        RandomDialog = new List<DescriptionEntry>();
+        Health = new HealthComponent();
+        Skills = new SkillComponent();
+        Root = new RootComponent();
+        Inventory = new InventoryComponent();
     }
     // --- Deep Clone ---
     public NPCObject Clone()

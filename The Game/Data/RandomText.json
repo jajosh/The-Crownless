@@ -1,21 +1,53 @@
 [
   {
-    "weatherMain": null,
-    "seasonMain": null,
-    "biomeMain": null,
-    "biomeSub": null,
-    "creatureType": null,
-    "text": [
-      "Is this the issue"
+    "ID": 101,
+    "TextEntry": "The air feels heavy and damp as you enter the swamp.",
+    "DescriptionType": "Grid",
+    "TypeID": 1,
+    "DescriptionWeight": 10,
+    "Weight": 5,
+    "Biome": "Any",
+    "SubBiome": "Any",
+    "Season": "Any",
+    "Weather": "Any",
+    "Speaker": "NPC",
+    "Categories": [
+      "Ambient",
+      "Description"
+    ],
+    "RequiredFlags": [
+      {
+        "DescriptionEntryID": 101,
+        "Flag": "TileBurned"
+      }
+    ],
+    "ForbiddenFlags": [
+      {
+        "DescriptionEntryID": 101,
+        "Flag": "TileBurned"
+      }
     ]
   },
   {
-    "weatherMain": null,
-    "seasonMain": null,
-    "biomeMain": null,
-    "biomeSub": null,
-    "text": [
-      "The wilds greet you in silence."
-    ]
+    "ID": 102,
+    "TextEntry": "Your blade gleams in the desert sun.",
+    "DescriptionType": "Item",
+    "TypeID": 5,
+    "DescriptionWeight": 1,
+    "Weight": 1,
+    "Biome": "Any",
+    "Season": "Any",
+    "Weather": "Any",
+    "Speaker": "Any",
+    "Categories": [
+      "Combat"
+    ],
+    "RequiredFlags": [
+      {
+        "DescriptionEntryID": 102,
+        "Flag": "PlayerWieldingSword"
+      }
+    ],
+    "ForbiddenFlags": []
   }
 ]

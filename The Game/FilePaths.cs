@@ -20,7 +20,7 @@ public static class FilePaths
     public static readonly string TriggerCoordinatesPath = Path.Combine(DataFolder, "TriggerCoordinates.json");
     // === Not refactored yet ===
     public static readonly string ItemFilePath = Path.Combine(DataFolder, "Items.json");
-    public static readonly string GridFilePath = Path.Combine(DataFolder, "grid.json");
+    public static readonly string LocationsFilePath = Path.Combine(DataFolder, "Maps.json");
     public static readonly string NPCFilePath = Path.Combine(DataFolder, "NPCs.json");
     public static readonly string NPCTypeFilePath = Path.Combine(DataFolder, "NPCTypes.json");
     public static readonly string ConfigFilePath = Path.Combine(ConfigFolder, "config.json");

@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
-using WindowsFormsApp1;
 using SQLitePCL;
+using WindowsFormsApp1;
+using System.Runtime.InteropServices;
 namespace The_Game
 {
 
@@ -20,14 +21,16 @@ namespace The_Game
         {
             Batteries_V2.Init();
             // Opens the console.
-            AllocConsole();
+            MyConsole.Init();
 
-            
+
 
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
+            BugHunter.Log(DebugType.INIT, "Application is starting", DebugLogSeverity.DEBUG);
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
+        
     }
 }

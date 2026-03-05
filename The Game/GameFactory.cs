@@ -12,27 +12,23 @@ public static class GameFactory
     {
         try
         {
+            // Initialize database connection first
+            var database = new GameDataBase();
+            Log("GameDataBase initialized successfully.");
             var beeper = new BeeperManager();
             Log("BeeperManager created successfully.");
-
             var fileManager = new FileManager();
             Log("FileManager created successfully.");
-
             var npc = new NPCManager();
             Log("NPCManager created successfully.");
-
             var player = new PlayerManager();
             Log("PlayerManager created successfully.");
-
             var processor = new TileProcessorManager();
             Log("TileProcessorManager created successfully.");
-
             var map = new MapManager();
             Log("MapManager created successfully.");
-
             var npcType = new NPCTypeManager();
             Log("NPCTypeManager created successfully.");
-
             var weather = new WeatherManager();
 
             var engine = new GameEngine(

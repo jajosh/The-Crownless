@@ -1,6 +1,6 @@
-﻿using MyGame.Controls;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyGame.Controls;
 public enum TileCheckType
 {
     None = 0,
@@ -74,17 +74,18 @@ public class TileProperties
 {
     // Tile ID
     public int TileID { get; set; }
-    public string PropertyTypeName { get; set; }
+    public string TilePropertyName { get; set; }
     public TileProperty TileProperty { get; set; }
 }
 public class TileRenderProfile
 {
     // Visual Look
-    public MyGame.Controls.ColorTextBox.CharData CharData { get; set; }
-    public MyGame.Controls.ColorTextBox.OverlayStep Overlay { get; set; }
-    public TileRenderProfile()
+    public MyGame.Controls.CharacterData CharData { get; set; }
+    public MyGame.Controls.OverlayStep Overlay { get; set; }
+    public TileRenderProfile() { }  // 👈 serializer uses this
+    public TileRenderProfile(string ascii)
     {
-        CharData = new ColorTextBox.CharData();
-        Overlay = new ColorTextBox.OverlayStep();
+        CharData = new CharacterData(ascii);
+        Overlay = new OverlayStep();
     }
 }

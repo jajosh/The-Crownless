@@ -42,6 +42,7 @@ public record DescriptionEntry
     public ObjectDeffinitionType DescriptionType { get; set; } // E.G. Item, Tile, Grid
     public int TypeID { get; set; }
     public int DescriptionWeight { get; set; }
+    public int Weight { get; set; }
     public GridBiomeType? Biome { get; set; }
     public GridBiomeSubType? SubBiome { get; set; }
     public SeasonData? Season { get; set; }
@@ -59,8 +60,8 @@ public record DescriptionEntry
 
 
     public DescriptionEntry(
-        string text,
-        int weight = 1,
+        string textEntry,                    
+        int descriptionWeight = 1,           
         GridBiomeType? biome = null,
         GridBiomeSubType? subBiome = null,
         SeasonData? season = null,
@@ -68,8 +69,9 @@ public record DescriptionEntry
         IReadOnlyList<DescriptionEntryFlag>? requiredFlags = null,
         IReadOnlyList<DescriptionEntryFlag>? forbiddenFlags = null)
     {
-        DescriptionWeight = weight;
-        TextEntry = text ?? throw new ArgumentNullException(nameof(text));
+        
+        TextEntry = textEntry;
+        DescriptionWeight = descriptionWeight;
 
         Biome = biome;
         SubBiome = subBiome;
@@ -81,8 +83,8 @@ public record DescriptionEntry
 
     // Bonus: nice static factory that reads like English
     public static DescriptionEntry Any(
-        string text,
-        int weight = 1,
+        string textEntry,
+        int descriptionWeight = 1,
         GridBiomeType? biome = null,
         GridBiomeSubType? subBiome = null,
         SeasonData? season = null,
@@ -90,16 +92,15 @@ public record DescriptionEntry
         List<DescriptionEntryFlag>? requiredFlags = null,
         List<DescriptionEntryFlag>? forbiddenFlags = null)
         => new DescriptionEntry(
-            text,
-            weight,
+            textEntry,
+            descriptionWeight,
             biome,
             subBiome,
             season,
             weather,
             requiredFlags,
             forbiddenFlags);
-
-    public bool Matches(GameEngine engine, DescriptionEntryFlag f)
+    public bool Matches(GameEngine engine)
     {
         if (engine == null) return false;
 
@@ -119,7 +120,9 @@ public record DescriptionEntry
         }
         catch (Exception ex)
         {
-            BugHunter.LogException(ex);
+            string context = $"Failed to query tile at ({player.Root.GridX}, {player.Root.GridY})";
+            BugHunter.Log(DebugType.TILEPROCESSING, $"{context} | {ex.Message}", DebugLogSeverity.FATAL);
+
         }
 
         // === Biome / Environment Checks ===
@@ -155,6 +158,68 @@ public record DescriptionEntry
 
         return biomeMatch && subBiomeMatch && seasonMatch && weatherMatch &&
                requiredFlagsMatch && forbiddenFlagsMatch /*&& customMatch*/;
+    }
+    public async Task<bool> MatchesAsync(GameEngine engine, CancellationToken ct = default)
+    {
+        if (engine == null) return false;
+
+        // 1. Extract synchronous state (Cheap operations)
+        var currentBiome = engine.Map.CurrentBiome();
+        var currentSubBiome = engine.Map.CurrentSubBiome();
+        var currentSeason = engine.Weather.CurrentSeason;
+        var currentWeather = engine.Weather.CurrentWeather;
+        var player = engine.Player.PlayerCharacter;
+
+        // 2. Perform Async I/O (The "Heavy" part)
+        TileObject? tile = null;
+        try
+        {
+            // Assuming your repository has an Async version of Query
+            tile = await TileRepository.QueryAsync(new
+            {
+                RootGridX = player.Root.GridX,
+                RootGridY = player.Root.GridY,
+                RootLocalX = player.Root.LocalX,
+                RootLocalY = player.Root.LocalY
+            }, ct);
+        }
+        catch (OperationCanceledException)
+        {
+            // Handle cancellation gracefully
+            return false;
+        }
+        catch (Exception ex)
+        {
+            string context = $"Cancellation failed: Must continue - ";
+            BugHunter.Log(DebugType.TILEPROCESSING, $"{context} | {ex.Message}", DebugLogSeverity.FATAL);
+        }
+
+        // 3. Environment Checks
+        bool biomeMatch = !Biome.HasValue || Biome.Value == currentBiome;
+        bool subBiomeMatch = !SubBiome.HasValue || SubBiome.Value == currentSubBiome;
+        bool seasonMatch = !Season.HasValue || Season.Value == currentSeason;
+        bool weatherMatch = !Weather.HasValue || Weather.Value == currentWeather;
+
+        // 4. Flag Checks
+        DescriptionFlag currentFlags = DescriptionFlag.None;
+
+        if (tile?.IsBurned() == true)
+            currentFlags |= DescriptionFlag.TileBurned;
+        if (player.IsWieldingSword() == true)
+            currentFlags |= DescriptionFlag.PlayerWieldingSword;
+        if (player.IsWearingMetal())
+            currentFlags |= DescriptionFlag.PlayerWearingMetal;
+
+        bool requiredFlagsMatch = RequiredFlags == null ||
+                                  RequiredFlags.Count == 0 ||
+                                  RequiredFlags.All(entry => currentFlags.HasFlag(entry.Flag));
+
+        bool forbiddenFlagsMatch = ForbiddenFlags == null ||
+                                   ForbiddenFlags.Count == 0 ||
+                                   !ForbiddenFlags.Any(entry => currentFlags.HasFlag(entry.Flag));
+
+        return biomeMatch && subBiomeMatch && seasonMatch && weatherMatch &&
+               requiredFlagsMatch && forbiddenFlagsMatch;
     }
 
 }

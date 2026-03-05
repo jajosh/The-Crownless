@@ -24,23 +24,23 @@ public class FileManager : IIFileEngine
         foreach (var folder in folders)
         {
             if (!Directory.Exists(folder))
-                BugHunter.Log($"[WARNING] Folder missing: {folder}", DebugLogSeverity.Debug);
+                BugHunter.Log(DebugType.GAMEFILE, $"Folder missing: {folder}", DebugLogSeverity.WARN);
             else
-                BugHunter.Log($"[SUCCESS] Folder missing: {folder}", DebugLogSeverity.Info);
+                BugHunter.Log(DebugType.GAMEFILE, $"Folder found: {folder}", DebugLogSeverity.INFO);
         }
 
         string[] files = {
                 FilePaths.ItemFilePath, FilePaths.ConfigFilePath, FilePaths.EventsFilePath,
-                FilePaths.GridFilePath, FilePaths.TriggerCoordinatesPath, FilePaths.NPCFilePath,
+                FilePaths.LocationsFilePath, FilePaths.TriggerCoordinatesPath, FilePaths.NPCFilePath,
                 FilePaths.NPCTypeFilePath, FilePaths.QuestFilePath, FilePaths.RandomTextPath,
                 FilePaths.RandomEnvironmentalDialogPath
             };
         foreach (var file in files)
         {
             if (File.Exists(file))
-                BugHunter.Log($"[SUCCESS] Folder exists: {file}", DebugLogSeverity.Info);
+                BugHunter.Log(DebugType.GAMEFILE, $"Folder exists: {file}", DebugLogSeverity.INFO);
             else
-                BugHunter.Log($"[SUCCESS] Folder missing: {file}");
+                BugHunter.Log(DebugType.GAMEFILE, $"Folder missing: {file}" ,DebugLogSeverity.WARN);
         }
     }
 
@@ -50,7 +50,7 @@ public class FileManager : IIFileEngine
         var saveFiles = Directory.GetFiles(FilePaths.SavesFolder, "*.json");  // Fixed: Enumerable files
         foreach (var file in saveFiles)
         {
-            BugHunter.Log($"Save file: {Path.GetFileName(file)}");
+            BugHunter.Log(DebugType.GAMEFILE, $"Save file: {Path.GetFileName(file)}", DebugLogSeverity.INFO);
         }
     }
 
@@ -61,7 +61,7 @@ public class FileManager : IIFileEngine
         Directory.CreateDirectory(FilePaths.ConfigFolder);
 
         CopyIfMissing("Data/items.json", FilePaths.ItemFilePath);
-        CopyIfMissing("Data/Maps.json", FilePaths.GridFilePath);
+        CopyIfMissing("Data/Maps.json", FilePaths.LocationsFilePath);
         CopyIfMissing("Data/NPCs.json", FilePaths.NPCFilePath);
         CopyIfMissing("Data/TriggerCoordinates.json", FilePaths.TriggerCoordinatesPath);  // Fixed typo
         CopyIfMissing("Data/Events.json", FilePaths.EventsFilePath);
@@ -83,18 +83,18 @@ public class FileManager : IIFileEngine
             if (!File.Exists(targetPath))
             {
                 File.Copy(sourcePath, targetPath);
-                BugHunter.Log($"[COPIED] {relativePathFromProject} → {targetPath}");
+                BugHunter.Log(DebugType.GAMEFILE, $"File Copied: {relativePathFromProject} → {targetPath}", DebugLogSeverity.INFO);
             }
             else
             {
                 // Optional: Uncomment for always-overwrite
                 // File.Copy(sourcePath, targetPath, overwrite: true);
-                BugHunter.Log($"[EXISTS] {targetPath} - skipped copy.");
+                BugHunter.Log(DebugType.GAMEFILE, $"{targetPath} - skipped copy.", DebugLogSeverity.INFO);
             }
         }
         else
         {
-            BugHunter.Log($"[WARNING] Source missing: {sourcePath}");
+            BugHunter.Log(DebugType.GAMEFILE, $"Source missing: {sourcePath}", DebugLogSeverity.WARN);
         }
     }
 

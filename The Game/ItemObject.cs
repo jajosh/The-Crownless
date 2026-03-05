@@ -85,9 +85,14 @@ public class ItemObject
     [NotMapped]public List<IItemComponent> Components { get; set; } // Separate DB table
     public Dictionary<TriggerEnum, ActionObject> TriggerData { get; set; } // JsonBlob
 
-    
+    public ItemObject()
+    {
+        Components = new List<IItemComponent>();
+        TriggerData = new Dictionary<TriggerEnum, ActionObject>();
+        EncumbranceErrorMessages = new List<DescriptionEntry>();
+    }
 
-    
+
     public object Clone()
     {
         // Shallow copy for now; extend for deep if needed

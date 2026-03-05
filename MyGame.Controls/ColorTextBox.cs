@@ -100,59 +100,21 @@ namespace MyGame.Controls
         // --------------------------------------------------------------------
         // Data Structures
         // --------------------------------------------------------------------
-        #region 💾 Data Structures
 
-        public class CharData
-        {
-            public char Char { get; set; }
-            public ColorComponent Color { get; set; } = new ColorComponent(255, 255, 255);
-            public bool IsSelected { get; set; }
-
-            public float MainScale { get; set; } = 1f;
-            public float ShadowScale { get; set; } = 1f;
-
-            public float ShadowSquishX { get; set; } = 1f;
-            public float ShadowSquishY { get; set; } = 1f;
-
-            public string MainFontFamily { get; set; }
-            public FontStyle? MainFontStyle { get; set; }
-            public float MainFontSizeMultiplier { get; set; } = 1f;
-
-            public string ShadowFontFamily { get; set; }
-            public FontStyle? ShadowFontStyle { get; set; }
-            public float ShadowFontSizeMultiplier { get; set; } = 1f;
-
-            public string OverlayFontFamily { get; set; }
-            public FontStyle? OverlayFontStyle { get; set; }
-            public float OverlayFontSizeMultiplier { get; set; } = 1f;
-
-            public ColorComponent ColorShiftOverride { get; set; }
-
-            public CharData() { }
-            public CharData(char c) { Char = c; }
-        }
-
-        public class OverlayStep
-        {
-            public ColorComponent Color { get; set; } = new ColorComponent(0, 0, 0, 0);
-            public string FontFamily { get; set; }
-            public FontStyle? FontStyle { get; set; }
-            public float SizeMultiplier { get; set; } = 1f;
-        }
-
-        #endregion
 
         // --------------------------------------------------------------------
         // Fields & State
         // --------------------------------------------------------------------
         #region ⚙️ Fields & State
 
-        private readonly List<CharData> _chars = new List<CharData>();
+        private readonly List<CharacterData> _chars = new List<CharacterData>();
         private readonly Dictionary<(string, float, FontStyle), Font> _fontCache = new Dictionary<(string, float, FontStyle), Font>();
 
         // Metrics
         private float _charWidth;
         private float _lineHeight;
+        private float? _overrideCharWidth;
+        private float? _overrideCharHeight;
         private int _firstVisibleLine;
         private int _letterSpacing;
         private HorizontalAlignment _textAlign = HorizontalAlignment.Left;
@@ -263,12 +225,38 @@ namespace MyGame.Controls
         #region 📏 Layout & Grid Locking
 
         [Category("Layout"), DefaultValue(51)]
-        [Browsable(false)]
-        public int FixedWidthInChars { get; } = 51;
+        public int FixedWidthInChars { get; set; } = 51;
 
         [Category("Layout"), DefaultValue(25)]
-        [Browsable(false)]
-        public int FixedHeightInChars { get; } = 25;
+        public int FixedHeightInChars { get; set; } = 25;
+
+        [Category("Metrics")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public float CharWidth
+        {
+            get => _overrideCharWidth ?? _charWidth;
+            set
+            {
+                _overrideCharWidth = value;
+                UpdateMetrics();
+                if (LockToGrid) InitializeGridBuffer();
+                else if (AutoWidthInChars) RecalculateWidthInChars();
+                Invalidate();
+            }
+        }
+
+        [Category("Metrics")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public float CharHeight
+        {
+            get => _overrideCharHeight ?? _lineHeight;
+            set
+            {
+                _overrideCharHeight = value;
+                UpdateMetrics(); // Recalculate based on new height
+                Invalidate();
+            }
+        }
 
         [Category("Layout"), DefaultValue(true)]
         [Description("When true, the text buffer is locked to 51 columns and 25 rows.")]
@@ -312,8 +300,8 @@ namespace MyGame.Controls
         // --------------------------------------------------------------------
         #region ✨ Effects Properties
 
-        [Category("Effects"), DefaultValue(true)]
-        public bool EnableRipple { get; set; } = true;
+        [Category("Effects"), DefaultValue(false)]
+        public bool EnableRipple { get; set; } = false;
 
         [Category("Effects"), DefaultValue(3f)]
         public float RippleAmplitude { get; set; } = 3f;
@@ -327,8 +315,8 @@ namespace MyGame.Controls
         [Category("Effects"), DefaultValue(false)]
         public bool RippleHorizontal { get; set; } = false;
 
-        [Category("Effects"), DefaultValue(true)]
-        public bool EnableNeonPulse { get; set; } = true;
+        [Category("Effects"), DefaultValue(false)]
+        public bool EnableNeonPulse { get; set; } = false;
 
         [Category("Effects"), DefaultValue(1.3f)]
         public float NeonPulseMaxScale { get; set; } = 1.3f;
@@ -396,7 +384,7 @@ namespace MyGame.Controls
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.UserPaint |
-                     ControlStyles.DoubleBuffer |
+                     ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.Selectable |
                      ControlStyles.StandardClick |
                      ControlStyles.ResizeRedraw, true);
@@ -409,11 +397,14 @@ namespace MyGame.Controls
             if (LockToGrid) InitializeGridBuffer(); // Initial padding
             else if (AutoWidthInChars) RecalculateWidthInChars();
 
-            OverlaySteps.Add(new OverlayStep { Color = _overlayTint });
+            // OverlaySteps.Add(new OverlayStep { Color = _overlayTint }); // Disabled default overlay
 
             // FIXED: Use System.Windows.Forms.Timer for UI thread safety
             _pulseTimer = new System.Windows.Forms.Timer { Interval = 16 };
-            _pulseTimer.Tick += (s, e) => Invalidate();
+            _pulseTimer.Tick += (s, e) =>
+            {
+                if (EnableNeonPulse || EnableRipple || OverlaySteps.Count > 0 || ColorShiftStrength > 0) Invalidate();
+            };
             _pulseTimer.Start();
         }
 
@@ -449,7 +440,7 @@ namespace MyGame.Controls
                 {
                     foreach (char c in value)
                     {
-                        _chars.Add(new CharData(c) { Color = ColorComponent.FromColor(this.ForeColor) });
+                        _chars.Add(new CharacterData(c) { Color = ColorComponent.FromColor(this.ForeColor) });
                     }
                 }
                 if (LockToGrid) InitializeGridBuffer();
@@ -494,7 +485,7 @@ namespace MyGame.Controls
             // Pad the buffer with spaces up to the fixed size
             while (_chars.Count < totalSize)
             {
-                _chars.Add(new CharData(' ')); // Pad with empty CharData
+                _chars.Add(new CharacterData(" ")); // Pad with empty CharacterData
             }
 
             // Truncate if buffer is too large
@@ -507,8 +498,8 @@ namespace MyGame.Controls
         private void UpdateMetrics()
         {
             using Graphics g = CreateGraphics();
-            _charWidth = g.MeasureString("M", Font).Width;
-            _lineHeight = Font.Height;
+            _charWidth = _overrideCharWidth ?? g.MeasureString("M", Font).Width;
+            _lineHeight = _overrideCharHeight ?? Font.Height;
         }
 
         private void RecalculateWidthInChars()
@@ -583,12 +574,12 @@ namespace MyGame.Controls
         // --------------------------------------------------------------------
         #region ⌨️ Public API (Read/Write)
 
-        public List<CharData> GetCharData() => _chars;
+        public List<CharacterData> GetCharData() => _chars;
 
         /// <summary>
         /// Clears the internal buffer and sets new character data.
         /// </summary>
-        public void SetCharData(IEnumerable<CharData> newChars)
+        public void SetCharData(IEnumerable<CharacterData> newChars)
         {
             _chars.Clear();
             if (newChars != null) _chars.AddRange(newChars);
@@ -600,7 +591,7 @@ namespace MyGame.Controls
         /// Sets the CharData at a specific grid coordinate (X, Y).
         /// X is column (0 to Width-1), Y is row (0 to Height-1).
         /// </summary>
-        public void SetCharDataAt(int x, int y, CharData data)
+        public void SetCharDataAt(int x, int y, CharacterData data)
         {
             if (!LockToGrid)
             {
@@ -616,7 +607,7 @@ namespace MyGame.Controls
 
             int index = y * FixedWidthInChars + x;
 
-            _chars[index] = data ?? new CharData(' ');
+            _chars[index] = data ?? new CharacterData(" ");
 
             Invalidate();
         }
@@ -630,10 +621,43 @@ namespace MyGame.Controls
             var c = color ?? ColorComponent.FromColor(ForeColor);
             foreach (var ch in text)
             {
-                _chars.Add(new CharData(ch) { Color = c });
+                _chars.Add(new CharacterData(ch) { Color = c });
             }
             if (LockToGrid) InitializeGridBuffer();
             Invalidate();
+        }
+
+        /// <summary>
+        /// Writes a formatted string to the grid at the specified coordinates.
+        /// This is a simplified implementation that parses tags like [wave], [shake], [shimmer].
+        /// </summary>
+        public void WriteFormattedString(int x, int y, string formattedText, Color color)
+        {
+            if (!LockToGrid) return;
+
+            // For now, we'll strip the tags and just set the character data
+            // In a full implementation, this would set the effect properties on CharData
+
+            string plainText = formattedText;
+            float shake = 0, wave = 0, shimmer = 0;
+
+            if (formattedText.Contains("[shake]")) { shake = 1.0f; plainText = plainText.Replace("[shake]", "").Replace("[/shake]", ""); }
+            if (formattedText.Contains("[wave]")) { wave = 1.0f; plainText = plainText.Replace("[wave]", "").Replace("[/wave]", ""); }
+            if (formattedText.Contains("[shimmer]")) { shimmer = 1.0f; plainText = plainText.Replace("[shimmer]", "").Replace("[/shimmer]", ""); }
+
+            // If it's a single character after stripping tags (common in MapManager.Append)
+            if (plainText.Length > 0)
+            {
+                char c = plainText[0];
+                var data = new CharacterData(c)
+                {
+                    Color = ColorComponent.FromColor(color),
+                    ShakeIntensity = shake,
+                    WaveIntensity = wave,
+                    ShimmerIntensity = shimmer
+                };
+                SetCharDataAt(x, y, data);
+            }
         }
 
         #endregion
@@ -683,7 +707,7 @@ namespace MyGame.Controls
         private ColorComponent GetCurrentGlobalTint() =>
             ColorShiftStrength > 0f ? _colorShiftCurrent : new ColorComponent(255, 255, 255);
 
-        private ColorComponent ApplyColorShift(ColorComponent baseColor, CharData cd)
+        private ColorComponent ApplyColorShift(ColorComponent baseColor, CharacterData cd)
         {
             if (ColorShiftStrength <= 0f) return baseColor;
             if (cd.ColorShiftOverride != null) return cd.ColorShiftOverride;
@@ -727,11 +751,11 @@ namespace MyGame.Controls
         // --------------------------------------------------------------------
         #region 🖌️ Rendering Core
 
-        private void DrawChar(Graphics g, float baseX, float baseY, char ch, ColorComponent colorComp, Font font,
+        private void DrawChar(Graphics g, float baseX, float baseY, string ch, ColorComponent colorComp, Font font,
                        float scale, float squishX, float squishY, Point offset,
                        float rippleX, float rippleY, StringFormat sf)
         {
-            if (ch == ' ' || colorComp.A <= 0) return;
+            if (string.IsNullOrEmpty(ch) || ch == " " || colorComp.A <= 0) return;
 
             // Safety check for NaN or Infinity which crashes GDI+
             if (float.IsNaN(baseX) || float.IsNaN(baseY) || float.IsNaN(scale)) return;
@@ -756,7 +780,7 @@ namespace MyGame.Controls
                     g.TranslateTransform(-centerX, -centerY);
 
                     using var b = new SolidBrush(colorComp.ToColor());
-                    g.DrawString(ch.ToString(), font, b, drawX, drawY, sf);
+                    g.DrawString(ch, font, b, drawX, drawY, sf);
                 }
             }
             finally
@@ -871,7 +895,7 @@ namespace MyGame.Controls
                     }
 
                     // --- SHADOW PASS ---
-                    if (ShadowColor.A > 0 && cd.Char != ' ' && !cd.IsSelected)
+                    if (ShadowColor.A > 0 && cd.Char != " " && !cd.IsSelected)
                     {
                         string family = cd.ShadowFontFamily ?? ShadowFontFamily;
                         FontStyle style = cd.ShadowFontStyle ?? ShadowFontStyle;
@@ -888,7 +912,7 @@ namespace MyGame.Controls
                     }
 
                     // --- MAIN PASS ---
-                    if (cd.Char != ' ')
+                    if (cd.Char != " ")
                     {
                         if (cd.IsSelected)
                         {
@@ -921,7 +945,7 @@ namespace MyGame.Controls
                             blendedOverlayColor = ColorComponent.Lerp(step.Color, OverlayTint, 0.5f);
                         }
 
-                        if (blendedOverlayColor.A > 0 && cd.Char != ' ')
+                        if (blendedOverlayColor.A > 0 && cd.Char != " ")
                         {
                             string family = cd.OverlayFontFamily ?? step.FontFamily ?? OverlayFontFamily;
                             FontStyle style = cd.OverlayFontStyle ?? step.FontStyle ?? OverlayFontStyle;

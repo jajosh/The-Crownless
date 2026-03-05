@@ -36,7 +36,11 @@ public class PlayerManager : IPlayerEngine
             }
             catch (Exception ex)
             {
-                BugHunter.LogException(ex);
+                BugHunter.Log(
+                DebugType.TILEPROCESSING,
+                $"Search Criteria is null | Exception: {ex}",
+                DebugLogSeverity.FATAL
+            );
             }
         }
     }

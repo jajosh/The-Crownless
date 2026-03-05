@@ -4,6 +4,8 @@ public enum GridBiomeType // The biome of the grid
     Any = 1,
     BorelForest =2,
     TemperateBroadleafForest= 3,
+    Volcanic = 4,
+    Swamp = 5
 
 }
 public enum GridBiomeSubType // What features the grid has

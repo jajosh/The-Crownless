@@ -60,7 +60,7 @@ public class InventoryComponent
     {
         Capacity = 1;
         Inventory = new Dictionary<int, ItemStackComponent>();
-        Dictionary<EquipmentSlots, List<ItemStackComponent>> EquipedItems = new Dictionary<EquipmentSlots, List<ItemStackComponent>>
+        EquipedItems = new Dictionary<EquipmentSlots, List<ItemStackComponent>>
         {
             { EquipmentSlots.Head, new List<ItemStackComponent>() },
             { EquipmentSlots.Chest, new List<ItemStackComponent>() },
