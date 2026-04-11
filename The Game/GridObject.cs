@@ -21,7 +21,7 @@ public class GridObject
     [NotMapped]
     public Dictionary<char, TileAddData>? TileAdds { get; set; } = new(); // Adds desriptions to the tiles
     [NotMapped]
-    public List<TileObject> RenderCell { get; set; } // used for cell rendering
+    public List<TileObject> GridMap { get; set; } // used for cell rendering
     public GridObject() { }
 
     /// <summary>

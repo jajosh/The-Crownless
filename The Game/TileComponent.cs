@@ -1,4 +1,4 @@
-﻿using MyGame.Controls;
+using MyGame.Controls;
 using System;
 public enum TrapType { }
 public interface TileComponent { }
@@ -35,8 +35,8 @@ public record CoverComponent(
     CoverGrade Cover) : TileComponent;
 public record DestructibleComponent(
     HealthComponent Health,
-    Dictionary<DamageTypes, int /*Damage type, resistance value*/> Resistances,
-    Dictionary<DamageTypes, int /*Damage type, Vulerbilities value*/> Vulerbilities) : TileComponent;
+    Dictionary<DamageTypes, int >/*Damage type, resistance value*/ Resistances,
+    Dictionary<DamageTypes, int >/*Damage type, Vulerbilities value*/ Vulerbilities) : TileComponent;
 public record OpenableComonent(
     bool isOpen,
     bool CanBeLocked,

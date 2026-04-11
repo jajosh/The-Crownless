@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Data.Common;
 using System.Drawing.Text;
@@ -53,6 +53,7 @@ public class GridRepository : GameDataBase
             BugHunter.Log(DebugType.GAMEFILE, $"Query attempted with no valid property filters on {criteriaType.Name}", DebugLogSeverity.ERROR);
             return null; // Or throw, depending on if this is expected
         }
+
         BugHunter.Log(DebugType.LOG, $"{whereClauses.Count} ", DebugLogSeverity.DEBUG);
         string whereClause = string.Join(" AND ", whereClauses);
         
@@ -124,6 +125,70 @@ public class GridRepository : GameDataBase
         return null;
     }
 
+    public static async Task<List<GridObject>> QueryAllAsync(object criteria, CancellationToken ct = default)
+    {
+        if (criteria == null)
+        {
+            BugHunter.Log(DebugType.GAMEFILE, "QueryAllAsync called with null criteria object.", DebugLogSeverity.FATAL);
+            throw new ArgumentNullException(nameof(criteria));
+        }
+        ct.ThrowIfCancellationRequested();
+
+        Type criteriaType = criteria.GetType();
+        var whereClauses = new List<string>();
+        var parameters = new List<SqliteParameter>();
+
+        foreach (PropertyInfo prop in criteriaType.GetProperties())
+        {
+            object? value = prop.GetValue(criteria);
+            if (value != null)
+            {
+                string columnName = prop.Name;
+                whereClauses.Add($"{columnName} = @{columnName}");
+                parameters.Add(new SqliteParameter($"@{columnName}", value));
+            }
+        }
+
+        if (whereClauses.Count == 0)
+        {
+            BugHunter.Log(DebugType.GAMEFILE, $"QueryAllAsync attempted with no valid property filters", DebugLogSeverity.ERROR);
+            return new List<GridObject>();
+        }
+
+        string whereClause = string.Join(" AND ", whereClauses);
+        string query = $@"SELECT * FROM GridObject WHERE {whereClause}";
+
+        var results = new List<GridObject>();
+
+        try
+        {
+            using var connection = new SqliteConnection(new GameDataBase().connectionString);
+            await connection.OpenAsync(ct);
+            using var command = new SqliteCommand(query, connection);
+            command.Parameters.AddRange(parameters.ToArray());
+
+            using var reader = await command.ExecuteReaderAsync(ct);
+            while (await reader.ReadAsync(ct))
+            {
+                var loadedGrid = GameDataBaseReader.MapToGridObject(reader);
+                if (loadedGrid != null)
+                {
+                    // Add to cache
+                    string key = GenerateCacheKey(loadedGrid.GridX, loadedGrid.GridY);
+                    _gridCache[key] = loadedGrid;
+                    
+                    results.Add(loadedGrid);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            BugHunter.Log(DebugType.GAMEFILE, $"SQL Query Failed: {query} | Error: {ex.Message}", DebugLogSeverity.DEBUG);
+        }
+
+        return results;
+    }
+
     public static async Task<GridObject?> QueryAsync(object criteria, CancellationToken ct = default)
     {
         // 1. Guard Clause: Stop immediately if null
@@ -132,6 +197,7 @@ public class GridRepository : GameDataBase
             BugHunter.Log(DebugType.GAMEFILE, "Query called with null criteria object.", DebugLogSeverity.FATAL);
             throw new ArgumentNullException(nameof(criteria));
         }
+        ct.ThrowIfCancellationRequested();
 
         Type criteriaType = criteria.GetType();
         var whereClauses = new List<string>();
@@ -215,7 +281,7 @@ public class GridRepository : GameDataBase
         {
             // Capture the SQL and the Error for easier debugging
             string errorMsg = $"SQL Query Failed: {query} | Error: {ex.Message}";
-            BugHunter.Log(DebugType.GAMEFILE, errorMsg, DebugLogSeverity.FATAL);
+            BugHunter.Log(DebugType.GAMEFILE, errorMsg, DebugLogSeverity.DEBUG);
         }
 
         return null;

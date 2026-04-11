@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-32"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <None Update="Data\TheCrownlessDB.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

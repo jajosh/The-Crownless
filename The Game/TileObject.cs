@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.Text;
@@ -18,20 +18,20 @@ public class TileObject
     public TileTypes TileType { get; set; }
 
     // === 🗺️ Locational Data (RootComponent Coordinates) ===
-    public int RootGridX { get; set; }
-    public int RootGridY { get; set; }
-    public int RootLocalX { get; set; }
-    public int RootLocalY { get; set; }
+    public int GridX { get; set; }
+    public int GridY { get; set; }
+    public int LocalX { get; set; }
+    public int LocalY { get; set; }
     [NotMapped]
     public RootComponent Root
     {
-        get => new RootComponent(RootGridX, RootGridY, RootLocalX, RootLocalY);
+        get => new RootComponent(GridX, GridY, LocalX, LocalY);
         set
         {
-            RootGridX = value.GridX;
-            RootGridY = value.GridY;
-            RootLocalX = value.LocalX;
-            RootLocalY = value.LocalY;
+            GridX = value.GridX;
+            GridY = value.GridY;
+            LocalX = value.LocalX;
+            LocalY = value.LocalY;
         }
     }
 
@@ -41,23 +41,20 @@ public class TileObject
     [NotMapped] public List<TileProperties> Properties { get; set; } // Separate Table
     public List<TileEffectState> Effects { get; set; } // JsonBlob
     public List<TileTriggerActions> TriggerActions { get; set; } // JsonBlob
-    public CoverGrade Cover { get; set; } = CoverGrade.none;
 
     // === 📝 State and Deferred Processing ===
     [NotMapped] public List<TileCheckType> DeferredChecks { get; set; } // initial Tile processing only, not needed in game
     [NotMapped] public List<DescriptionEntry> Description { get; set; }// Separate Table
-    [NotMapped]
-    public ICharacter? Occupant
-    { get; set; }
+    [NotMapped] public ITileOccupant? Occupant { get; set; }
 
 
     // Used for tile processing. 
     public TileObject(int gridX, int gridY, int localX, int localY, TileTypes tileType, bool isWalkable, bool isRoofed, List<DescriptionEntry> description, string asciiToShow) : this()
     {
-        RootGridX = gridX;
-        RootGridY = gridY;
-        RootLocalX = localX;
-        RootLocalY = localY;
+        GridX = gridX;
+        GridY = gridY;
+        LocalX = localX;
+        LocalY = localY;
         TileType = tileType;
 
         // Initialize BaseRender Profile
@@ -65,6 +62,13 @@ public class TileObject
         BaseRender.CharData.MainChar = asciiToShow;
 
         Description = description ?? new List<DescriptionEntry>();
+
+        Components.Add(new TileComponents
+        {
+            ComponentTypeName = "IsWalkableComponent",
+            TileComponent = new IsWalkableComponent(true, 5)
+        });
+        
     }
     public TileObject()
     {

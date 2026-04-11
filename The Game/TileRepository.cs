@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,15 +23,15 @@ public class TileRepository : GameDataBase
         string query = @"
                     SELECT TileObject.*
                     FROM TileObject
-                    WHERE RootGridX = @RootGridX
-                      AND RootGridY = @RootGridY";
+                    WHERE GridX = @GridX
+                      AND GridY = @GridY";
         using (var connection = new SqliteConnection(new GameDataBase().connectionString))
         {
             connection.Open();
             using (var cmd = new SqliteCommand(query, connection)) // Fixed to SqliteCommand
             {
-                cmd.Parameters.AddWithValue("@RootGridX", gridX);
-                cmd.Parameters.AddWithValue("@RootGridY", gridY);
+                cmd.Parameters.AddWithValue("@GridX", gridX);
+                cmd.Parameters.AddWithValue("@GridY", gridY);
                 using (var reader = cmd.ExecuteReader()) // Fixed to SqliteDataReader if needed, but works
                 {
                     int x = 0;
@@ -58,10 +58,10 @@ public class TileRepository : GameDataBase
         List<TileObject> result = new List<TileObject>();
 
         string query = @"
-        SELECT TileObject.*
+        SELECT TileObject *
         FROM TileObject
-        WHERE RootGridX = @RootGridX
-          AND RootGridY = @RootGridY";
+        WHERE GridX = @GridX
+          AND GridY = @GridY";
 
         using (var connection = new SqliteConnection(new GameDataBase().connectionString))
         {
@@ -69,8 +69,8 @@ public class TileRepository : GameDataBase
 
             using (var cmd = new SqliteCommand(query, connection))
             {
-                cmd.Parameters.AddWithValue("@RootGridX", gridX);
-                cmd.Parameters.AddWithValue("@RootGridY", gridY);
+                cmd.Parameters.AddWithValue("@GridX", gridX);
+                cmd.Parameters.AddWithValue("@GridY", gridY);
 
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
@@ -93,7 +93,7 @@ public class TileRepository : GameDataBase
     }
     public static TileObject Query(object criteria)
     {
-        if (criteria == null) // Null check
+        if (criteria == null)
         {
             BugHunter.Log(
                 DebugType.TILEPROCESSING,
@@ -112,7 +112,7 @@ public class TileRepository : GameDataBase
             if (value != null)
             {
                 string columnName = prop.Name;
-                whereClauses.Add($"{columnName} = @{columnName}");
+                whereClauses.Add($"TileObject.{columnName} = @{columnName}");
                 parameters.Add(new SqliteParameter($"@{columnName}", value));
             }
         }
@@ -121,40 +121,55 @@ public class TileRepository : GameDataBase
         {
             BugHunter.Log(
                 DebugType.TILEPROCESSING,
-                $"Failure to fill whereClases | Exception: {nameof(ArgumentNullException)}",
+                $"Failure to fill whereClauses | Exception: {nameof(ArgumentNullException)}",
                 DebugLogSeverity.FATAL
             );
         }
 
         string whereClause = string.Join(" AND ", whereClauses);
         string query = $@"
-            SELECT TileObject.* 
-            FROM TileObject 
-            LEFT JOIN DescriptionEntry ON TileObject.TileID = DescriptionEntry.TypeID 
-            AND DescriptionEntry.DescriptionType = 'Tile'
-            LEFT JOIN TileComponents ON TileObject.TileID = TileComponents.TileID
-            LEFT JOIN TileProperties ON TileObject.TileID = TileProperties.TileID
-            WHERE {whereClause} 
+            SELECT TileObject.*
+            FROM TileObject
+            WHERE {whereClause}
             LIMIT 1";
+
+        TileObject? tile = null;
 
         using (var connection = new SqliteConnection(new GameDataBase().connectionString))
         {
             connection.Open();
-            using (var cmd = new SqliteCommand(query, connection)) // Fixed to SqliteCommand
+
+            // 1. Load the main tile row
+            using (var cmd = new SqliteCommand(query, connection))
             {
                 cmd.Parameters.AddRange(parameters.ToArray());
-                using (var reader = cmd.ExecuteReader()) // Fixed to SqliteDataReader if needed, but works
+                using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        return GameDataBaseReader.MapToTileObject(reader);
+                        tile = GameDataBaseReader.MapToTileObject(reader);
                     }
                 }
-
             }
-        } // Connection auto-closes/disposes here
 
-        return null;
+            if (tile == null) return null;
+
+            // 2. Load components from the separate TileComponents table
+            string compQuery = "SELECT * FROM TileComponents WHERE TileID = @TileID";
+            using (var compCmd = new SqliteCommand(compQuery, connection))
+            {
+                compCmd.Parameters.AddWithValue("@TileID", tile.TileId);
+                using (var reader = compCmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        tile.Components.Add(GameDataBaseReader.MapToComponents(reader));
+                    }
+                }
+            }
+        }
+
+        return tile;
     }
     public static async Task<TileObject?> QueryAsync(object criteria, CancellationToken ct = default)
     {
@@ -333,19 +348,22 @@ public class TileRepository : GameDataBase
             foreach (var tile in tiles)
             {
                 currentTile = tile;
-                // 1. Insert Main Tile
-                int newTileId = InsertMainTile(currentTile, connection, transaction);
+                // 1. Insert Main Tile (UPSERT)
+                int tileId = InsertMainTile(currentTile, connection, transaction);
 
-                // 2. Insert Components
-                InsertComponents(newTileId, currentTile.Components, connection, transaction);
+                // 2. Clear existing child records to prevent duplication bloat
+                DeleteExistingTileChildren(tileId, connection, transaction);
 
-                // 3. Insert Properties
-                InsertProperties(newTileId, currentTile.Properties, connection, transaction);
+                // 3. Insert fresh Components
+                InsertComponents(tileId, currentTile.Components, connection, transaction);
 
-                // 4. Insert Descriptions
+                // 4. Insert fresh Properties
+                InsertProperties(tileId, currentTile.Properties, connection, transaction);
+
+                // 5. Insert fresh Descriptions
                 if (currentTile.Description != null && currentTile.Description.Count > 0)
                 {
-                    DescriptionRepository.InsertDescriptions(newTileId, "Tile", currentTile.Description, connection, transaction);
+                    DescriptionRepository.InsertDescriptions(tileId, "Tile", currentTile.Description, connection, transaction);
                 }
 
             }
@@ -360,7 +378,7 @@ public class TileRepository : GameDataBase
             transaction.Rollback();
 
             string tileInfo = currentTile != null
-                ? $"{currentTile.BaseRender.CharData.MainChar} at ({currentTile.RootGridX},{currentTile.RootGridY},{currentTile.RootLocalX},{currentTile.RootLocalY})"
+                ? $"{currentTile.BaseRender.CharData.MainChar} at ({currentTile.GridX},{currentTile.GridY},{currentTile.LocalX},{currentTile.LocalY})"
                 : "Unknown";
 
             BugHunter.Log(
@@ -374,59 +392,85 @@ public class TileRepository : GameDataBase
     private int InsertMainTile(TileObject tile, SqliteConnection connection, SqliteTransaction transaction)
     {
         string sql = @"
-            INSERT OR REPLACE INTO TileObject (RootGridX, RootGridY, RootLocalX, RootLocalY, TileType, BaseRender)
-            VALUES (@RootGridX, @RootGridY, @RootLocalX, @RootLocalY, @TileType, @BaseRender);
-            SELECT last_insert_rowid();";
+        INSERT INTO TileObject (GridX, GridY, LocalX, LocalY, TileType, BaseRender)
+        VALUES (@GridX, @GridY, @LocalX, @LocalY, @TileType, @BaseRender)
+        ON CONFLICT(GridX, GridY, LocalX, LocalY) DO UPDATE SET
+            TileType   = excluded.TileType,
+            BaseRender = excluded.BaseRender;";
 
         using (var command = new SqliteCommand(sql, connection, transaction))
         {
-            // 1. Map scalar properties
-            command.Parameters.AddWithValue(@"RootGridX", tile.RootGridX);
-            command.Parameters.AddWithValue(@"RootGridY", tile.RootGridY);
-            command.Parameters.AddWithValue(@"RootLocalX", tile.RootLocalX);
-            command.Parameters.AddWithValue(@"RootLocalY", tile.RootLocalY);
+            command.Parameters.AddWithValue(@"GridX", tile.GridX);
+            command.Parameters.AddWithValue(@"GridY", tile.GridY);
+            command.Parameters.AddWithValue(@"LocalX", tile.LocalX);
+            command.Parameters.AddWithValue(@"LocalY", tile.LocalY);
             command.Parameters.AddWithValue(@"TileType", tile.TileType.ToString());
-
-            // 2. Map the Metadata (JSON BLOB)
-            // Convert the C# object back to a UTF-8 byte array (the BLOB format)
 
             byte[] jsonString = JsonLoader.SerializeJsonBlob<TileRenderProfile>(tile.BaseRender);
             command.Parameters.AddWithValue(@"BaseRender", jsonString);
 
-            object result = command.ExecuteScalar();
+            command.ExecuteNonQuery();
+        }
+
+        // Directly query for the ID to be 100% robust against edge cases with last_insert_rowid() during UPSERT
+        string idSql = "SELECT TileID FROM TileObject WHERE GridX=@GridX AND GridY=@GridY AND LocalX=@LocalX AND LocalY=@LocalY;";
+        using (var idCmd = new SqliteCommand(idSql, connection, transaction))
+        {
+            idCmd.Parameters.AddWithValue("@GridX", tile.GridX);
+            idCmd.Parameters.AddWithValue("@GridY", tile.GridY);
+            idCmd.Parameters.AddWithValue("@LocalX", tile.LocalX);
+            idCmd.Parameters.AddWithValue("@LocalY", tile.LocalY);
+
+            object result = idCmd.ExecuteScalar();
             if (result == null || result == DBNull.Value)
             {
-                BugHunter.Log(DebugType.TILEREPOSITORY, new InvalidOperationException("Failed to get last insert ID"), DebugLogSeverity.FATAL);
+                BugHunter.Log(DebugType.TILEREPOSITORY, new InvalidOperationException("Failed to retrieve TileID after upsert"), DebugLogSeverity.FATAL);
+                return -1;
             }
-            
-            long newId = (long)result;
-            return (int)newId;
+
+            return (int)(long)result;
+        }
+    }
+
+    private void DeleteExistingTileChildren(int tileId, SqliteConnection connection, SqliteTransaction transaction)
+    {
+        // Clear components and properties. Descriptions are handled in DescriptionRepository.InsertDescriptions
+        using (var cmd1 = new SqliteCommand("DELETE FROM TileComponents WHERE TileID = @TileID", connection, transaction))
+        {
+            cmd1.Parameters.AddWithValue("@TileID", tileId);
+            cmd1.ExecuteNonQuery();
+        }
+
+        using (var cmd2 = new SqliteCommand("DELETE FROM TileProperties WHERE TileID = @TileID", connection, transaction))
+        {
+            cmd2.Parameters.AddWithValue("@TileID", tileId);
+            cmd2.ExecuteNonQuery();
         }
     }
     private void InsertComponents(int tileId, List<TileComponents> components, SqliteConnection connection, SqliteTransaction transaction)
-    { 
-        string sql = @"
-        INSERT INTO TileComponents (TileID, ComponentTypeName, SerializedData)
+    {
+        const string sql = @"
+        INSERT INTO TileComponents (TileID, TypeName, Data)
         VALUES (@TileID, @TypeName, @Data);";
 
-        using (var command = new SqliteCommand(sql, connection, transaction))
+        using var command = new SqliteCommand(sql, connection, transaction);
+        command.Parameters.Add("@TileID", SqliteType.Integer);
+        command.Parameters.Add("@TypeName", SqliteType.Text);
+        command.Parameters.Add("@Data", SqliteType.Blob);
+
+        foreach (var component in components)
         {
-            command.Parameters.Add("@TileID", SqliteType.Integer);
-            command.Parameters.Add("@TypeName", SqliteType.Text);
-            command.Parameters.Add("@Data", SqliteType.Blob);
+            if (component?.TileComponent == null)
+                continue;
+            TileComponent comp = component.TileComponent;
+            Type runtimeType = comp.GetType();
+            byte[] componentData = JsonLoader.SerializeJsonBlob(comp, runtimeType);
 
-            foreach (var component in components)
-            {
-                if (component.TileComponent == null) continue;
+            command.Parameters["@TileID"].Value = tileId;
+            command.Parameters["@TypeName"].Value = component.TileComponent.GetType().Name;
+            command.Parameters["@Data"].Value = componentData;
 
-                byte[] componentData = JsonLoader.SerializeJsonBlob(component.TileComponent);
-
-                command.Parameters["@TileID"].Value = tileId;
-                command.Parameters["@TypeName"].Value = component.TileComponent.GetType().Name;
-                command.Parameters["@Data"].Value = (object)componentData ?? DBNull.Value;
-
-                command.ExecuteNonQuery();
-            }
+            command.ExecuteNonQuery();
         }
     }
     private void InsertProperties(int tileId, List<TileProperties> properties, SqliteConnection connection, SqliteTransaction transaction)

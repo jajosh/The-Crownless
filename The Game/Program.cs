@@ -27,7 +27,7 @@ namespace The_Game
 
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            BugHunter.Log(DebugType.INIT, "Application is starting", DebugLogSeverity.DEBUG);
+            BugHunter.Log(DebugType.INIT, "Application is starting", DebugLogSeverity.telemetry);
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }

@@ -1,38 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using Microsoft.Data.Sqlite;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
 
 public class GameDataBaseReader
 {
-    public static TileObject MapToTileObject(SqliteDataReader reader)
+    public static LocationObject MapToLocationObject (SqliteDataReader reader)
     {
-        // Manually map columns to properties; for simplicity, assuming column names match property names
-        var tile = new TileObject
+        var Location = new LocationObject
         {
-            TileId = reader.GetInt32(reader.GetOrdinal("TileID")),
-            RootGridX = reader.GetInt32(reader.GetOrdinal("RootGridX")),
-            RootGridY = reader.GetInt32(reader.GetOrdinal("RootGridY")),
-            RootLocalX = reader.GetInt32(reader.GetOrdinal("RootLocalX")),
-            RootLocalY = reader.GetInt32(reader.GetOrdinal("RootLocalY")),
-            TileType = (TileTypes)Enum.Parse(typeof(TileTypes), reader.GetString(reader.GetOrdinal("TileType")), ignoreCase: true),
+            Type = (LocationType)Enum.Parse(typeof(LocationType), reader.GetString(reader.GetOrdinal("Type")), ignoreCase: true),
+            ID = reader.GetInt32(reader.GetOrdinal("ID")),
+            Name = reader.GetString(reader.GetOrdinal("Name")),
+            LocationMap = new List<GridObject>()
         };
-
-        // --- Json Blob Mapping ---
-        tile.BaseRender = JsonLoader.DescerializeJsonBlob<TileRenderProfile>(reader, "BaseRender") ?? tile.BaseRender;
-
-        // TriggerActions might not exist in the table yet, so we check if the column exists
-        int triggerOrdinal = -1;
-        try { triggerOrdinal = reader.GetOrdinal("TriggerActions"); } catch { }
-        if (triggerOrdinal != -1)
-        {
-            tile.TriggerActions = JsonLoader.DescerializeJsonBlob<List<TileTriggerActions>>(reader, "TriggerActions") ?? tile.TriggerActions;
-        }
-        
-        return tile;
+        return Location;
     }
-
     public static GridObject MapToGridObject(SqliteDataReader reader)
     {
         // Manually map columns to properties; for simplicity, assuming column names match property names
@@ -43,18 +28,46 @@ public class GameDataBaseReader
             GridY = reader.GetInt32(reader.GetOrdinal("GridY")),
             Biome = Enum.Parse<GridBiomeType>(reader.GetString(reader.GetOrdinal("Biome")), ignoreCase: true),
             SubBiome = Enum.Parse<GridBiomeSubType>(reader.GetString(reader.GetOrdinal("SubBiome")), ignoreCase: true),
-            RandomEventChance = reader.GetInt32(reader.GetOrdinal("RandomEventChance"))
+            RandomEventChance = reader.GetInt32(reader.GetOrdinal("RandomEventChance")),
+            GridMap = new List<TileObject>()
         };
 
         // --- Json Blob Mapping ---
-        grid.GridMapKey = JsonLoader.DescerializeJsonBlob<List<string>>(reader, "GridMapKey") ?? grid.GridMapKey;
+        grid.GridMapKey = JsonLoader.DeserializeJsonBlob<List<string>>(reader, "GridMapKey") ?? grid.GridMapKey;
 
         return grid;
+    }
+    public static TileObject MapToTileObject(SqliteDataReader reader)
+    {
+        // Manually map columns to properties; for simplicity, assuming column names match property names
+        var tile = new TileObject
+        {
+            TileId = reader.GetInt32(reader.GetOrdinal("TileID")),
+            GridX = reader.GetInt32(reader.GetOrdinal("GridX")),
+            GridY = reader.GetInt32(reader.GetOrdinal("GridY")),
+            LocalX = reader.GetInt32(reader.GetOrdinal("LocalX")),
+            LocalY = reader.GetInt32(reader.GetOrdinal("LocalY")),
+            TileType = (TileTypes)Enum.Parse(typeof(TileTypes), reader.GetString(reader.GetOrdinal("TileType")), ignoreCase: true),
+        };
+
+        // --- Json Blob Mapping ---
+        tile.BaseRender = JsonLoader.DeserializeJsonBlob<TileRenderProfile>(reader, "BaseRender") ?? tile.BaseRender;
+
+        // TriggerActions might not exist in the table yet, so we check if the column exists
+        int triggerOrdinal = -1;
+        try { triggerOrdinal = reader.GetOrdinal("TriggerActions"); } catch { }
+        if (triggerOrdinal != -1)
+        {
+            tile.TriggerActions = JsonLoader.DeserializeJsonBlob<List<TileTriggerActions>>(reader, "TriggerActions") ?? tile.TriggerActions;
+        }
+        
+        return tile;
     }
 
     public static TileComponents MapToComponents(SqliteDataReader reader)
     {
-        string? typeName = reader.IsDBNull(reader.GetOrdinal("ComponentTypeName")) ? null : reader.GetString(reader.GetOrdinal("ComponentTypeName"));
+        // DB column is "TypeName" (not "ComponentTypeName") and "Data" (not "SerializedData")
+        string? typeName = reader.IsDBNull(reader.GetOrdinal("TypeName")) ? null : reader.GetString(reader.GetOrdinal("TypeName"));
         int tileId = reader.GetInt32(reader.GetOrdinal("TileID"));
 
         var result = new TileComponents
@@ -65,21 +78,22 @@ public class GameDataBaseReader
 
         if (!string.IsNullOrEmpty(typeName))
         {
+            
             result.TileComponent = typeName switch
             {
-                "IsRoofedComponent" => JsonLoader.DescerializeJsonBlob<IsRoofedComponent>(reader, "SerializedData"),
-                "CuttablePlantComponent" => JsonLoader.DescerializeJsonBlob<CuttablePlantComponent>(reader, "SerializedData"),
-                "HarvestablePlantComponent" => JsonLoader.DescerializeJsonBlob<HarvestablePlantComponent>(reader, "SerializedData"),
-                "TileInventoryComponent" => JsonLoader.DescerializeJsonBlob<TileInventoryComponent>(reader, "SerializedData"),
-                "IsFlammableComponent" => JsonLoader.DescerializeJsonBlob<IsFlammableComponent>(reader, "SerializedData"),
-                "IsWalkableComponent" => JsonLoader.DescerializeJsonBlob<IsWalkableComponent>(reader, "SerializedData"),
-                "CoverComponent" => JsonLoader.DescerializeJsonBlob<CoverComponent>(reader, "SerializedData"),
-                "DestructibleComponent" => JsonLoader.DescerializeJsonBlob<DestructibleComponent>(reader, "SerializedData"),
-                "OpenableComonent" => JsonLoader.DescerializeJsonBlob<OpenableComonent>(reader, "SerializedData"),
-                "ChestComponent" => JsonLoader.DescerializeJsonBlob<ChestComponent>(reader, "SerializedData"),
-                "TrapComponent" => JsonLoader.DescerializeJsonBlob<TrapComponent>(reader, "SerializedData"),
-                "Respawnable" => JsonLoader.DescerializeJsonBlob<Respawnable>(reader, "SerializedData"),
-                "TiledEffectComponent" => JsonLoader.DescerializeJsonBlob<TiledEffectComponent>(reader, "SerializedData"),
+                "IsRoofedComponent"          => JsonLoader.DeserializeJsonBlob<IsRoofedComponent>(reader, "Data"),
+                "CuttablePlantComponent"     => JsonLoader.DeserializeJsonBlob<CuttablePlantComponent>(reader, "Data"),
+                "HarvestablePlantComponent"  => JsonLoader.DeserializeJsonBlob<HarvestablePlantComponent>(reader, "Data"),
+                "TileInventoryComponent"     => JsonLoader.DeserializeJsonBlob<TileInventoryComponent>(reader, "Data"),
+                "IsFlammableComponent"       => JsonLoader.DeserializeJsonBlob<IsFlammableComponent>(reader, "Data"),
+                "IsWalkableComponent"        => JsonLoader.DeserializeJsonBlob<IsWalkableComponent>(reader, "Data"),
+                "CoverComponent"             => JsonLoader.DeserializeJsonBlob<CoverComponent>(reader, "Data"),
+                "DestructibleComponent"      => JsonLoader.DeserializeJsonBlob<DestructibleComponent>(reader, "Data"),
+                "OpenableComponent"           => JsonLoader.DeserializeJsonBlob<OpenableComonent>(reader, "Data"),
+                "ChestComponent"             => JsonLoader.DeserializeJsonBlob<ChestComponent>(reader, "Data"),
+                "TrapComponent"              => JsonLoader.DeserializeJsonBlob<TrapComponent>(reader, "Data"),
+                "Respawnable"                => JsonLoader.DeserializeJsonBlob<Respawnable>(reader, "Data"),
+                "TiledEffectComponent"       => JsonLoader.DeserializeJsonBlob<TiledEffectComponent>(reader, "Data"),
                 _ => null
             };
         }

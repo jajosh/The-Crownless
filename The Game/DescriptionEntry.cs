@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.Logging;
+using Microsoft.VisualBasic.Logging;
 using System.Text.Json;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -116,7 +116,7 @@ public record DescriptionEntry
         TileObject? tile = null;
         try
         {
-            tile = TileRepository.Query(new { RootGridX = player.Root.GridX, RootGridY = player.Root.GridY, RootLocalX = player.Root.LocalX, RootLocalY = player.Root.LocalY });
+            tile = TileRepository.Query(new { GridX = player.Root.GridX, GridY = player.Root.GridY, LocalX = player.Root.LocalX, LocalY = player.Root.LocalY });
         }
         catch (Exception ex)
         {
@@ -177,10 +177,10 @@ public record DescriptionEntry
             // Assuming your repository has an Async version of Query
             tile = await TileRepository.QueryAsync(new
             {
-                RootGridX = player.Root.GridX,
-                RootGridY = player.Root.GridY,
-                RootLocalX = player.Root.LocalX,
-                RootLocalY = player.Root.LocalY
+                GridX = player.Root.GridX,
+                GridY = player.Root.GridY,
+                LocalX = player.Root.LocalX,
+                LocalY = player.Root.LocalY
             }, ct);
         }
         catch (OperationCanceledException)

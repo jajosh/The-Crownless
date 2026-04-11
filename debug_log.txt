@@ -1,0 +1,109 @@
+4/8/2026 11:40:42 PM: GameDataBase initialized successfully.
+4/8/2026 11:40:42 PM: BeeperManager created successfully.
+4/8/2026 11:40:42 PM: FileManager created successfully.
+4/8/2026 11:40:42 PM: NPCManager created successfully.
+4/8/2026 11:40:42 PM: PlayerManager created successfully.
+4/8/2026 11:40:42 PM: TileProcessorManager created successfully.
+23:40:42.042 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/TriggerCoordinates.json
+23:40:42.058 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Config/config.json
+23:40:42.068 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/RandomEnvironmentalDialog.json
+23:40:42.075 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Config\config.json
+23:40:42.088 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\TriggerCoordinates.json
+23:40:42.122 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\RandomEnvironmentalDialog.json
+23:40:42.545 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:40:42.552 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:40:42.576 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:40:42.587 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:40:42.591 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:40:42.663 [T:02] [TILEPROCESSING    ] | [FATAL   ] | FATAL: Database Save Failed. All changes rolled back. Failed on Tile: F at (0,0,0,24) | Error: SQLite Error 1: 'no such table: main.'.
+23:40:42.668 [T:02] [GRIDPROCESSING    ] | [DEBUG   ] | Total grids in the gridKey = 4
+23:40:42.672 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:40:42.687 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:40:42 PM: MapManager created successfully.
+23:40:42.702 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:40:42.711 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:40:42 PM: NPCTypeManager created successfully.
+4/8/2026 11:40:42 PM: GameEngine created successfully.
+23:40:43.116 [T:02] [LOG               ] | [DEBUG   ] | 2 
+4/8/2026 11:42:30 PM: GameDataBase initialized successfully.
+4/8/2026 11:42:30 PM: BeeperManager created successfully.
+4/8/2026 11:42:30 PM: FileManager created successfully.
+4/8/2026 11:42:30 PM: NPCManager created successfully.
+4/8/2026 11:42:30 PM: PlayerManager created successfully.
+4/8/2026 11:42:30 PM: TileProcessorManager created successfully.
+23:42:30.372 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/TriggerCoordinates.json
+23:42:30.393 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Config/config.json
+23:42:30.403 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/RandomEnvironmentalDialog.json
+23:42:30.417 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Config\config.json
+23:42:30.456 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\TriggerCoordinates.json
+23:42:30.488 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\RandomEnvironmentalDialog.json
+23:42:30.956 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:42:30.959 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:42:30.965 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:42:30.993 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:42:30.996 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:42:31.097 [T:02] [TILEPROCESSING    ] | [FATAL   ] | FATAL: Database Save Failed. All changes rolled back. Failed on Tile: F at (0,0,0,24) | Error: SQLite Error 1: 'no such table: main.'.
+23:42:31.101 [T:02] [GRIDPROCESSING    ] | [DEBUG   ] | Total grids in the gridKey = 4
+23:42:31.108 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:42:31.119 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:42:31 PM: MapManager created successfully.
+23:42:31.133 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:42:31.143 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:42:31 PM: NPCTypeManager created successfully.
+4/8/2026 11:42:31 PM: GameEngine created successfully.
+23:42:31.534 [T:02] [LOG               ] | [DEBUG   ] | 2 
+4/8/2026 11:44:12 PM: GameDataBase initialized successfully.
+4/8/2026 11:44:12 PM: BeeperManager created successfully.
+4/8/2026 11:44:12 PM: FileManager created successfully.
+4/8/2026 11:44:12 PM: NPCManager created successfully.
+4/8/2026 11:44:12 PM: PlayerManager created successfully.
+4/8/2026 11:44:12 PM: TileProcessorManager created successfully.
+23:44:12.638 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/TriggerCoordinates.json
+23:44:12.655 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Config/config.json
+23:44:12.669 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/RandomEnvironmentalDialog.json
+23:44:12.684 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Config\config.json
+23:44:12.694 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\TriggerCoordinates.json
+23:44:12.715 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\RandomEnvironmentalDialog.json
+23:44:13.173 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:44:13.176 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:44:13.179 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:44:13.201 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:44:13.205 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:44:13.268 [T:02] [TILEPROCESSING    ] | [FATAL   ] | FATAL: Database Save Failed. All changes rolled back. Failed on Tile: F at (0,0,0,24) | Error: SQLite Error 1: 'no such table: main.'.
+23:44:13.271 [T:02] [GRIDPROCESSING    ] | [DEBUG   ] | Total grids in the gridKey = 4
+23:44:13.277 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:44:13.291 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:44:13 PM: MapManager created successfully.
+23:44:13.303 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:44:13.314 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:44:13 PM: NPCTypeManager created successfully.
+4/8/2026 11:44:13 PM: GameEngine created successfully.
+23:44:13.617 [T:02] [LOG               ] | [DEBUG   ] | 2 
+4/8/2026 11:53:35 PM: GameDataBase initialized successfully.
+4/8/2026 11:53:35 PM: BeeperManager created successfully.
+4/8/2026 11:53:35 PM: FileManager created successfully.
+4/8/2026 11:53:35 PM: NPCManager created successfully.
+4/8/2026 11:53:35 PM: PlayerManager created successfully.
+4/8/2026 11:53:35 PM: TileProcessorManager created successfully.
+23:53:35.105 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/TriggerCoordinates.json
+23:53:35.121 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Config/config.json
+23:53:35.127 [T:02] [GAMEFILE          ] | [WARN    ] | Source missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\Data/RandomEnvironmentalDialog.json
+23:53:35.141 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Config\config.json
+23:53:35.157 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\TriggerCoordinates.json
+23:53:35.181 [T:02] [GAMEFILE          ] | [WARN    ] | Folder missing: C:\Users\jajos\source\repos\ConsoleApp1\The Game\bin\Debug\net10.0-windows7.0\Data\RandomEnvironmentalDialog.json
+23:53:35.626 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:53:35.631 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:53:35.635 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ć' (expected OnĆ)
+23:53:35.654 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:53:35.657 [T:02] [TILEPROCESSING    ] | [WARN    ] | No handler found for letter 'Ĕ' (expected OnĔ)
+23:53:36.910 [T:02] [GRIDPROCESSING    ] | [DEBUG   ] | Total grids in the gridKey = 4
+23:53:36.913 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:53:36.924 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+23:53:36.930 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:53:36 PM: MapManager created successfully.
+23:53:36.940 [T:02] [GRIDREPOSITORY    ] | [DEBUG   ] | currentGrid location ID = 1
+4/8/2026 11:53:37 PM: NPCTypeManager created successfully.
+4/8/2026 11:53:37 PM: GameEngine created successfully.
+23:53:37.282 [T:02] [LOG               ] | [DEBUG   ] | 2 
+23:54:03.459 [T:02] [LOG               ] | [DEBUG   ] | 2 
+23:54:04.278 [T:02] [LOG               ] | [DEBUG   ] | 2 

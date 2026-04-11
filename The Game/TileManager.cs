@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 
 public class TileManager : ITileEngine
@@ -133,7 +133,7 @@ public class TileManager : ITileEngine
 
             // Clear after processing
             tile.DeferredChecks.Clear();
-            // BugHunter.Log(DebugType.LOG, $" | Tile Processed {tile.BaseRender.CharData.MainChar}, {tile.RootGridX},{tile.RootGridY},{tile.RootLocalX},{tile.RootLocalY}) | ", DebugLogSeverity.telemetry);
+            // BugHunter.Log(DebugType.LOG, $" | Tile Processed {tile.BaseRender.CharData.MainChar}, {tile.GridX},{tile.GridY},{tile.LocalX},{tile.LocalY}) | ", DebugLogSeverity.telemetry);
         }
         BugHunter.Log(DebugType.GENERICPROCESSING, "Tiles have been processed, starting SQL Transfer...", DebugLogSeverity.telemetry);
         TileRepository repository = new TileRepository();
@@ -189,5 +189,42 @@ public class TileManager : ITileEngine
             Root = new RootComponent(gridX, gridY, LocalX, LocalY),
             TileType = TileTypes.empty,
         };
+    }
+    public static ICharacter TileStateUpdater(ICharacter character, TileObject tile)
+    {
+        foreach (TileComponents component in tile.Components)
+        {
+            switch (component.ComponentTypeName)
+            {
+                case "IsRoofedComponent":
+
+                    break;
+                case "CuttablePlantComponent":
+                    break;
+                case "HarvestablePlantComponent":
+                    break;
+                case "TileInventoryComponent":
+                    break;
+                case "IsFlammableComponent":
+                    break;
+                case "IsWalkableComponent":
+                    break;
+                case "CoverComponent":
+                    break;
+                case "DestructibleComponent":
+                    break;
+                case "OpenableComonent":
+                    break;
+                case "ChestComponent":
+                    break;
+                case "TrapComponent":
+                    break;
+                case "Respawnable":
+                    break;
+                case "TiledEffectComponent":
+                    break;
+            }
+        }
+        return character;
     }
 }

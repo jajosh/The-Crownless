@@ -3,13 +3,18 @@ using WindowsFormsApp1;
 using Newtonsoft.Json;
 using MyGame.Controls;
 
-public interface ICharacter : ISkills, IActor, IActionable, IInventory 
+public interface ICharacter : ISkills, IActor, IActionable, IInventory, ITileOccupant
 { }
-public interface IActionable
+public interface ITileOccupant
+{
+    string Name { get; }
+    RootComponent Root { get; set; }
+    TileRenderProfile Render { get; set; }
+    HealthComponent Health { get; set; }
+}
+public interface IActionable : ITileOccupant
 {
     // ─── Identity ───────────────────────────────────────────────
-    string Name { get; set; }
-    TileRenderProfile Render { get; set; }
     RaceComponent Race { get; set; }
 
     // ─── Components ─────────────────────────────────────────────

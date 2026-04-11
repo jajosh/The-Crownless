@@ -9,12 +9,19 @@ public enum DebugLogSeverity // The severity of the message being sent.
 {
 
     telemetry = 0, // 4D0D11 → RGB(77, 13, 17)
+    // Telemetry data
     FILESINK = 1, // 7A2B00 → RGB(122, 43, 0)
+    // Data related to files 
     INFO = 2, // 23684C → RGB(35, 104, 76)
+    // Worthy of note but not of importance
     DEBUG = 3, // 0A1D6D → RGB(10, 29, 109)
+    // Relanvant to potential issues
     WARN = 4, // A39B6D → RGB(163, 155, 109)
+    // Likely an issue
     ERROR = 5, // FCBD81 → RGB(252, 189, 129)
+    // Issue, needs to be addressed but not game breaking
     FATAL = 6, // EBEDC9 → RGB(235, 237, 201)
+    // Game breaking, needs to be addressed
 }
 public enum DebugType
 {
@@ -119,8 +126,9 @@ public static class BugHunter
         Task.Factory.StartNew(ProcessLogs, TaskCreationOptions.LongRunning);
     }
 
-    public static void Log(DebugType type, string message, DebugLogSeverity severity = DebugLogSeverity.INFO)
+    public static void Log(DebugType type, string message, DebugLogSeverity severity = DebugLogSeverity.INFO, bool Private = true)
     {
+        // Private is for the future when i want to print these out to the player
         _logQueue.Add(new DebugMessage(type, message, severity));
     }
 

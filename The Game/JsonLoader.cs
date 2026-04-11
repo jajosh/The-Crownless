@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -43,47 +43,34 @@ public static class JsonLoader
             WriteIndented = true,
             ReferenceHandler = ReferenceHandler.Preserve, // Handles circular references if any
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase), new ColorJsonConverter() }// 👈 this lets enum keys serialize as strings
+           
         };
         
         string json = JsonSerializer.Serialize(obj, options);
         File.WriteAllText(filePath, json);
     }
-    public static T DescerializeJsonBlob<T>(SqliteDataReader reader, string columnName)
+    public static T? DeserializeJsonBlob<T>(SqliteDataReader reader, string columnName)
     {
-        // 1. Get the column index
         int ordinal = reader.GetOrdinal(columnName);
 
-        // 2. Read the BLOB data as a raw byte array
         if (reader.IsDBNull(ordinal))
-        {
-            return default; // Handle null case if column is nullable
-        }
+            return default;
+
         byte[] jsonBytes = (byte[])reader[ordinal];
-
-        // 3. Decode the byte array into a string using UTF-8 encoding
-        string jsonString = Encoding.UTF8.GetString(jsonBytes);
-
-        // 4. Deserialize the JSON string int the target object type (T)
-        T result = JsonSerializer.Deserialize<T>(jsonString, Options);
-        return result;
+        return JsonSerializer.Deserialize<T>(jsonBytes, Options);
     }
-    public static byte[] SerializeJsonBlob<T>(T data)
+    public static byte[]? SerializeJsonBlob<T>(T data)
     {
-        // 1. Handle null input: If the object is null, we return null 
-        //    to represent a DB NULL value.
         if (data == null)
-        {
             return null;
-        }
 
-        // 2. Serialize the target object type (T) into a JSON string
-        //    Note: You can pass JsonSerializerOptions here if needed (e.g., camelCase)
-        string jsonString = JsonSerializer.Serialize<T>(data, Options);
-
-        // 3. Encode the JSON string into a raw byte array (BLOB) using UTF-8 encoding
-        byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonString);
-
-        // 4. Return the byte array, ready for SQLite insertion
-        return jsonBytes;
+        return JsonSerializer.SerializeToUtf8Bytes(data, Options);
     }
+    public static byte[]? SerializeJsonBlob(object? data, Type runtimeType)
+    {
+        if (data == null)
+            return null;
+        return JsonSerializer.SerializeToUtf8Bytes(data, runtimeType, Options);
+    }
+
 }
