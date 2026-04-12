@@ -9,68 +9,72 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using The_Game;
 
-public static class JsonLoader
+namespace The_Game
 {
-    private static readonly JsonSerializerOptions Options = new()
+    public static class JsonLoader
     {
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        PropertyNameCaseInsensitive = true,
-        WriteIndented = true
-    };
-    public static T LoadFromJson<T>(string filePath)
-    {
-        var options = new JsonSerializerOptions
+        private static readonly JsonSerializerOptions Options = new()
         {
-
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+                        new ActionObjectConverter()},
             PropertyNameCaseInsensitive = true,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase), new ColorJsonConverter() }
-
+            WriteIndented = true
         };
-
-        string json = File.ReadAllText(filePath);
-        return JsonSerializer.Deserialize<T>(json, options);
-    }
-    /// <summary>
-    /// Saves an object to json
-    /// </summary>
-    /// <typeparam name="T"> This is a placeholder for the actually object</typeparam>
-    /// <param name="filePath"> Path to the save location </param>
-    /// <param name="obj"> object to save</param>
-    public static void SaveToJson<T>(string filePath, T obj)
-    {
-        var options = new JsonSerializerOptions
+        public static T LoadFromJson<T>(string filePath)
         {
-            WriteIndented = true,
-            ReferenceHandler = ReferenceHandler.Preserve, // Handles circular references if any
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase), new ColorJsonConverter() }// 👈 this lets enum keys serialize as strings
-           
-        };
-        
-        string json = JsonSerializer.Serialize(obj, options);
-        File.WriteAllText(filePath, json);
-    }
-    public static T? DeserializeJsonBlob<T>(SqliteDataReader reader, string columnName)
-    {
-        int ordinal = reader.GetOrdinal(columnName);
+            var options = new JsonSerializerOptions
+            {
 
-        if (reader.IsDBNull(ordinal))
-            return default;
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase), new ColorJsonConverter() }
 
-        byte[] jsonBytes = (byte[])reader[ordinal];
-        return JsonSerializer.Deserialize<T>(jsonBytes, Options);
-    }
-    public static byte[]? SerializeJsonBlob<T>(T data)
-    {
-        if (data == null)
-            return null;
+            };
 
-        return JsonSerializer.SerializeToUtf8Bytes(data, Options);
-    }
-    public static byte[]? SerializeJsonBlob(object? data, Type runtimeType)
-    {
-        if (data == null)
-            return null;
-        return JsonSerializer.SerializeToUtf8Bytes(data, runtimeType, Options);
-    }
+            string json = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<T>(json, options);
+        }
+        /// <summary>
+        /// Saves an object to json
+        /// </summary>
+        /// <typeparam name="T"> This is a placeholder for the actually object</typeparam>
+        /// <param name="filePath"> Path to the save location </param>
+        /// <param name="obj"> object to save</param>
+        public static void SaveToJson<T>(string filePath, T obj)
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                ReferenceHandler = ReferenceHandler.Preserve, // Handles circular references if any
+                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase), new ColorJsonConverter() }// 👈 this lets enum keys serialize as strings
 
+            };
+
+            string json = JsonSerializer.Serialize(obj, options);
+            File.WriteAllText(filePath, json);
+        }
+        public static T? DeserializeJsonBlob<T>(SqliteDataReader reader, string columnName)
+        {
+            int ordinal = reader.GetOrdinal(columnName);
+
+            if (reader.IsDBNull(ordinal))
+                return default;
+
+            byte[] jsonBytes = (byte[])reader[ordinal];
+            return JsonSerializer.Deserialize<T>(jsonBytes, Options);
+        }
+        public static byte[]? SerializeJsonBlob<T>(T data)
+        {
+            if (data == null)
+                return null;
+
+            return JsonSerializer.SerializeToUtf8Bytes(data, Options);
+        }
+        public static byte[]? SerializeJsonBlob(object? data, Type runtimeType)
+        {
+            if (data == null)
+                return null;
+            return JsonSerializer.SerializeToUtf8Bytes(data, runtimeType, Options);
+        }
+
+    }
 }

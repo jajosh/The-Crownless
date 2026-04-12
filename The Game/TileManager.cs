@@ -1,6 +1,9 @@
 using System;
 using System.Reflection;
 
+namespace The_Game;
+
+
 public class TileManager : ITileEngine
 {
     public Random random = new Random();

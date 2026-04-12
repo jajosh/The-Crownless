@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+
+namespace The_Game;
+
 
 public class ItemManager
 {

@@ -1,6 +1,9 @@
-﻿
+
 using System;
 using System.Security.Cryptography.X509Certificates;
+
+namespace The_Game;
+
 public enum QuestStatus
 {
     Inactive,

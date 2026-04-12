@@ -1,6 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
+
+namespace The_Game;
+
 public enum CoinType
 {
     Copper,

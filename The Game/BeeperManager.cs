@@ -1,4 +1,7 @@
-﻿using System;
+using System;
+
+namespace The_Game;
+
 // The logic of the beeper
 public class BeeperManager : IBeeperEngine
 {

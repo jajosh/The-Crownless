@@ -1,7 +1,10 @@
-﻿using MyGame.Controls;
+using MyGame.Controls;
 using System;
 using System.Security.Cryptography.X509Certificates;
 using The_Game;
+
+namespace The_Game;
+
 
 public class MovementManager
 {

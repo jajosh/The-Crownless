@@ -1,4 +1,7 @@
-﻿using System;
+using System;
+
+namespace The_Game;
+
 
 public partial class TileProcessor
 {
@@ -11,91 +14,91 @@ public partial class TileProcessor
             { "&", TileProcessor.OnNPCSpawn },
             { "!", TileProcessor.OnQuestMarker },
             { "?", TileProcessor.OnQuestionMark },
-            { "♘", TileProcessor.OnKnightSpawn },
-            { "♖", TileProcessor.OnGuard },
-            { "€", TileProcessor.OnRandomEventSpawn },
-            { "ɤ", TileProcessor.OnPlantSpawn },
-            { "♥", TileProcessor.OnHeartSpawn },
-            { "♡", TileProcessor.OnHalfHeartSpawn },
-            { "♬", TileProcessor.OnSoundIndicator },
-            { "☠", TileProcessor.OnPhysicalTrap },
-            { "☢", TileProcessor.OnMagicTrap },
-            { "☣", TileProcessor.OnLogicTrap },
-            { "ÿ", TileProcessor.OnMarketStand },
+            { "?", TileProcessor.OnKnightSpawn },
+            { "?", TileProcessor.OnGuard },
+            { "�", TileProcessor.OnRandomEventSpawn },
+            { "?", TileProcessor.OnPlantSpawn },
+            { "?", TileProcessor.OnHeartSpawn },
+            { "?", TileProcessor.OnHalfHeartSpawn },
+            { "?", TileProcessor.OnSoundIndicator },
+            { "?", TileProcessor.OnPhysicalTrap },
+            { "?", TileProcessor.OnMagicTrap },
+            { "?", TileProcessor.OnLogicTrap },
+            { "�", TileProcessor.OnMarketStand },
             #endregion
 
             #region === Shops ===
-            { "⚔", TileProcessor.OnWeaponsShop },
-            { "⚒", TileProcessor.OnCraftingShop },
-            { "⛏", TileProcessor.OnRangerShop },
-            { "⛓", TileProcessor.OnMatieralShop },
+            { "?", TileProcessor.OnWeaponsShop },
+            { "?", TileProcessor.OnCraftingShop },
+            { "?", TileProcessor.OnRangerShop },
+            { "?", TileProcessor.OnMatieralShop },
             #endregion
 
             #region === Faction Related ===
-            { "♦", TileProcessor.OnFactionQuest },
+            { "?", TileProcessor.OnFactionQuest },
             #endregion
 
             #region === Terrain & Walkable Areas ===
             { ".", TileProcessor.OnPath },
             { ",", TileProcessor.OnGrass },
             { "'", TileProcessor.OnInsideWalkablePath },
-            { "…", TileProcessor.OnRoad },
-            { "♣", TileProcessor.OnTree },
-            { "♤", TileProcessor.OnDeadTree },
+            { "�", TileProcessor.OnRoad },
+            { "?", TileProcessor.OnTree },
+            { "?", TileProcessor.OnDeadTree },
             #endregion
             
             #region === Accent Pieces ===
-            { "◎", TileProcessor.OnFairyRing },
-            { "◉", TileProcessor.OnBullseye },
-            { "●", TileProcessor.OnSmallStone1 },
-            { "○", TileProcessor.OnSmallStone2 },
-            { "▫", TileProcessor.OnGroundDetail },
-            { "▪", TileProcessor.OnSmallStone3 },
+            { "?", TileProcessor.OnFairyRing },
+            { "?", TileProcessor.OnBullseye },
+            { "?", TileProcessor.OnSmallStone1 },
+            { "?", TileProcessor.OnSmallStone2 },
+            { "?", TileProcessor.OnGroundDetail },
+            { "?", TileProcessor.OnSmallStone3 },
             #endregion
 
             #region === Terrain & Non-Walkable Areas ===
-            { "▒", TileProcessor.OnImpassableTerrain },
+            { "�", TileProcessor.OnImpassableTerrain },
             { "f", TileProcessor.OnThickForest },
             { "F", TileProcessor.OnDenseForest },
-            { "■", TileProcessor.OnLargeStone },
-            { "□", TileProcessor.OnObstaclesgrid },
+            { "�", TileProcessor.OnLargeStone },
+            { "?", TileProcessor.OnObstaclesgrid },
             { "%", TileProcessor.OnBush },
             #endregion
 
             #region === Structures & Furnishings ===
-            { "˄", TileProcessor.OnTroughUpper },
-            { "˅", TileProcessor.OnTroughLower },
+            { "^", TileProcessor.OnTroughUpper },
+            { "?", TileProcessor.OnTroughLower },
             { "<", TileProcessor.OnFurnaceLeft },
             { ">", TileProcessor.OnFurnaceRight },
-            { "✎", TileProcessor.OnWritingDesk },
-            { "✏", TileProcessor.OnNote },
-            { "π", TileProcessor.OnCounter },
-            { "▭", TileProcessor.OnBed },
-            { "☩", TileProcessor.OnCross1 },
-            { "†", TileProcessor.OnCross2 },
-            { "‡", TileProcessor.OnReligiousSymbol },
-            { "ɦ", TileProcessor.OnPew },
-            { "⛬", TileProcessor.OnAlter},
-            { "▣", TileProcessor.OnChest },
-            { "⬜", TileProcessor.OnBarrel },
-            { "Ṡ", TileProcessor.OnSecretChest },
-            { "█", TileProcessor.OnContainer },
-            { "Ǒ", TileProcessor.OnWoodenPillar },
+            { "?", TileProcessor.OnWritingDesk },
+            { "?", TileProcessor.OnNote },
+            { "p", TileProcessor.OnCounter },
+            { "?", TileProcessor.OnBed },
+            { "?", TileProcessor.OnCross1 },
+            { "�", TileProcessor.OnCross2 },
+            { "�", TileProcessor.OnReligiousSymbol },
+            { "?", TileProcessor.OnPew },
+            { "?", TileProcessor.OnAlter},
+            { "?", TileProcessor.OnChest },
+            { "?", TileProcessor.OnBarrel },
+            { "?", TileProcessor.OnSecretChest },
+            { "�", TileProcessor.OnContainer },
+            { "O", TileProcessor.OnWoodenPillar },
 
             #endregion
             #region === Walls ===
-            // ┌, ┐, └, ┘, ─, │, ┼, ┬, ┴, ├, ┤  -> OnWallCharacter
-            { "┌", TileProcessor.OnWallCharacter },
-            { "┐", TileProcessor.OnWallCharacter },
-            { "└", TileProcessor.OnWallCharacter },
-            { "┘", TileProcessor.OnWallCharacter },
-            { "─", TileProcessor.OnWallCharacter },
-            { "│", TileProcessor.OnWallCharacter },
-            { "┼", TileProcessor.OnWallCharacter },
-            { "┬", TileProcessor.OnWallCharacter },
-            { "┴", TileProcessor.OnWallCharacter },
-            { "├", TileProcessor.OnWallCharacter },
-            { "┤", TileProcessor.OnWallCharacter },
+            // +, +, +, +, -, �, +, -, -, +, �  -> OnWallCharacter
+            { "+", TileProcessor.OnWallCharacter },
+            { "+", TileProcessor.OnWallCharacter },
+            { "+", TileProcessor.OnWallCharacter },
+            { "+", TileProcessor.OnWallCharacter },
+            { "-", TileProcessor.OnWallCharacter },
+            { "�", TileProcessor.OnWallCharacter },
+            { "+", TileProcessor.OnWallCharacter },
+            { "-", TileProcessor.OnWallCharacter },
+            { "-", TileProcessor.OnWallCharacter },
+            { "+", TileProcessor.OnWallCharacter },
+            { "�", TileProcessor.OnWallCharacter },
 
             // #, +, -, |, /, \, _  -> OnSpecialBuilders
             { "#", TileProcessor.OnSpecialBuilders },
@@ -109,33 +112,33 @@ public partial class TileProcessor
 
             #region === Doors & Entrances ===
             { "=", TileProcessor.OnDoor },
-            { "▶", TileProcessor.OnRightEntrance },
-            { "◀", TileProcessor.OnLeftEntrance },
+            { "?", TileProcessor.OnRightEntrance },
+            { "?", TileProcessor.OnLeftEntrance },
             #endregion
 
             #region === UI Decorations & Symbols ===
-            { "★", TileProcessor.OnSolidStar },
-            { "☆", TileProcessor.OnEmptyStar },
-            { "✓", TileProcessor.OnCheckMark1 },
-            { "✗", TileProcessor.OnCrossPatch1 },
-            { "✘", TileProcessor.OnCrossPatch2 },
-            { "✔", TileProcessor.OnCheckMark2 },
-            { "↑", TileProcessor.OnUpArrow1 },
-            { "↓", TileProcessor.OnDownArrow1 },
-            { "←", TileProcessor.OnLeftArrow1 },
-            { "→", TileProcessor.OnRightArrow1 },
-            { "↔", TileProcessor.OnSideSideArrow },
-            { "↕", TileProcessor.OnUpDownArrow },
-            { "⇦", TileProcessor.OnLeftArrow2 },
-            { "⇩", TileProcessor.OnDownArrow2 },
-            { "⇨", TileProcessor.OnRightArrow2 },
-            { "⇧", TileProcessor.OnUpArrow2 },
+            { "?", TileProcessor.OnSolidStar },
+            { "?", TileProcessor.OnEmptyStar },
+            { "?", TileProcessor.OnCheckMark1 },
+            { "?", TileProcessor.OnCrossPatch1 },
+            { "?", TileProcessor.OnCrossPatch2 },
+            { "?", TileProcessor.OnCheckMark2 },
+            { "?", TileProcessor.OnUpArrow1 },
+            { "?", TileProcessor.OnDownArrow1 },
+            { "?", TileProcessor.OnLeftArrow1 },
+            { "?", TileProcessor.OnRightArrow1 },
+            { "?", TileProcessor.OnSideSideArrow },
+            { "?", TileProcessor.OnUpDownArrow },
+            { "?", TileProcessor.OnLeftArrow2 },
+            { "?", TileProcessor.OnDownArrow2 },
+            { "?", TileProcessor.OnRightArrow2 },
+            { "?", TileProcessor.OnUpArrow2 },
             { "^", TileProcessor.OnUpArrow3 },
-            { "☻", TileProcessor.OnCharacter },
-            { "☺", TileProcessor.OnSmileFace },
-            { "⚙", TileProcessor.OnMachinery },
-            { "‼", TileProcessor.OnAlert },
-            { "♫", TileProcessor.OnMusicalInstruments }
+            { "?", TileProcessor.OnCharacter },
+            { "?", TileProcessor.OnSmileFace },
+            { "?", TileProcessor.OnMachinery },
+            { "?", TileProcessor.OnAlert },
+            { "?", TileProcessor.OnMusicalInstruments }
             #endregion
         };
     }

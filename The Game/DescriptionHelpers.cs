@@ -1,13 +1,16 @@
 ﻿using System;
 
-public class DescriptionEntryFlag
+namespace The_Game
 {
-    public int DescriptionEntryID { get; set; }
-    public DescriptionFlag Flag { get; set; }
-    public bool Matches(DescriptionFlag flag)
+    public class DescriptionEntryFlag
     {
-        if (flag == Flag)
-            return true;
-        return false;
+        public int DescriptionEntryID { get; set; }
+        public DescriptionFlag Flag { get; set; }
+        public bool Matches(DescriptionFlag flag)
+        {
+            if (flag == Flag)
+                return true;
+            return false;
+        }
     }
 }

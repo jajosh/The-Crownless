@@ -1,6 +1,9 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Data.Sqlite;
+
+namespace The_Game;
+
 public class GameDataBase
 {
     public string  dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data\\TheCrownlessDB.db");

@@ -1,7 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using The_Game;
+
+namespace The_Game;
+
 
 // The Player Object
 public class PlayerObject : ICharacter
@@ -28,15 +31,15 @@ public class PlayerObject : ICharacter
         };
 
     public int pronounKey = 3; // Default
-    private TileRenderProfile _render = new TileRenderProfile("△");
+    private TileRenderProfile _render = new TileRenderProfile("?");
 
     public TileRenderProfile Render
     {
         get
         {
-            _render.CharData.MainChar = "△";
-            _render.CharData.ShadowChar = "△";
-            _render.CharData.TintChar = "△";
+            _render.CharData.MainChar = "?";
+            _render.CharData.ShadowChar = "?";
+            _render.CharData.TintChar = "?";
             return _render;
         }
         set => _render = value;
@@ -149,7 +152,7 @@ public class PlayerObject : ICharacter
         {
             foreach (var stack in item.Value)
             {
-                if (stack.Item.material == PrimaryMaterial.Metal)
+                if (stack.Item.Material == PrimaryMaterial.Metal)
                 {
                     return true;
                 }

@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using The_Game;
+
+namespace The_Game;
+
 
 public class NPCTypeManager : INPCTypeEngine
 {

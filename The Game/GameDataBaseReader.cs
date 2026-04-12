@@ -5,132 +5,135 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-public class GameDataBaseReader
+namespace The_Game
 {
-    public static LocationObject MapToLocationObject (SqliteDataReader reader)
+    public class GameDataBaseReader
     {
-        var Location = new LocationObject
+        public static LocationObject MapToLocationObject(SqliteDataReader reader)
         {
-            Type = (LocationType)Enum.Parse(typeof(LocationType), reader.GetString(reader.GetOrdinal("Type")), ignoreCase: true),
-            ID = reader.GetInt32(reader.GetOrdinal("ID")),
-            Name = reader.GetString(reader.GetOrdinal("Name")),
-            LocationMap = new List<GridObject>()
-        };
-        return Location;
-    }
-    public static GridObject MapToGridObject(SqliteDataReader reader)
-    {
-        // Manually map columns to properties; for simplicity, assuming column names match property names
-        var grid = new GridObject
-        {
-            GridID = reader.GetInt32(reader.GetOrdinal("GridID")),
-            GridX = reader.GetInt32(reader.GetOrdinal("GridX")),
-            GridY = reader.GetInt32(reader.GetOrdinal("GridY")),
-            Biome = Enum.Parse<GridBiomeType>(reader.GetString(reader.GetOrdinal("Biome")), ignoreCase: true),
-            SubBiome = Enum.Parse<GridBiomeSubType>(reader.GetString(reader.GetOrdinal("SubBiome")), ignoreCase: true),
-            RandomEventChance = reader.GetInt32(reader.GetOrdinal("RandomEventChance")),
-            GridMap = new List<TileObject>()
-        };
-
-        // --- Json Blob Mapping ---
-        grid.GridMapKey = JsonLoader.DeserializeJsonBlob<List<string>>(reader, "GridMapKey") ?? grid.GridMapKey;
-
-        return grid;
-    }
-    public static TileObject MapToTileObject(SqliteDataReader reader)
-    {
-        // Manually map columns to properties; for simplicity, assuming column names match property names
-        var tile = new TileObject
-        {
-            TileId = reader.GetInt32(reader.GetOrdinal("TileID")),
-            GridX = reader.GetInt32(reader.GetOrdinal("GridX")),
-            GridY = reader.GetInt32(reader.GetOrdinal("GridY")),
-            LocalX = reader.GetInt32(reader.GetOrdinal("LocalX")),
-            LocalY = reader.GetInt32(reader.GetOrdinal("LocalY")),
-            TileType = (TileTypes)Enum.Parse(typeof(TileTypes), reader.GetString(reader.GetOrdinal("TileType")), ignoreCase: true),
-        };
-
-        // --- Json Blob Mapping ---
-        tile.BaseRender = JsonLoader.DeserializeJsonBlob<TileRenderProfile>(reader, "BaseRender") ?? tile.BaseRender;
-
-        // TriggerActions might not exist in the table yet, so we check if the column exists
-        int triggerOrdinal = -1;
-        try { triggerOrdinal = reader.GetOrdinal("TriggerActions"); } catch { }
-        if (triggerOrdinal != -1)
-        {
-            tile.TriggerActions = JsonLoader.DeserializeJsonBlob<List<TileTriggerActions>>(reader, "TriggerActions") ?? tile.TriggerActions;
-        }
-        
-        return tile;
-    }
-
-    public static TileComponents MapToComponents(SqliteDataReader reader)
-    {
-        // DB column is "TypeName" (not "ComponentTypeName") and "Data" (not "SerializedData")
-        string? typeName = reader.IsDBNull(reader.GetOrdinal("TypeName")) ? null : reader.GetString(reader.GetOrdinal("TypeName"));
-        int tileId = reader.GetInt32(reader.GetOrdinal("TileID"));
-
-        var result = new TileComponents
-        {
-            TileID = tileId,
-            ComponentTypeName = typeName
-        };
-
-        if (!string.IsNullOrEmpty(typeName))
-        {
-            
-            result.TileComponent = typeName switch
+            var Location = new LocationObject
             {
-                "IsRoofedComponent"          => JsonLoader.DeserializeJsonBlob<IsRoofedComponent>(reader, "Data"),
-                "CuttablePlantComponent"     => JsonLoader.DeserializeJsonBlob<CuttablePlantComponent>(reader, "Data"),
-                "HarvestablePlantComponent"  => JsonLoader.DeserializeJsonBlob<HarvestablePlantComponent>(reader, "Data"),
-                "TileInventoryComponent"     => JsonLoader.DeserializeJsonBlob<TileInventoryComponent>(reader, "Data"),
-                "IsFlammableComponent"       => JsonLoader.DeserializeJsonBlob<IsFlammableComponent>(reader, "Data"),
-                "IsWalkableComponent"        => JsonLoader.DeserializeJsonBlob<IsWalkableComponent>(reader, "Data"),
-                "CoverComponent"             => JsonLoader.DeserializeJsonBlob<CoverComponent>(reader, "Data"),
-                "DestructibleComponent"      => JsonLoader.DeserializeJsonBlob<DestructibleComponent>(reader, "Data"),
-                "OpenableComponent"           => JsonLoader.DeserializeJsonBlob<OpenableComonent>(reader, "Data"),
-                "ChestComponent"             => JsonLoader.DeserializeJsonBlob<ChestComponent>(reader, "Data"),
-                "TrapComponent"              => JsonLoader.DeserializeJsonBlob<TrapComponent>(reader, "Data"),
-                "Respawnable"                => JsonLoader.DeserializeJsonBlob<Respawnable>(reader, "Data"),
-                "TiledEffectComponent"       => JsonLoader.DeserializeJsonBlob<TiledEffectComponent>(reader, "Data"),
-                _ => null
+                Type = (LocationType)Enum.Parse(typeof(LocationType), reader.GetString(reader.GetOrdinal("Type")), ignoreCase: true),
+                ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                Name = reader.GetString(reader.GetOrdinal("Name")),
+                LocationMap = new List<GridObject>()
+            };
+            return Location;
+        }
+        public static GridObject MapToGridObject(SqliteDataReader reader)
+        {
+            // Manually map columns to properties; for simplicity, assuming column names match property names
+            var grid = new GridObject
+            {
+                GridID = reader.GetInt32(reader.GetOrdinal("GridID")),
+                GridX = reader.GetInt32(reader.GetOrdinal("GridX")),
+                GridY = reader.GetInt32(reader.GetOrdinal("GridY")),
+                Biome = Enum.Parse<GridBiomeType>(reader.GetString(reader.GetOrdinal("Biome")), ignoreCase: true),
+                SubBiome = Enum.Parse<GridBiomeSubType>(reader.GetString(reader.GetOrdinal("SubBiome")), ignoreCase: true),
+                RandomEventChance = reader.GetInt32(reader.GetOrdinal("RandomEventChance")),
+                GridMap = new List<TileObject>()
+            };
+
+            // --- Json Blob Mapping ---
+            grid.GridMapKey = JsonLoader.DeserializeJsonBlob<List<string>>(reader, "GridMapKey") ?? grid.GridMapKey;
+
+            return grid;
+        }
+        public static TileObject MapToTileObject(SqliteDataReader reader)
+        {
+            // Manually map columns to properties; for simplicity, assuming column names match property names
+            var tile = new TileObject
+            {
+                TileId = reader.GetInt32(reader.GetOrdinal("TileID")),
+                GridX = reader.GetInt32(reader.GetOrdinal("GridX")),
+                GridY = reader.GetInt32(reader.GetOrdinal("GridY")),
+                LocalX = reader.GetInt32(reader.GetOrdinal("LocalX")),
+                LocalY = reader.GetInt32(reader.GetOrdinal("LocalY")),
+                TileType = (TileTypes)Enum.Parse(typeof(TileTypes), reader.GetString(reader.GetOrdinal("TileType")), ignoreCase: true),
+            };
+
+            // --- Json Blob Mapping ---
+            tile.BaseRender = JsonLoader.DeserializeJsonBlob<TileRenderProfile>(reader, "BaseRender") ?? tile.BaseRender;
+
+            // TriggerActions might not exist in the table yet, so we check if the column exists
+            int triggerOrdinal = -1;
+            try { triggerOrdinal = reader.GetOrdinal("TriggerActions"); } catch { }
+            if (triggerOrdinal != -1)
+            {
+                tile.TriggerActions = JsonLoader.DeserializeJsonBlob<List<TileTriggerActions>>(reader, "TriggerActions") ?? tile.TriggerActions;
+            }
+
+            return tile;
+        }
+
+        public static TileComponents MapToComponents(SqliteDataReader reader)
+        {
+            // DB column is "TypeName" (not "ComponentTypeName") and "Data" (not "SerializedData")
+            string? typeName = reader.IsDBNull(reader.GetOrdinal("TypeName")) ? null : reader.GetString(reader.GetOrdinal("TypeName"));
+            int tileId = reader.GetInt32(reader.GetOrdinal("TileID"));
+
+            var result = new TileComponents
+            {
+                TileID = tileId,
+                ComponentTypeName = typeName
+            };
+
+            if (!string.IsNullOrEmpty(typeName))
+            {
+
+                result.TileComponent = typeName switch
+                {
+                    "IsRoofedComponent" => JsonLoader.DeserializeJsonBlob<IsRoofedComponent>(reader, "Data"),
+                    "CuttablePlantComponent" => JsonLoader.DeserializeJsonBlob<CuttablePlantComponent>(reader, "Data"),
+                    "HarvestablePlantComponent" => JsonLoader.DeserializeJsonBlob<HarvestablePlantComponent>(reader, "Data"),
+                    "TileInventoryComponent" => JsonLoader.DeserializeJsonBlob<TileInventoryComponent>(reader, "Data"),
+                    "IsFlammableComponent" => JsonLoader.DeserializeJsonBlob<IsFlammableComponent>(reader, "Data"),
+                    "IsWalkableComponent" => JsonLoader.DeserializeJsonBlob<IsWalkableComponent>(reader, "Data"),
+                    "CoverComponent" => JsonLoader.DeserializeJsonBlob<CoverComponent>(reader, "Data"),
+                    "DestructibleComponent" => JsonLoader.DeserializeJsonBlob<DestructibleComponent>(reader, "Data"),
+                    "OpenableComponent" => JsonLoader.DeserializeJsonBlob<OpenableComonent>(reader, "Data"),
+                    "ChestComponent" => JsonLoader.DeserializeJsonBlob<ChestComponent>(reader, "Data"),
+                    "TrapComponent" => JsonLoader.DeserializeJsonBlob<TrapComponent>(reader, "Data"),
+                    "Respawnable" => JsonLoader.DeserializeJsonBlob<Respawnable>(reader, "Data"),
+                    "TiledEffectComponent" => JsonLoader.DeserializeJsonBlob<TiledEffectComponent>(reader, "Data"),
+                    _ => null
+                };
+            }
+
+            return result;
+        }
+
+        public static TileProperties MapToProperties(SqliteDataReader reader)
+        {
+            return new TileProperties
+            {
+                TileID = reader.GetInt32(reader.GetOrdinal("TileID")),
+                TilePropertyName = reader.GetString(reader.GetOrdinal("TilePropertyName")),
+                TileProperty = (TileProperty)Enum.Parse(typeof(TileProperty), reader.GetString(reader.GetOrdinal("TileProperties")), ignoreCase: true)
             };
         }
 
-        return result;
-    }
-
-    public static TileProperties MapToProperties(SqliteDataReader reader)
-    {
-        return new TileProperties
+        public static DescriptionEntry MapToDescription(SqliteDataReader reader)
         {
-            TileID = reader.GetInt32(reader.GetOrdinal("TileID")),
-            TilePropertyName = reader.GetString(reader.GetOrdinal("TilePropertyName")),
-            TileProperty = (TileProperty)Enum.Parse(typeof(TileProperty), reader.GetString(reader.GetOrdinal("TileProperties")), ignoreCase: true)
-        };
-    }
+            var entry = new DescriptionEntry(
+                textEntry: reader.GetString(reader.GetOrdinal("TextEntry")),
+                descriptionWeight: reader.GetInt32(reader.GetOrdinal("DescriptionWeight")),
+                biome: reader.IsDBNull(reader.GetOrdinal("Biome")) ? null : Enum.Parse<GridBiomeType>(reader.GetString(reader.GetOrdinal("Biome"))),
+                subBiome: reader.IsDBNull(reader.GetOrdinal("SubBiome")) ? null : Enum.Parse<GridBiomeSubType>(reader.GetString(reader.GetOrdinal("SubBiome"))),
+                season: reader.IsDBNull(reader.GetOrdinal("Season")) ? null : Enum.Parse<SeasonData>(reader.GetString(reader.GetOrdinal("Season"))),
+                weather: reader.IsDBNull(reader.GetOrdinal("Weather")) ? null : Enum.Parse<WeatherData>(reader.GetString(reader.GetOrdinal("Weather")))
+            );
 
-    public static DescriptionEntry MapToDescription(SqliteDataReader reader)
-    {
-        var entry = new DescriptionEntry(
-            textEntry: reader.GetString(reader.GetOrdinal("TextEntry")),
-            descriptionWeight: reader.GetInt32(reader.GetOrdinal("DescriptionWeight")),
-            biome: reader.IsDBNull(reader.GetOrdinal("Biome")) ? null : Enum.Parse<GridBiomeType>(reader.GetString(reader.GetOrdinal("Biome"))),
-            subBiome: reader.IsDBNull(reader.GetOrdinal("SubBiome")) ? null : Enum.Parse<GridBiomeSubType>(reader.GetString(reader.GetOrdinal("SubBiome"))),
-            season: reader.IsDBNull(reader.GetOrdinal("Season")) ? null : Enum.Parse<SeasonData>(reader.GetString(reader.GetOrdinal("Season"))),
-            weather: reader.IsDBNull(reader.GetOrdinal("Weather")) ? null : Enum.Parse<WeatherData>(reader.GetString(reader.GetOrdinal("Weather")))
-        );
+            // Map IDs manually
+            try
+            {
+                entry.ID = reader.GetInt32(reader.GetOrdinal("ID"));
+                entry.DescriptionType = Enum.Parse<ObjectDeffinitionType>(reader.GetString(reader.GetOrdinal("DescriptionType")));
+                entry.TypeID = reader.GetInt32(reader.GetOrdinal("TypeID"));
+            }
+            catch { }
 
-        // Map IDs manually
-        try
-        {
-            entry.ID = reader.GetInt32(reader.GetOrdinal("ID"));
-            entry.DescriptionType = Enum.Parse<ObjectDeffinitionType>(reader.GetString(reader.GetOrdinal("DescriptionType")));
-            entry.TypeID = reader.GetInt32(reader.GetOrdinal("TypeID"));
+            return entry;
         }
-        catch { }
-
-        return entry;
     }
 }

@@ -1,5 +1,8 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using System;
+
+namespace The_Game;
+
 public enum WaveformType
 {
     Sine,

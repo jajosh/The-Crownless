@@ -1,53 +1,56 @@
-﻿using MyGame.Controls;
+using MyGame.Controls;
 using System;
 using System.Collections.Concurrent;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+
+namespace The_Game;
+
 public enum DebugLogSeverity // The severity of the message being sent.
 
 {
 
-    telemetry = 0, // 4D0D11 → RGB(77, 13, 17)
+    telemetry = 0, // 4D0D11 ? RGB(77, 13, 17)
     // Telemetry data
-    FILESINK = 1, // 7A2B00 → RGB(122, 43, 0)
+    FILESINK = 1, // 7A2B00 ? RGB(122, 43, 0)
     // Data related to files 
-    INFO = 2, // 23684C → RGB(35, 104, 76)
+    INFO = 2, // 23684C ? RGB(35, 104, 76)
     // Worthy of note but not of importance
-    DEBUG = 3, // 0A1D6D → RGB(10, 29, 109)
+    DEBUG = 3, // 0A1D6D ? RGB(10, 29, 109)
     // Relanvant to potential issues
-    WARN = 4, // A39B6D → RGB(163, 155, 109)
+    WARN = 4, // A39B6D ? RGB(163, 155, 109)
     // Likely an issue
-    ERROR = 5, // FCBD81 → RGB(252, 189, 129)
+    ERROR = 5, // FCBD81 ? RGB(252, 189, 129)
     // Issue, needs to be addressed but not game breaking
-    FATAL = 6, // EBEDC9 → RGB(235, 237, 201)
+    FATAL = 6, // EBEDC9 ? RGB(235, 237, 201)
     // Game breaking, needs to be addressed
 }
 public enum DebugType
 {
     // Engine
-    INIT, // 5A4335 → RGB(90, 67, 53)
-    GAMELOADINGSTAGE, // 834D2F → RGB(131, 77, 47)
-    ERROR, // B3886F → RGB(179, 136, 111)
-    LOG, // CF8114 → RGB(207, 129, 20)
+    INIT, // 5A4335 ? RGB(90, 67, 53)
+    GAMELOADINGSTAGE, // 834D2F ? RGB(131, 77, 47)
+    ERROR, // B3886F ? RGB(179, 136, 111)
+    LOG, // CF8114 ? RGB(207, 129, 20)
 
     // World
-    MAPGENERATION, // 166305 → RGB(22, 99, 5)
+    MAPGENERATION, // 166305 ? RGB(22, 99, 5)
     GENERICPROCESSING, 
     LOCATIONPROCESSING, // !!! NO COLOR !!!
-    GRIDPROCESSING, // 7ED256 → RGB(126, 210, 86)
-    TILEPROCESSING, // 75E06B → RGB(117, 224, 107)
-    MAPRENDERING, // CAF2BE → RGB(202, 242, 190)
+    GRIDPROCESSING, // 7ED256 ? RGB(126, 210, 86)
+    TILEPROCESSING, // 75E06B ? RGB(117, 224, 107)
+    MAPRENDERING, // CAF2BE ? RGB(202, 242, 190)
 
     // Gameplay
-    MOVEMENT, // 8E1180 → RGB(142, 17, 128)
+    MOVEMENT, // 8E1180 ? RGB(142, 17, 128)
 
     // Data
-    SQL, // 5E1DC5 → RGB(94, 29, 197)
-    LOCATIONREPOSITORY,// B36CDA → RGB(179, 108, 218)
-    GRIDREPOSITORY, // BA09C4 → RGB(186, 9, 196)
-    TILEREPOSITORY, // AD3DD6 → RGB(173, 61, 214)
-    GAMEFILE, // C381FC → RGB(195, 129, 252)
+    SQL, // 5E1DC5 ? RGB(94, 29, 197)
+    LOCATIONREPOSITORY,// B36CDA ? RGB(179, 108, 218)
+    GRIDREPOSITORY, // BA09C4 ? RGB(186, 9, 196)
+    TILEREPOSITORY, // AD3DD6 ? RGB(173, 61, 214)
+    GAMEFILE, // C381FC ? RGB(195, 129, 252)
 
 
 

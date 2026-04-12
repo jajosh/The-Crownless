@@ -11,6 +11,9 @@ using SQLitePCL;
 using The_Game;
 using static System.Windows.Forms.Design.AxImporter;
 
+namespace The_Game;
+
+
 public class MapManager : MapEngine
 {
     public static LocationObject LocationCache { get; set; } // The active location

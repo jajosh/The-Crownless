@@ -1,5 +1,7 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using System;
+
+namespace The_Game;
 
 public class WaveformProvider : WaveProvider32
 {
@@ -92,6 +94,7 @@ public class WaveformProvider : WaveProvider32
         };
 
         using var wo = new WaveOutEvent();
+
         wo.Init(provider);
         wo.Play();
 

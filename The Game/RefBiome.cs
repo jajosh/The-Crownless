@@ -1,4 +1,7 @@
-﻿using System;
+using System;
+
+namespace The_Game;
+
 public enum GridBiomeType // The biome of the grid
 {
     Any = 1,

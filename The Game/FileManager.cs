@@ -1,5 +1,7 @@
-﻿using NAudio.Gui;
-using WindowsFormsApp1;
+using NAudio.Gui;
+
+namespace The_Game;
+
 
 public class FileManager : IIFileEngine
 {
@@ -83,7 +85,7 @@ public class FileManager : IIFileEngine
             if (!File.Exists(targetPath))
             {
                 File.Copy(sourcePath, targetPath);
-                BugHunter.Log(DebugType.GAMEFILE, $"File Copied: {relativePathFromProject} → {targetPath}", DebugLogSeverity.INFO);
+                BugHunter.Log(DebugType.GAMEFILE, $"File Copied: {relativePathFromProject} ? {targetPath}", DebugLogSeverity.INFO);
             }
             else
             {

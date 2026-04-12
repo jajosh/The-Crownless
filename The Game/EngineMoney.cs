@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using System.Numerics;
+
+namespace The_Game;
+
 
 public interface IMoneyEngine
 {

@@ -4,14 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+namespace The_Game
+{
 
-    public enum ActionNames
-    {
-        CorruptingTouch,
-        HorrifiyingVisage,
-        Wail,
-        Heal
-    }
+
     public enum Languages
     {
         None,
@@ -44,25 +40,5 @@ using System.Threading.Tasks;
         restrained
     }
     public enum CombatRelation { Ally, Enemy, Neutral }
-    public enum TriggerEnum
-    {
-        Trade,
-        Attack,
-        Flee,
-        RequestHelp,
-        GiveQuest,
-        Steal,
-        Bribe,
-        Talk,
-    }
-    public enum Skill
-    {
-        Strength,
-        Dexterity,
-        Charisma,
-        Intelligence,
-        Wisdom,
-        Constitution
-    }
-    
+}
 

@@ -7,6 +7,9 @@ using System.Xml;
 using MyGame.Controls;
 using The_Game;
 
+namespace The_Game;
+
+
 
 // The Tile object
 public class TileObject

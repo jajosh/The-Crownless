@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using static System.Windows.Forms.AxHost;
 
+namespace The_Game;
+
 public class TileRepository : GameDataBase
 {
     public TileRepository()
@@ -454,6 +456,7 @@ public class TileRepository : GameDataBase
         VALUES (@TileID, @TypeName, @Data);";
 
         using var command = new SqliteCommand(sql, connection, transaction);
+
         command.Parameters.Add("@TileID", SqliteType.Integer);
         command.Parameters.Add("@TypeName", SqliteType.Text);
         command.Parameters.Add("@Data", SqliteType.Blob);

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-namespace WindowsFormsApp1
+namespace The_Game
 {
     public class HealthComponent
     {

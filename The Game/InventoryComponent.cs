@@ -1,23 +1,26 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Reflection.Metadata.BlobBuilder;
+
+namespace The_Game;
+
 public enum EquipmentSlotType
 {
     Single = 0,
     MultiRing = 1,
     MultiBracelet = 2
 }
-// SINGLE slots â€” normal enum (one item per slot)
+// SINGLE slots — normal enum (one item per slot)
 public enum SingleEquipmentSlots
 {
     Head, Chest, Waist, Legs, Feet, Arms, Hands, Wrists, Shoulders,
     Neck, Back, LowerBack, Side, Cap, Belt, Tabard
 }
 
-// MULTI slots â€” FLAGS enum (multiple items allowed)
+// MULTI slots — FLAGS enum (multiple items allowed)
 [Flags]
 public enum MultiEquipmentSlots : long
 {

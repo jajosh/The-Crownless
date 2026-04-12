@@ -1,6 +1,9 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyGame.Controls;
+
+namespace The_Game;
+
 public enum TileCheckType
 {
     None = 0,
@@ -82,7 +85,7 @@ public class TileRenderProfile
     // Visual Look
     public MyGame.Controls.CharacterData CharData { get; set; }
     public MyGame.Controls.OverlayStep Overlay { get; set; }
-    public TileRenderProfile() { }  // 👈 serializer uses this
+    public TileRenderProfile() { }  // ?? serializer uses this
     public TileRenderProfile(string ascii)
     {
         CharData = new CharacterData(ascii);

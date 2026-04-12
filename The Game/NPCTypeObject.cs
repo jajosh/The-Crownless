@@ -1,7 +1,10 @@
-﻿
+
 using Newtonsoft.Json;
 using System;
 using The_Game;
+
+namespace The_Game;
+
 
 public enum CreatureType
 {

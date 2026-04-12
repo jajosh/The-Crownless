@@ -1,31 +1,34 @@
-﻿using System;
+using System;
 using MyGame.Controls;
+
+namespace The_Game;
+
 
 public class TileEffectState
 {
     public int ID { get; set; }
     public string Name { get; set; } = string.Empty;
     public List<string> Description { get; set; } = new();
-    // 🎨 Visuals
+    // ?? Visuals
     public ColorComponent ForeGroundColor { get; set; }
     public ColorComponent BackGroundColor { get; set; }
-    // ⚔️ Effect Mechanics
+    // ?? Effect Mechanics
     public int? DamageOverTime { get; set; }
     public DamageTypes? DamageType { get; set; }
     public int? MovementPenalty { get; set; }
     public int? Duration { get; set; }
     public int Radius { get; set; }
     public RootComponent Root { get; set; }
-    // 👁️ Environmental Interaction
+    // ??? Environmental Interaction
     public bool? BlockVision { get; set; }
-    // 💫 Conditions
+    // ?? Conditions
     public int? ChanceToApplyCondition { get; set; }
     public Conditions? ConditionToApply { get; set; }
-    // ⚙️ Behavior Flags
+    // ?? Behavior Flags
     public bool IsStackable { get; set; } = false;
     public bool IsSpreadable { get; set; } = false;
     public bool IsCleansable { get; set; } = true;
-    // 🧠 Runtime State
+    // ?? Runtime State
     public bool IsActive { get; set; } = false;
     public TileEffectState Clone()
     {

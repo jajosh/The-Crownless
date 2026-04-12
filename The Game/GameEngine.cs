@@ -1,41 +1,42 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using WindowsFormsApp1;
 
-
-public class GameEngine
+namespace The_Game
 {
-    // Just REFERENCES - no instantiation here!
-    public IBeeperEngine Beeper { get; set; }
-    public IIFileEngine FileManager { get; init; }
-    public INPCEngine NPC { get; init; }
-    public IPlayerEngine Player { get; init; }
-    public ITileProcessorEngine Processor { get; init; }
-    public MapEngine Map { get; init; }
-    public INPCTypeEngine NPCType { get; init; }
-    public WeatherEngine Weather { get; init; }
-
-
-    public List<IActionable> ActiveOnScreen { get; set; } = new();
-    public List<IActionable> ActiveOnLocation { get; set; } = new();
-
-    public GameEngine(IBeeperEngine beeper, IIFileEngine fileManager, INPCEngine npc, IPlayerEngine player, ITileProcessorEngine processor, MapEngine map, INPCTypeEngine npcType, WeatherEngine weather)
+    public class GameEngine
     {
-        Beeper = beeper;
-        FileManager = fileManager;
-        NPC = npc;
-        Player = player;
-        Processor = processor;
-        Map = map;
-        NPCType = npcType;
-        Weather = weather;
-    }
+        // Just REFERENCES - no instantiation here!
+        public IBeeperEngine Beeper { get; set; }
+        public IIFileEngine FileManager { get; init; }
+        public INPCEngine NPC { get; init; }
+        public IPlayerEngine Player { get; init; }
+        public ITileProcessorEngine Processor { get; init; }
+        public MapEngine Map { get; init; }
+        public INPCTypeEngine NPCType { get; init; }
+        public WeatherEngine Weather { get; init; }
 
-    public void Assembly()
-    {
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-        // Components initialize THEMSELVES
+        public List<IActionable> ActiveOnScreen { get; set; } = new();
+        public List<IActionable> ActiveOnLocation { get; set; } = new();
+
+        public GameEngine(IBeeperEngine beeper, IIFileEngine fileManager, INPCEngine npc, IPlayerEngine player, ITileProcessorEngine processor, MapEngine map, INPCTypeEngine npcType, WeatherEngine weather)
+        {
+            Beeper = beeper;
+            FileManager = fileManager;
+            NPC = npc;
+            Player = player;
+            Processor = processor;
+            Map = map;
+            NPCType = npcType;
+            Weather = weather;
+        }
+
+        public void Assembly()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            // Components initialize THEMSELVES
+        }
     }
 }

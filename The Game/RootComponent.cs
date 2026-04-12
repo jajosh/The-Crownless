@@ -1,4 +1,7 @@
-﻿using System;
+using System;
+
+namespace The_Game;
+
 
 // Used to track entity position
 public class RootComponent : IEquatable<RootComponent>

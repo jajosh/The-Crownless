@@ -1,5 +1,17 @@
-﻿using System;
+using System;
 
+namespace The_Game;
+
+
+public enum Skill
+{
+    Strength,
+    Dexterity,
+    Charisma,
+    Intelligence,
+    Wisdom,
+    Constitution
+}
 public class SkillComponent
 {
     public int Strength { get; set; }
