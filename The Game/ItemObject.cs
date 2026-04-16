@@ -136,8 +136,8 @@ public class ItemObject : ICloneable
         clone.TriggerData = TriggerData.ToDictionary(
             kvp => kvp.Key,
             kvp => kvp.Value
-                .Select(action => action.Clone())
-                .ToList()
+                .Select(action => (ActionObject)action.Clone())
+                .ToList<ActionObject>()
         );
 
         // These are display/lore data — unlikely to mutate in combat

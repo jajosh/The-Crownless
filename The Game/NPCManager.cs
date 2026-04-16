@@ -4,7 +4,7 @@ using The_Game;
 
 namespace The_Game
 {
-    public class NPCManager : INPCEngine
+    public class NPCManager : INPCEngine 
     {
         List<NPCObject> NPCs => NPCs;
         public NPCManager()

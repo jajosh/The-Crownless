@@ -17,10 +17,12 @@ namespace The_Game
         bool Versatile) : IItemComponent;
 
     public record RangedComponent(
-        int Range) : IItemComponent;
+        int Range
+          ) : IItemComponent;
 
     public record ConsumableComponent(
-        TriggerConfig Trigger) : IItemComponent;
+        ItemTrigger Trigger,
+        List<ActionObject> Actions) : IItemComponent;
 
     public record CraftingComponent(
         bool IsCookable,
@@ -44,15 +46,17 @@ namespace The_Game
     public static class ComponentLoader
     {
         private static readonly Dictionary<string, Type> ComponentTypes = new()
-    {
-        { "WeaponComponent", typeof(WeaponComponent) },
-        { "MeleeComponent", typeof(MeleeComponent) },
-        { "RangedComponent", typeof(RangedComponent) },
-        { "ConsumableComponent", typeof(ConsumableComponent) },
-        { "CraftingComponent", typeof(CraftingComponent) },
-        { "ArmorComponent", typeof(ArmorComponent) },
-        { "DurabilityComponent", typeof(DurabilityComponent) }
-    };
+        {
+            { "WeaponComponent", typeof(WeaponComponent) },
+            { "MeleeComponent", typeof(MeleeComponent) },
+            { "RangedComponent", typeof(RangedComponent) },
+            { "ConsumableComponent", typeof(ConsumableComponent) },
+            { "CraftingComponent", typeof(CraftingComponent) },
+            { "ArmorComponent", typeof(ArmorComponent) },
+            { "DurabilityComponent", typeof(DurabilityComponent) },
+            { "EnchantableComponent", typeof(EnchantableComponent) },
+            { "EquipedableComponent", typeof(EquipedableComponent) }
+        };
 
         public static IItemComponent LoadComponent(JsonObject obj)
         {

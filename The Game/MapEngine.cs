@@ -7,7 +7,8 @@ namespace The_Game
 {
     public interface MapEngine
     {
-
+        public LocationObject LocationCache { get; set; }
+        public GridObject CurrentGridCache { get; set; }
         string PickADescription(TileObject tile, SeasonData? Season = null, WeatherData? WeatherSeason = null, GridBiomeType? CurrentBiomeSeason = null, GridBiomeSubType? CurrentSubBiomeSeason = null);
 
         bool PrintWorld(PlayerObject player, ColorTextBox ctb);

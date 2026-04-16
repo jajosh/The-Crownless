@@ -36,6 +36,19 @@ namespace The_Game
                 text, weight, biome, subBiome, season, weather)
             );
         }
+        public TileObject FindTile(int localX, int localY)
+        {
+            TileObject resultTile = new();
+            foreach (TileObject tile in GridMap)
+            {
+                if (tile.LocalX == localX && tile.LocalY == localY)
+                {
+                    return tile;
+                }
+            }
+            BugHunter.Log(DebugType.GRIDPROCESSING, $"Failed to find tile in GridMapSearch at {localX}, {localY}", DebugLogSeverity.WARN);
+            return null;
+        }
     }
     public class TileAddData
     {

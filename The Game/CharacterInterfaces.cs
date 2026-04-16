@@ -5,7 +5,13 @@ using MyGame.Controls;
 namespace The_Game
 {
     public interface ICharacter : ISkills, IActor, IActionable, IInventory, ITileOccupant
-    { }
+    {
+        bool CanAttack(IActionable target);
+        void PerformAttack(IActionable target);
+        bool CanUseBonus();
+        void PreformBonus(IActionable target);
+        CombatRelation GetCombatRelation(IActionable target);
+    }
     public interface ITileOccupant
     {
         string Name { get; }
@@ -23,17 +29,13 @@ namespace The_Game
         HealthComponent Health { get; set; } // Health & Mana
 
         // --- Data & State -------------------------------------------
-        List<ActionObject> TriggerData { get; set; }
+        Dictionary<ActionEffectType, List<ActionObject>> TriggerAction { get; set; }
 
         // === Visual ===
 
 
-        bool CanAttack(IActionable target);
-        void PerformAttack(IActionable target);
-        bool CanUseBonus();
-        void PerformBonus(IActionable target);
-        CombatRelation GetCombatRelation(SaveGame saveGame);
-        List<ActionObject> PossibleAttacks(ICharacter Target, List<ICharacter> allies);
+        
+        List<ActionObject> PossibleAttacks(ICharacter Target, List<ICharacter> allies, List<ICharacter> Enemies);
     }
     public interface IHealth
     {

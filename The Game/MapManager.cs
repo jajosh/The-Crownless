@@ -16,8 +16,8 @@ namespace The_Game;
 
 public class MapManager : MapEngine
 {
-    public static LocationObject LocationCache { get; set; } // The active location
-    public static GridObject CurrentGridCache { get; set; } // The active Grid
+    public LocationObject LocationCache { get; set; } // The active location
+    public GridObject CurrentGridCache { get; set; } // The active Grid
     public MapManager()
     {
         ProcessTiles();
@@ -28,7 +28,7 @@ public class MapManager : MapEngine
         try
         {
             // 1. Load the current grid the player is in and add it to the cache first.
-            CurrentGridCache = await GridRepository.QueryAsync(new { GridX = player.Root.GridX, GridY = player.Root.GridY }, ct);
+            Form1.Game.Map.CurrentGridCache = await GridRepository.QueryAsync(new { GridX = player.Root.GridX, GridY = player.Root.GridY }, ct);
         }
         catch (Exception ex)
         {
@@ -36,29 +36,29 @@ public class MapManager : MapEngine
             return null;
         }
 
-        if (CurrentGridCache != null)
+        if (Form1.Game.Map.CurrentGridCache != null)
         {
             try
             {
                 // 2. Load the Location metadata.
-                LocationCache = await LocationRepository.QueryAsync(new { ID = CurrentGridCache.LocationID }, ct);
+                Form1.Game.Map.LocationCache = await LocationRepository.QueryAsync(new { ID = Form1.Game.Map.CurrentGridCache.LocationID }, ct);
                 
-                if (LocationCache != null)
+                if (Form1.Game.Map.LocationCache != null)
                 {
                     // 3. Load ALL grids for this location to ensure the location is "loaded as a whole" in the cache.
-                    var allGridsInLocation = await GridRepository.QueryAllAsync(new { LocationID = LocationCache.ID }, ct);
-                    LocationCache.LocationMap = allGridsInLocation;
+                    var allGridsInLocation = await GridRepository.QueryAllAsync(new { LocationID = Form1.Game.Map.LocationCache.ID }, ct);
+                    Form1.Game.Map.LocationCache.LocationMap = allGridsInLocation;
                     
-                    BugHunter.Log(DebugType.LOCATIONPROCESSING, $"Loaded location '{LocationCache.Name}' with {LocationCache.LocationMap.Count} grids cached.", DebugLogSeverity.INFO);
+                    BugHunter.Log(DebugType.LOCATIONPROCESSING, $"Loaded location '{Form1.Game.Map.LocationCache.Name}' with {Form1.Game.Map.LocationCache.LocationMap.Count} grids cached.", DebugLogSeverity.INFO);
                 }
             }
             catch (Exception ex)
             {
-                BugHunter.Log(DebugType.ERROR, $"Failed to load location data for Grid {CurrentGridCache.GridID} | Error: {ex.Message}", DebugLogSeverity.WARN);
+                BugHunter.Log(DebugType.ERROR, $"Failed to load location data for Grid {Form1.Game.Map.CurrentGridCache.GridID} | Error: {ex.Message}", DebugLogSeverity.WARN);
             }
         }
 
-        return (LocationCache, CurrentGridCache);
+        return (Form1.Game.Map.LocationCache, Form1.Game.Map.CurrentGridCache);
     }
 
     public void ProcessTiles()

@@ -21,12 +21,16 @@ namespace The_Game
 			Game.Player.PlayerCharacter.Root.LocalX = 13;
 			Game.Player.PlayerCharacter.Root.LocalY = 8;
 			Game.Map.PrintWorld(Game.Player.PlayerCharacter, ctbTheMap);
+			// Use an anonymous object for the criteria and synchronously wait for the async result.
 
 		}
 		private void ctbTheMap_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			BugHunter.Log(DebugType.GENERICPROCESSING, "KeyPress Event Found...", DebugLogSeverity.telemetry);
-			switch(e.KeyChar)
+			LocationObject location = Game.Map.LocationCache;
+			GridObject grid = Game.Map.CurrentGridCache;
+
+            BugHunter.Log(DebugType.GENERICPROCESSING, "KeyPress Event Found...", DebugLogSeverity.telemetry);
+			switch (e.KeyChar)
 			{
 				case 'w':
 				case 'a':
@@ -36,11 +40,20 @@ namespace The_Game
 					break;
 				case 'm':
 					List<TileObject> TestList = new List<TileObject>();
-					TestList.Add( TileRepository.Query(new { GridX = Game.Player.PlayerCharacter.Root.GridX, GridY = Game.Player.PlayerCharacter.Root.GridY, LocalX = Game.Player.PlayerCharacter.Root.LocalX +1, LocalY = Game.Player.PlayerCharacter.Root.LocalY }));
-                    TestList.Add(TileRepository.Query(new { GridX = Game.Player.PlayerCharacter.Root.GridX, GridY = Game.Player.PlayerCharacter.Root.GridY, LocalX = Game.Player.PlayerCharacter.Root.LocalX - 1, LocalY = Game.Player.PlayerCharacter.Root.LocalY }));
-                    TestList.Add(TileRepository.Query(new { GridX = Game.Player.PlayerCharacter.Root.GridX, GridY = Game.Player.PlayerCharacter.Root.GridY, LocalX = Game.Player.PlayerCharacter.Root.LocalX, LocalY = Game.Player.PlayerCharacter.Root.LocalY +1 }));
-                    TestList.Add(TileRepository.Query(new { GridX = Game.Player.PlayerCharacter.Root.GridX, GridY = Game.Player.PlayerCharacter.Root.GridY, LocalX = Game.Player.PlayerCharacter.Root.LocalX, LocalY = Game.Player.PlayerCharacter.Root.LocalY -1}));
-					foreach (TileObject tile in TestList)
+					TileObject Tile = new TileObject();
+					Tile = grid.FindTile(Game.Player.PlayerCharacter.Root.LocalX + 1, Game.Player.PlayerCharacter.Root.LocalY);
+                    TestList.Add(Tile);
+
+
+                    Tile = grid.FindTile(Game.Player.PlayerCharacter.Root.LocalX - 1, Game.Player.PlayerCharacter.Root.LocalY);
+                    TestList.Add(Tile);
+
+                    Tile = grid.FindTile(Game.Player.PlayerCharacter.Root.LocalX, Game.Player.PlayerCharacter.Root.LocalY + 1);
+                    TestList.Add(Tile);
+
+                    Tile = grid.FindTile(Game.Player.PlayerCharacter.Root.LocalX, Game.Player.PlayerCharacter.Root.LocalY - 1);
+                    TestList.Add(Tile);
+                    foreach (TileObject tile in TestList)
 					{
 						int x = 0;
 						foreach (TileComponents component in tile.Components)

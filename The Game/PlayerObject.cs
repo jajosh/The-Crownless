@@ -53,6 +53,7 @@ public class PlayerObject : ICharacter
     public int Initiative { get; set; }                // Combat initiative roll
     public RootComponent Root { get; set; }            // Player position
     public int TileSpeed { get; set; } = 6;            // Default movement speed
+    public Dictionary<ActionEffectType, List<ActionObject>> TriggerAction { get; set; }
     #endregion
 
     // === Money (IMoney) ===
@@ -62,7 +63,6 @@ public class PlayerObject : ICharacter
 
     // === Triggers & Actions ===
     #region Triggers
-    public List<TriggerConfig> TriggerKey { get; set; } // Used for hydration
     public List<ActionObject> TriggerData { get; set; }
     [JsonIgnore]
     #endregion
@@ -90,7 +90,6 @@ public class PlayerObject : ICharacter
         Root = new RootComponent();
         // TileSpeed is already initialized in the field declaration
         Money = new Dictionary<CoinType, int>();
-        TriggerKey = new List<TriggerConfig>();
         TriggerData = new List<ActionObject>();
         CurrentEvent = 0; // Default value, adjust if needed
         PastEvents = new Dictionary<int, int>();
@@ -121,16 +120,16 @@ public class PlayerObject : ICharacter
         }
     }
     public bool CanUseBonus() => BonusActionCount > 0;
-    public void PerformBonus(IActionable target)
+    public void PreformBonus(IActionable target)
     {
         // Placeholder: define custom bonus behavior
     }
-    public CombatRelation GetCombatRelation(SaveGame saveGame)
+    public CombatRelation GetCombatRelation(IActionable target)
     {
         // Placeholder: return default Neutral
         return CombatRelation.Neutral;
     }
-    public List<ActionObject> PossibleAttacks(ICharacter Target, List<ICharacter> allies)
+    public List<ActionObject> PossibleAttacks(ICharacter Target, List<ICharacter> allies, List<ICharacter> Enemies)
     {
         List<ActionObject> actions = new();
         int x = Target.Root.LocalX - Root.LocalX;

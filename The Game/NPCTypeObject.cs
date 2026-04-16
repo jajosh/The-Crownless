@@ -68,7 +68,6 @@ public record NPCTypeObject
     #endregion
 
     #region Triggers
-    public List<TriggerConfig>? TriggerKey { get; set; } = new();
     [JsonIgnore]
     public List<ActionObject> TriggerData { get; set; } = new();
 
